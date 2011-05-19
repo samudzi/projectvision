@@ -1,0 +1,29 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  brief: MyString
+  detail: MyText
+  category: MyString
+  type: MyString
+  status: MyString
+  actionable: false
+  context: MyString
+  next: MyText
+  outcome: MyText
+  action_status: MyString
+  due_date: 2011-03-10 08:50:56
+  action_type: MyString
+
+two:
+  brief: MyString
+  detail: MyText
+  category: MyString
+  type: MyString
+  status: MyString
+  actionable: false
+  context: MyString
+  next: MyText
+  outcome: MyText
+  action_status: MyString
+  due_date: 2011-03-10 08:50:56
+  action_type: MyString

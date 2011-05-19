@@ -1,0 +1,200 @@
+
+        #main-panel td {
+            padding:5px;
+        }
+
+
+
+
+/**
+ * Generic
+ */
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix {
+	display: inline-block;
+}
+
+html[xmlns] .clearfix {
+	display: block;
+}
+
+* html .clearfix {
+	height: 1%;
+}
+
+.no-pointer {
+    cursor: default;
+}
+
+
+/**
+ * Ext Hacks
+ */
+
+#application-tab .x-tab-strip-spacer {
+	border-color: #EAEAEA;
+}
+
+#home-toolbar {
+    /* margin: -3px 0 0; */
+    border-top: 1px solid #D0D0D0;
+}
+
+/**
+ * Icons
+ */
+
+button.project {
+    background-image: url(../images/icons/folder.png);
+}
+
+button.timesheet {
+    background-image: url(../images/icons/calendar.png);
+}
+
+button.data {
+    background-image: url(../images/icons/database.png);
+}
+
+button.hr {
+    background-image: url(../images/icons/group.png);
+}
+
+button.after-sale {
+    background-image: url(../images/icons/money_dollar.png);
+}
+
+button.setting {
+    background-image: url(../images/icons/wrench.png);
+}
+
+button.document {
+    background-image: url(../images/icons/page_word.png);
+}
+
+button.preference {
+    background-image: url(../images/icons/user_edit.png);
+}
+
+button.logout {
+    background-image: url(../images/icons/user_go.png);
+}
+
+button.new {
+    background-image: url(../images/icons/page_add.png);
+}
+
+button.save {
+    background-image: url(../images/icons/page_save.png);
+}
+
+button.load {
+    background-image: url(../images/icons/page_refresh.png);
+}
+
+button.revision {
+    background-image: url(../images/icons/clock.png);
+}
+
+button.add-member {
+    background-image: url(../images/icons/user_add.png);
+}
+
+button.del-member {
+    background-image: url(../images/icons/user_delete.png);
+}
+
+button.add-prop {
+    background-image: url(../images/icons/table_add.png);
+}
+
+button.del-prop {
+    background-image: url(../images/icons/table_delete.png);
+}
+/*
+button.cancel {
+    background-image: url(../images/icons/page_white_delete.png);
+}
+*/
+button.wip {
+    background-image: url(../images/icons/lock_open.png);
+}
+
+button.done {
+    background-image: url(../images/icons/lock_open.png);
+}
+
+button.import {
+    background-image: url(../images/icons/page_lightning.png);
+}
+
+button.delete {
+    background-image: url(../images/icons/page_delete.png);
+}
+
+button.cancel {
+    background-image: url(../images/icons/page_red.png);
+}
+
+.home {
+    background-image: url(../images/icons/house.png);
+}
+
+/*!
+ * Navigation
+ */
+  .main-menu-button .x-btn-mc {
+	text-align: left;
+  }
+
+/*!
+ * Application Tab
+ */
+#application-tab .x-tab-panel-header {
+    padding: 10px 0 2px;
+    background: #000 !important;
+}
+
+/*!
+ * Sticky Notes
+ */
+
+.stickynote {
+    background: #fff29b;
+    margin: 5px;
+}
+
+.stickynote .by {
+    color:#c88818;
+    font-size:13px;
+    text-align:center;
+    padding:2px;
+}
+
+.stickynote .date {
+    background-color:#f9eb8c;
+    color: #c88818;
+    bottom:0;
+    font-size:9px;
+    padding:1px 2px;
+    text-align:right;
+}
+
+.stickynote .message {
+    color:#333;
+    font-size: 12px;
+    padding:0 5px 5px;
+}
