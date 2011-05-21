@@ -13,7 +13,8 @@ class CreateThoughts < ActiveRecord::Migration
       t.string :action_status
       t.datetime :due_date
       t.string :action_type
-
+      t.integer :user_id
+      # t.integer :thought
       t.timestamps
     end
   end

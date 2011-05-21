@@ -13,6 +13,7 @@ class Users::SessionsController < ApplicationController
     logger.debug "Trying to create a new session..." 
     resource = warden.authenticate!(:scope => resource_name, :recall => "#{controller_path}#new")
     #set_flash_message :notice, :signed_in
+    logger.debug "Session Created"
     sign_in_and_redirect(resource_name, resource)
     
     #if (current_user != nil)

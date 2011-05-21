@@ -1,5 +1,6 @@
 class ThoughtsController < ApplicationController
   def index
+    params[:user_id] = current_user.id
     thoughts, row_count = Thought.list(params)
     render :json => {
         :success => true,
@@ -13,7 +14,7 @@ class ThoughtsController < ApplicationController
     parser
 
     thought = Thought.new(params[:thought])
-
+    thought.user_id = current_user.id
     if thought.save
       render :json => {
           :notice => 'Saved',

@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(:version => 20110407072139) do
     t.string   "action_status"
     t.datetime "due_date"
     t.string   "action_type"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

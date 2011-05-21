@@ -4,13 +4,14 @@ class Thought < ActiveRecord::Base
   attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type, :scope
 
 #  extjs_fields :id, :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type
+  belongs_to :user
 
   def self.list(params=nil)
     row_count = 0;
     if(!params[:action_type])
-      thoughts = Thought.where(:status => params[:status]).limit(20)
+      thoughts = Thought.where(:status => params[:status], :user_id => params[:user_id]).limit(20)
     else
-      thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type]).limit(20)
+      thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type], :user_id => params[:user_id]).limit(20)
     end
     row_count = Thought.count
     [thoughts, row_count]
