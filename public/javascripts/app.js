@@ -23,7 +23,7 @@ var tabs = new Ext.ux.VrTabPanel({
   plain:true,
   tabMarginTop: 30,	/* Push the tab strip down 30px from top. If not set, defaults to 15.*/
   bodyStyle: 'padding: 10px',
-  defaults:{
+  defaults: {
     autoScroll: true
   },
   items:[dashboardPanel,inboxPanel,organizePanel,actionPanel]
@@ -52,11 +52,23 @@ var tabs = new Ext.ux.VrTabPanel({
 //  }
 
 var mainPanel = new Ext.Panel({
-  title: 'Project Vision',
+  // title: 'Project Vision',
   layout: 'fit',
-  items: [tabs]
+  items: [tabs],
+  tbar: new Ext.Toolbar({
+    cls: 'x-panel-header',
+    height: 25,
+    items: [
+    '<span style="color:#15428B; font-weight:bold">Project Vision</span>',
+    '->',{
+      text: 'Logout',
+      handler: function() {
+        document.location = 'users/sign_out'
+      }
+    },' ']
+  })
 });
 
-Ext.onReady(function(){
+Ext.onReady( function() {
   mainPanel.render('mainDiv');
 });
