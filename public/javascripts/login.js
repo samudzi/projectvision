@@ -24,7 +24,7 @@ Ext.onReady(function(){
       allowBlank:false
     },{
       fieldLabel:'Password',
-      name:'user[encrypted_password]',
+      name:'user[password]',
       inputType:'password',
       allowBlank:false
     }],
