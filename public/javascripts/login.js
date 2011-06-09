@@ -53,7 +53,7 @@ Ext.onReady(function(){
 
           success:function(){
             console.log("done");
-            window.location = "/home";
+            window.location = "/";
 //            Ext.Msg.alert('Status', 'Login Successful!', function(btn, text){
 //              if (btn == 'ok'){
 //                var redirect = 'test.asp';
