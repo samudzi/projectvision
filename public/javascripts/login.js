@@ -11,7 +11,7 @@ Ext.onReady(function(){
   // Assign various config options as seen.
   var login = new Ext.FormPanel({
     labelWidth:80,
-    url:'/users/sign_in',
+    url:'/users/sign_in.json',
     frame:true,
     title:'ProjectVision - Please Login',
     defaultType:'textfield',
@@ -24,7 +24,7 @@ Ext.onReady(function(){
       allowBlank:false
     },{
       fieldLabel:'Password',
-      name:'user[encrypted_password]',
+      name:'user[password]',
       inputType:'password',
       allowBlank:false
     }],
