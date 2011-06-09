@@ -4,7 +4,7 @@ Pv::Application.routes.draw do
 
   get "users/index"
 
-  root :to => "home#index"
+  root :to => "home#login"
   get "home/index"
   
 
