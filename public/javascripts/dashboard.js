@@ -16,9 +16,12 @@ var userStatsItems = {
   collapsible: true
 };
 
+var upcomingStore = Ext.StoreMgr.get('upcoming_store');
+upcomingStore.load({params:{action_status:'Pending'}});
+
 var miniTodoGrid = new Ext.grid.GridPanel({
   title: 'Upcoming Tasks',
-  store: todoStore,
+  store: upcomingStore,
   height: 300,
   columns: [
   {
@@ -56,10 +59,13 @@ var miniThoughtGrid = new Ext.grid.GridPanel({
   }]
 });
 
+var recentCompletedStore = Ext.StoreMgr.get('recent_completed_store');
+recentCompletedStore.load({params:{action_status:'Completed'}});
+
 // create the Grid
 var miniCompltedTodoGrid = new Ext.grid.GridPanel({
   title: 'Completed Items Log',
-  store: inboxStore,
+  store: recentCompletedStore,
   height: 300,
   columns: [
   {

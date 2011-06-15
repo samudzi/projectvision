@@ -203,9 +203,10 @@ var organizeDetailsPanel = new Ext.FormPanel({
       store: new Ext.data.SimpleStore({
         fields: ['name','value'],
         data: [
+        ['Pending','Pending'],
         ['Active','Active'],
-        ['Inactive','Inactive'],
-        ['Pending','Pending']
+        ['Completed','Completed'],
+        ['Inactive','Inactive']
         ]
       }),
       width: 100,

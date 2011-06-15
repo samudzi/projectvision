@@ -193,9 +193,10 @@ var todoEditPanel = new Ext.form.FormPanel({
     store: new Ext.data.SimpleStore({
       fields: ['name','value'],
       data: [
-      ['Active','Active'],
-      ['Inactive','Inactive'],
-      ['Pending','Pending']
+        ['Pending','Pending'],
+        ['Active','Active'],
+        ['Completed','Completed'],
+        ['Inactive','Inactive']
       ]
     }),
     width: 100,
