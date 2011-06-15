@@ -8,7 +8,7 @@ class HomeController < ApplicationController
 		if(current_user.nil?)
 		  render :action => 'login'
 		else
-		  logger.debug(current_user.id);
+		  #logger.debug(current_user.id);
 		end
   end
 

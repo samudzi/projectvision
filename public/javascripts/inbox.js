@@ -7,7 +7,7 @@ inboxStore.load({
     status: 0
   }
 });
-console.log(inboxStore);
+
 var newThought = false;
 var selectedThoughtID = 0;
 
