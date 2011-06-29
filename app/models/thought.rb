@@ -17,6 +17,9 @@ class Thought < ActiveRecord::Base
         thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type], :action_status => params[:action_status], :user_id => params[:user_id]).limit(20)
       end
     end
+    if(params[:ttype] == "all")
+      thoughts = Thought.where(:user_id => params[:user_id])
+    end
     row_count = Thought.count
     [thoughts, row_count]
   end

@@ -19,6 +19,9 @@ var userStatsItems = {
 var upcomingStore = Ext.StoreMgr.get('upcoming_store');
 upcomingStore.load({params:{action_status:'Pending'}});
 
+var globalStore = Ext.StoreMgr.get('global_thought_store');
+globalStore.load();
+
 var miniTodoGrid = new Ext.grid.GridPanel({
   title: 'Upcoming Tasks',
   store: upcomingStore,
