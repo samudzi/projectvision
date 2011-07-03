@@ -3,25 +3,57 @@
 var userStats = new Ext.FormPanel({
   frame: true,
   title: 'User Stats',
-  //  Width: 220,
-  //  hieght: 200,
+  //Width: 220,
+  //hieght: 200,
   items: []
 });
 
 var userStatsItems = {
   xtype: 'fieldset',
   title: 'User Stats',
-  height: 150,
-  //  width: 400,
+  height: 95,
+  //width: 400,
   collapsible: true
 };
 
-var upcomingStore = Ext.StoreMgr.get('upcoming_store');
-upcomingStore.load({params:{action_status:'Pending'}});
+userStats.add(userStatsItems);
+
+/*var upcomingStore = Ext.StoreMgr.get('upcoming_store');
+//upcomingStore.load({params:{action_status:'Pending'}});
+var upcomingArrayStore = new Ext.data.ArrayStore({
+	 fields: [          
+           {name: 'next', type: 'string'},           
+           {name: 'due_date', type: 'date'}
+        ]
+});
+//, dateFormat: 'n/j h:ia'
+upcomingStore.load({callback : function(records,option,success){
+		
+		var upcomingData = new Array();
+		records.each(function(rec){
+			var action_status = rec.get('action_status');			
+			if(action_status=='Pending')
+			{
+				var tempArray = new Array();			
+				rec.fields.each(function(field) 
+				{ 
+					if(field.name=='next' || field.name=='due_date'){
+						var fieldValue = rec.get(field.name);   
+						tempArray.push(fieldValue);
+					}
+				});
+				upcomingData.push(tempArray);
+			}			
+			
+		});
+		
+		upcomingArrayStore.loadData(upcomingData);
+	}
+});*/
 
 var miniTodoGrid = new Ext.grid.GridPanel({
   title: 'Upcoming Tasks',
-  store: upcomingStore,
+  store: upcomingArrayStore,
   height: 300,
   columns: [
   {
@@ -41,7 +73,7 @@ var miniTodoGrid = new Ext.grid.GridPanel({
 // create the Grid
 var miniThoughtGrid = new Ext.grid.GridPanel({
   title: 'Recent Thoughts',
-  store: inboxStore,
+  store: upcomingArrayStore,
   height: 300,
   columns: [
   {
@@ -83,7 +115,6 @@ var miniCompltedTodoGrid = new Ext.grid.GridPanel({
   }]
 });
 
-userStats.add(userStatsItems);
 
 var quickThoughtPanel = new Ext.FormPanel({
   //  title: 'Details',
@@ -111,7 +142,7 @@ var quickThoughtPanel = new Ext.FormPanel({
 
 var recentTeamActivity = new Ext.grid.GridPanel({
   title: 'Recent team Activities',
-  store: inboxStore,
+  store: inboxArrayStore,
   height: 300,
   columns: [
   {
@@ -146,12 +177,20 @@ var dashboardPanel = new Ext.TabPanel({
       frame:true,
       width:400
     },
-    items: [userStatsItems,quickThoughtPanel,miniTodoGrid,miniThoughtGrid,miniCompltedTodoGrid,recentTeamActivity]
+    items: [userStats,quickThoughtPanel,miniTodoGrid,miniThoughtGrid,miniCompltedTodoGrid,recentTeamActivity]
   },{
     title: 'Community'
   },{
     title: 'Personal Settings'
   }
-  ]
+  ],
+  listeners: {
+          activate: function(tab){
+				if(addWindow) addWindow.hide();
+				if(todoEditWindow) todoEditWindow.hide();
+				if(refEditWindow) refEditWindow.hide();
+				if(remindEditWindow) remindEditWindow.hide();	
+		  }
+  }
 });
 
