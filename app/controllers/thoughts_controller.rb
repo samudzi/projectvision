@@ -1,4 +1,6 @@
 class ThoughtsController < ApplicationController
+ after_filter :log_thought, :only =>[:create, :update, :destroy]
+  
   def index
     params[:user_id] = current_user.id
     thoughts, row_count = Thought.list(params)
@@ -13,13 +15,14 @@ class ThoughtsController < ApplicationController
     params[:actionable] = false;
     parser
 
-    thought = Thought.new(params[:thought])
-    thought.user_id = current_user.id
-    if thought.save
+    @thought = Thought.new(params[:thought])
+    @thought.user_id = current_user.id
+    @success = @thought.save
+    if @success
       render :json => {
           :notice => 'Saved',
           :success => true,
-          :data => thought.id
+          :data => @thought.id
       }
     else
       render :json => { :success => false }
@@ -37,9 +40,10 @@ class ThoughtsController < ApplicationController
 
   def update
     parser
-    thought = Thought.find(params[:id])
+    @thought = Thought.find(params[:id])
 
-    if thought.update_attributes(params[:thought])
+    @success = @thought.update_attributes(params[:thought])
+    if @success
       render :json => { :success => true}
     else
       render :json => { :success => false}
@@ -49,8 +53,8 @@ class ThoughtsController < ApplicationController
   def destroy
     params
     id = params[:id]
-    Thought.destroy(id)
-    
+    @thought= Thought.find(params[:id])
+    @success = Thought.destroy(id)
     render :json => { :success => true }
   end
 
@@ -71,5 +75,13 @@ class ThoughtsController < ApplicationController
 
     logger.debug "=========================="
     logger.debug "parser: #{params}"
+  end
+  
+  def log_thought
+    if @success
+      @action_logs = ActionLog.create :model_id => @thought.id, :model => "Thought", 
+                                    :user_id =>current_user.id, :action_type => action_name,
+                                    :message => current_user.email + " " + action_name + " " + "Thought" + " " + @thought.brief
+    end
   end
 end

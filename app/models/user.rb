@@ -9,4 +9,5 @@ class User < ActiveRecord::Base
   
   has_many :thoughts
   belongs_to :team
+  belongs_to :action_log
 end
