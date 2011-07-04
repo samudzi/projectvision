@@ -18,42 +18,9 @@ var userStatsItems = {
 
 userStats.add(userStatsItems);
 
-/*var upcomingStore = Ext.StoreMgr.get('upcoming_store');
-//upcomingStore.load({params:{action_status:'Pending'}});
-var upcomingArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-           {name: 'next', type: 'string'},           
-           {name: 'due_date', type: 'date'}
-        ]
-});
-//, dateFormat: 'n/j h:ia'
-upcomingStore.load({callback : function(records,option,success){
-		
-		var upcomingData = new Array();
-		records.each(function(rec){
-			var action_status = rec.get('action_status');			
-			if(action_status=='Pending')
-			{
-				var tempArray = new Array();			
-				rec.fields.each(function(field) 
-				{ 
-					if(field.name=='next' || field.name=='due_date'){
-						var fieldValue = rec.get(field.name);   
-						tempArray.push(fieldValue);
-					}
-				});
-				upcomingData.push(tempArray);
-			}			
-			
-		});
-		
-		upcomingArrayStore.loadData(upcomingData);
-	}
-});*/
-
 var miniTodoGrid = new Ext.grid.GridPanel({
   title: 'Upcoming Tasks',
-  store: upcomingArrayStore,
+  store: upcomingJsonStore,
   height: 300,
   columns: [
   {
@@ -73,7 +40,7 @@ var miniTodoGrid = new Ext.grid.GridPanel({
 // create the Grid
 var miniThoughtGrid = new Ext.grid.GridPanel({
   title: 'Recent Thoughts',
-  store: upcomingArrayStore,
+  store: inboxJsonStore,
   height: 300,
   columns: [
   {
@@ -91,13 +58,13 @@ var miniThoughtGrid = new Ext.grid.GridPanel({
   }]
 });
 
-var recentCompletedStore = Ext.StoreMgr.get('recent_completed_store');
-recentCompletedStore.load({params:{action_status:'Completed'}});
+//var recentCompletedStore = Ext.StoreMgr.get('recent_completed_store');
+//recentCompletedStore.load({params:{action_status:'Completed'}});
 
 // create the Grid
 var miniCompltedTodoGrid = new Ext.grid.GridPanel({
   title: 'Completed Items Log',
-  store: recentCompletedStore,
+  store: recentCompletedJsonStore,
   height: 300,
   columns: [
   {
@@ -142,7 +109,7 @@ var quickThoughtPanel = new Ext.FormPanel({
 
 var recentTeamActivity = new Ext.grid.GridPanel({
   title: 'Recent team Activities',
-  store: inboxArrayStore,
+  store: inboxJsonStore,
   height: 300,
   columns: [
   {
@@ -156,8 +123,7 @@ var recentTeamActivity = new Ext.grid.GridPanel({
 
 var dashboardPanel = new Ext.TabPanel({
   title: 'Dashboard',
-                id:'main-panel',
-
+  id:'main-panel',
   xtype: 'tabpanel',
   ref:'dashboard',
   activeTab: 0,

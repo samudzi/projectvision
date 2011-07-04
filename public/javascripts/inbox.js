@@ -86,13 +86,13 @@ function deleteHandler(){
 }
 
 function gridRowClickHandler(addrGrid,rowIndex,e) {
-  detailsPanel.update(inboxArrayStore.getAt(rowIndex).get('detail'));
+  detailsPanel.update(inboxJsonStore.getAt(rowIndex).get('detail'));
 }
 
 
 // create the Grid
 var thoughtGrid = new Ext.grid.GridPanel({
-  store: inboxArrayStore,
+  store: inboxJsonStore,
   columns: [
   {
     id       :'brief',
@@ -152,12 +152,12 @@ var thoughtGrid = new Ext.grid.GridPanel({
         else
           addWindow.setTitle('Edit Thought');
         
-        selectedThoughtID = inboxArrayStore.getAt(rowIndex).data.id;
+        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         addPanel.getForm().reset();
         addPanel.getForm().load({
-          url: '/thoughts/' + inboxArrayStore.getAt(rowIndex).data.id + '.json',
+          url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
-            id: inboxArrayStore.getAt(rowIndex).data.id
+            id: inboxJsonStore.getAt(rowIndex).data.id
           },
           waitMsg: 'Loading...',
           method: 'get',
@@ -175,7 +175,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = inboxArrayStore.getAt(rowIndex).data.id;
+        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
           scope:this,
@@ -185,7 +185,10 @@ var thoughtGrid = new Ext.grid.GridPanel({
           waitMsg:'Deleting...',
           method: 'delete',
           success: function(f,a){
-            globalThoughtStore.reload();
+            globalThoughtStore.reload({callback : function(records,option,success){
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
           }
         });
       //        myData.splice(rowIndex,1);
@@ -201,7 +204,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
       tooltip : 'Move to Organized',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = inboxArrayStore.getAt(rowIndex).data.id;
+        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID+'.json',
           params: {
@@ -211,7 +214,10 @@ var thoughtGrid = new Ext.grid.GridPanel({
           method: 'put',
           waitMsg: 'Saving...',
           success: function(f,a) {
-            globalThoughtStore.reload();
+            globalThoughtStore.reload({callback : function(records,option,success){					
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
             //organizeStore.reload();
           }
         });

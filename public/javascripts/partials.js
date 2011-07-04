@@ -1,22 +1,31 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 
-var inboxArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-		   {name: 'id', type: 'int'},   
-           {name: 'brief', type: 'string'},
-		   {name: 'detail', type: 'string'},     
-           {name: 'category', type: 'string'}       
-        ]
+var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];
+/*var fieldsArray = [ 
+		{name: 'id', type: 'int'},   
+		{name: 'brief', type: 'string'},  
+		{name: 'detail', type: 'string'},  
+		{name: 'category', type: 'string'},  
+		{name: 'type', type: 'string'},  
+		{name: 'status', type: 'string'}, 
+		{name: 'actionable', type: 'string'}, 
+		{name: 'context', type: 'string'}, 
+		{name: 'next', type: 'string'}, 
+		{name: 'outcome', type: 'string'}, 
+		{name: 'action_status', type: 'string'},
+		{name: 'due_date', type: 'date'},
+		{name: 'action_type', type: 'string'},
+		{name: 'scope', type: 'string'}   
+];*/
+var inboxJsonStore = new Ext.data.JsonStore({
+			root: 'inbox',
+			fields: fieldsArray
 });
-var organizeArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-		   {name: 'id', type: 'int'},   
-           {name: 'brief', type: 'string'}, 
-           {name: 'category', type: 'string'},
-		   {name: 'actionable', type: 'string'}   
-        ]
+var organizeJsonStore = new Ext.data.JsonStore({
+			root: 'organize',
+			fields: fieldsArray
 });
-var todoArrayStore = new Ext.data.ArrayStore({
+/*var todoArrayStore = new Ext.data.ArrayStore({
 	 fields: [          
 		   {name: 'id', type: 'int'},   
            {name: 'next', type: 'string'}, 
@@ -25,151 +34,153 @@ var todoArrayStore = new Ext.data.ArrayStore({
 		   {name: 'context', type: 'string'},
 		   {name: 'action_status', type: 'string'}   
         ]
+});*/
+
+var todoJsonStore = new Ext.data.JsonStore({
+			root: 'todo',
+			fields: fieldsArray
 });
-var Grid1Store = new Ext.data.JsonStore({
-    root: 'users',
-    fields: [ 'id', 'name', 'email' ],
-    autoLoad: true,
-    data: { users: [ 
-      { "id": 1, "name":"John Smith", "email":"jsmith@example.com"},
-      { "id": 2, "name":"Anna Smith", "email":"asmith@example.com"},
-      { "id": 3, "name":"Peter Smith", "email":"psmith@example.com"},
-      { "id": 4, "name":"Tom Smith", "email":"tsmith@example.com"},
-      { "id": 5, "name":"Andy Smith", "email":"asmith@example.com"},
-      { "id": 6, "name":"Nick Smith", "email":"nsmith@example.com"}
-    ]}
-  });
-var referenceArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-		   {name: 'id', type: 'int'},   
-           {name: 'detail', type: 'string'}, 
-           {name: 'context', type: 'string'},		   
-		   {name: 'scope', type: 'string'}   
-        ]
+var referenceJsonStore = new Ext.data.JsonStore({
+			root: 'reference',
+			fields: fieldsArray
 });
-var reminderArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-		   {name: 'id', type: 'int'},   
-           {name: 'detail', type: 'string'}, 
-           {name: 'context', type: 'string'},		   
-		   {name: 'scope', type: 'string'}   
-        ]
+var reminderJsonStore = new Ext.data.JsonStore({
+			root: 'reminder',
+			fields: fieldsArray
 });
-var upcomingArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-		   {name: 'id', type: 'int'},   
-           {name: 'next', type: 'string'},           
-           {name: 'due_date', type: 'date'}
-        ]
+var upcomingJsonStore = new Ext.data.JsonStore({
+			root: 'upcoming',
+			fields: fieldsArray
 });
+var recentCompletedJsonStore = new Ext.data.JsonStore({
+			root: 'recent_completed',
+			fields: fieldsArray
+});
+
 function globalThoughtStoreCallbackFn(records){
-	var inboxData = new Array();
-		var organizeData = new Array();
-		var todoData = new Array();
-		var upcomingData = new Array();
-		var rowCount=0;
+	
+		var tempJsonInbox = new Array();
+		var finalJsonInbox = [];	
+		var tempJsonOrganize = new Array();
+		var finalJsonOrganize = [];		
+		var tempJsonTodo = new Array();
+		var finalJsonTodo = [];		
+		var tempJsonReference = new Array();
+		var finalJsonReference = [];		
+		var tempJsonReminder = new Array();
+		var finalJsonReminder = [];			
+		var tempJsonUpcoming = new Array();
+		var finalJsonUpcoming = [];	
+		var tempJsonRecentCompleted = new Array();
+		var finalJsonRecentCompleted = [];	
 		records.each(function(rec){
 			var action_status = rec.get('action_status');
 			var action_type = rec.get('action_type');
 			var status = rec.get('status');
-			rowCount++;
+			
 			if(status==0) // inbox store
 			{
-				var tempArray = new Array();			
+				var tempArray = [];
 				rec.fields.each(function(field) 
 				{ 
-					if(field.name=='id' || field.name=='brief' || field.name=='detail' || field.name=='category'){
-						var fieldValue = rec.get(field.name);   
-						tempArray.push(fieldValue);
-					}
-				});
-				inboxData.push(tempArray);
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonInbox.push(tempArray);	
 			}	
 			
 			if(status==1) // organize store
 			{
-				var tempArray = new Array();			
+				var tempArray = [];
 				rec.fields.each(function(field) 
 				{ 
-					if(field.name=='id' || field.name=='brief' || field.name=='category' || field.name=='actionable'){
-						var fieldValue = rec.get(field.name);   
-						tempArray.push(fieldValue);
-					}
-				});
-				organizeData.push(tempArray);
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonOrganize.push(tempArray);	
 			}	
 			
 			if(status==2 && action_type=='1') // todo store
 			{
-				var tempJsonString="{todo:[";
-				var fieldCount=0;	
+				var tempArray = [];
 				rec.fields.each(function(field) 
 				{ 
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
 					
-					//if(field.name=='id' || field.name=='next' || field.name=='outcome' || field.name=='due_date' || field.name=='context' || field.name=='action_status'){
-						
-						var fieldValue = rec.get(field.name); 
-						fieldCount++;
-						if(fieldCount == 16)
-							tempJsonString += "{"+field.name+":"+fieldValue+"";	
-						else
-							tempJsonString += "{"+field.name+":"+fieldValue+",";	
-					//}
-				});
-				
-				if(rowCount == records.length)
-					//todoData.push(tempArray);
-				else
-					//todoData.push(tempArray);
+				});				
+				tempJsonTodo.push(tempArray);						
 			}	
 			
 			if(status==2 && action_type=='2') // reference store
 			{
-				var tempArray = new Array();			
+				var tempArray = [];
 				rec.fields.each(function(field) 
 				{ 
-					if(field.name=='id' || field.name=='detail' || field.name=='context' || field.name=='scope'){
-						var fieldValue = rec.get(field.name);   
-						tempArray.push(fieldValue);
-					}
-				});
-				referenceData.push(tempArray);
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonReference.push(tempArray);
 			}	
 			
 			if(status==2 && action_type=='3') // reminder store
 			{
-				var tempArray = new Array();			
+				var tempArray = [];
 				rec.fields.each(function(field) 
 				{ 
-					if(field.name=='id' || field.name=='detail' || field.name=='context' || field.name=='due_date'){
-						var fieldValue = rec.get(field.name);   
-						tempArray.push(fieldValue);
-					}
-				});
-				reminderData.push(tempArray);
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonReminder.push(tempArray);
 			}	
 			
 			if(status==2 && action_status=='Pending' && action_type=='1') // upcoming store
 			{
-				var tempArray = new Array();			
+				var tempArray = [];
 				rec.fields.each(function(field) 
 				{ 
-					if(field.name=='id' || field.name=='next' || field.name=='due_date'){
-						var fieldValue = rec.get(field.name);   
-						tempArray.push(fieldValue);
-					}
-				});
-				upcomingData.push(tempArray);
-			}			
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonUpcoming.push(tempArray);
+			}	
+			
+			if(status==2 && action_status=='Completed' && action_type=='1') // recentCompleted store
+			{
+				var tempArray = [];
+				rec.fields.each(function(field) 
+				{ 
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonRecentCompleted.push(tempArray);
+			}		
 			
 		});		// records.each
-		inboxArrayStore.loadData(inboxData);
-		organizeArrayStore.loadData(organizeData);
-		todoArrayStore.loadData(todoData);
-		referenceArrayStore.loadData(referenceData);
-		reminderArrayStore.loadData(reminderData);
-		upcomingArrayStore.loadData(upcomingData);
+		
+		finalJsonInbox["inbox"] = tempJsonInbox;
+		inboxJsonStore.loadData(finalJsonInbox,false);
+		finalJsonOrganize["organize"] = tempJsonOrganize;
+		organizeJsonStore.loadData(finalJsonOrganize,false);
+		finalJsonTodo["todo"] = tempJsonTodo;
+		todoJsonStore.loadData(finalJsonTodo,false);
+		finalJsonReference["reference"] = tempJsonReference;
+		referenceJsonStore.loadData(finalJsonReference,false);
+		finalJsonReminder["reminder"] = tempJsonReminder;
+		reminderJsonStore.loadData(finalJsonReminder,false);		
+		finalJsonUpcoming["upcoming"] = tempJsonUpcoming;
+		upcomingJsonStore.loadData(finalJsonUpcoming,false);
+		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
+		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
+		
 }  // globalThoughtStoreCallbackFn
+
 
 globalThoughtStore.load({callback : function(records,option,success){
 		globalThoughtStoreCallbackFn(records);		
@@ -191,7 +202,10 @@ function thoughtSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
         //inboxStore.reload();
-		globalThoughtStore.reload();
+		globalThoughtStore.reload({callback : function(records,option,success){
+				globalThoughtStoreCallbackFn(records);		
+			}
+		});
         newThought = false;
       }
     });
@@ -207,7 +221,10 @@ function thoughtSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
         //inboxStore.reload();
-		globalThoughtStore.reload();
+		globalThoughtStore.reload({callback : function(records,option,success){
+				globalThoughtStoreCallbackFn(records);		
+			}
+		});
       }
     });
   }
@@ -227,7 +244,10 @@ function todoSaveHandler()
     waitMsg: 'Saving...',
     success: function(f,a) {
       //todoStore.reload();
-	  globalThoughtStore.reload();
+	  globalThoughtStore.reload({callback : function(records,option,success){
+				globalThoughtStoreCallbackFn(records);		
+			}
+		});
     }
   });
   todoEditWindow.hide();
@@ -244,7 +264,10 @@ function refSaveHandler()
     waitMsg: 'Saving...',
     success: function(f,a) {
       //referenceStore.reload();
-	  globalThoughtStore.reload();
+	  globalThoughtStore.reload({callback : function(records,option,success){
+				globalThoughtStoreCallbackFn(records);		
+			}
+		});
     }
   });
   refEditWindow.hide();
@@ -261,7 +284,10 @@ function remindSaveHandler()
     waitMsg: 'Saving...',
     success: function(f,a) {
       //reminderStore.reload();
-	  globalThoughtStore.reload();
+	  globalThoughtStore.reload({callback : function(records,option,success){
+				globalThoughtStoreCallbackFn(records);		
+			}
+		});
     }
   });
   remindEditWindow.hide();

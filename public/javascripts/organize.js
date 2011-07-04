@@ -6,29 +6,28 @@ var selectedOrganizeID = 0;
 
 
 function organizeGridRowClickHandler(addrGrid,rowIndex,e) {
-  currentOrganizeIndex = rowIndex;
-  selectedOrganizeID = organizeArrayStore.getAt(rowIndex).data.id;
-  organizeDetailsPanel.getForm().reset();
-  organizeDetailsPanel.getForm().load({
-    url: '/thoughts/' + organizeArrayStore.getAt(rowIndex).data.id + '.json',
-    params: {
-      id: organizeArrayStore.getAt(rowIndex).data.id
-    },
-    waitMsg: 'Loading...',
-    method: 'get',
-    success: function(f,a){
-
-    }
-  });
-  if(organizeArrayStore.getAt(rowIndex).data.actionable == true)
-    organizeDetailsPanel.todo_options.show();
-  organizeDetailsPanel.enable();
-
+	currentOrganizeIndex = rowIndex;
+	selectedOrganizeID = organizeJsonStore.getAt(rowIndex).data.id;
+	organizeDetailsPanel.getForm().reset();
+	/*organizeDetailsPanel.getForm().load({
+		url: '/thoughts/' + organizeJsonStore.getAt(rowIndex).data.id + '.json',
+		params: {
+		  id: organizeJsonStore.getAt(rowIndex).data.id
+		},
+		waitMsg: 'Loading...',
+		method: 'get',
+		success: function(f,a){
+		
+		}
+	});*/
+	if(organizeJsonStore.getAt(rowIndex).data.actionable == true)
+	organizeDetailsPanel.todo_options.show();
+	organizeDetailsPanel.enable();
 }
 
 // create the Grid
 var organizeGrid = new Ext.grid.GridPanel({
-  store: organizeArrayStore,
+  store: organizeJsonStore,
   columns: [
   {
     id       :'brief',
@@ -52,7 +51,7 @@ var organizeGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {        
-        selectedThoughtID = organizeArrayStore.getAt(rowIndex).data.id;
+        selectedThoughtID = organizeJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
           scope:this,
@@ -63,7 +62,10 @@ var organizeGrid = new Ext.grid.GridPanel({
           method: 'delete',
           success: function(f,a){
             //organizeStore.reload();
-			globalThoughtStore.reload();
+			globalThoughtStore.reload({callback : function(records,option,success){					
+						globalThoughtStoreCallbackFn(records);		
+					}
+				});
             organizeDetailsPanel.disable();
           }
         });
@@ -248,7 +250,10 @@ var organizeDetailsPanel = new Ext.FormPanel({
 				organizeDetailsPanel.disable();
               //organizeStore.reload();
               //todoStore.reload();
-			  globalThoughtStore.reload();
+			  globalThoughtStore.reload({callback : function(records,option,success){					
+						globalThoughtStoreCallbackFn(records);		
+					}
+				});
 			  
             }
           });
@@ -271,7 +276,10 @@ var organizeDetailsPanel = new Ext.FormPanel({
 				organizeDetailsPanel.disable();
               //organizeStore.reload();
               //referenceStore.reload();
-			  globalThoughtStore.reload();
+			 globalThoughtStore.reload({callback : function(records,option,success){					
+						globalThoughtStoreCallbackFn(records);		
+					}
+				});
             }
           });
       }
@@ -293,7 +301,10 @@ var organizeDetailsPanel = new Ext.FormPanel({
 				organizeDetailsPanel.disable();
              // organizeStore.reload();
               //reminderStore.reload();
-			  globalThoughtStore.reload();
+			  globalThoughtStore.reload({callback : function(records,option,success){					
+						globalThoughtStoreCallbackFn(records);		
+					}
+				});
             }
           });
       }
