@@ -1,7 +1,7 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 
-var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];
-/*var fieldsArray = [ 
+/*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
+var fieldsArray = [ 
 		{name: 'id', type: 'int'},   
 		{name: 'brief', type: 'string'},  
 		{name: 'detail', type: 'string'},  
@@ -16,7 +16,7 @@ var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actio
 		{name: 'due_date', type: 'date'},
 		{name: 'action_type', type: 'string'},
 		{name: 'scope', type: 'string'}   
-];*/
+];
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
 			fields: fieldsArray
@@ -57,6 +57,22 @@ var recentCompletedJsonStore = new Ext.data.JsonStore({
 			fields: fieldsArray
 });
 
+var todoStatusComboStore = new Ext.data.SimpleStore({
+	id: 0,
+	fields: ['action_status', 'action_status'],
+	data : [
+		['Pending', 'Pending'],
+		['Active', 'Active'],
+		['Completed', 'Completed'],		
+		['Inactive', 'Inactive']
+	]
+});
+
+/*var todoStatusComboStore = new Ext.data.JsonStore({
+	root: 'actionstatus',
+	fields: ['value', 'action_status']
+});*/
+
 function globalThoughtStoreCallbackFn(records){
 	
 		var tempJsonInbox = new Array();
@@ -72,11 +88,16 @@ function globalThoughtStoreCallbackFn(records){
 		var tempJsonUpcoming = new Array();
 		var finalJsonUpcoming = [];	
 		var tempJsonRecentCompleted = new Array();
-		var finalJsonRecentCompleted = [];	
+		var finalJsonRecentCompleted = [];
+		/*var todoStatusComboStoreData = new Array();
+		var todoStatusComboStoreTemp = new Array();*/
 		records.each(function(rec){
 			var action_status = rec.get('action_status');
 			var action_type = rec.get('action_type');
 			var status = rec.get('status');
+			
+			/*todoStatusComboStoreTemp['value'] = action_status;
+			todoStatusComboStoreTemp['action_status'] = action_status;*/
 			
 			if(status==0) // inbox store
 			{
@@ -163,7 +184,8 @@ function globalThoughtStoreCallbackFn(records){
 			}		
 			
 		});		// records.each
-		
+		/*todoStatusComboStoreData["actionstatus"] = todoStatusComboStoreTemp;
+		todoStatusComboStore.loadData(todoStatusComboStoreData,false); */
 		finalJsonInbox["inbox"] = tempJsonInbox;
 		inboxJsonStore.loadData(finalJsonInbox,false);
 		finalJsonOrganize["organize"] = tempJsonOrganize;
@@ -178,7 +200,7 @@ function globalThoughtStoreCallbackFn(records){
 		upcomingJsonStore.loadData(finalJsonUpcoming,false);
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
-		
+				
 }  // globalThoughtStoreCallbackFn
 
 

@@ -105,9 +105,23 @@ var reminderData = [
 //
 //});
 
+//var rowIndexArray = new Array();
 // create the Grid
-var todoGrid = new Ext.grid.GridPanel({
+var todoGrid = new Ext.grid.EditorGridPanel({
   store: todoJsonStore,
+  frame: true,
+  tbar:[{
+		text:'Save Record',
+		tooltip:'Update the row',
+		//iconCls:'edit',
+		handler:function(){
+			//var todoStore_temp = todoGrid.getStore();
+		}
+  }],
+  /*selectionchange : function (sm) {
+		todoGrid.stopEditing();
+		todoGrid.store.save();
+  },*/
   columns: [
   {
     id       :'brief',
@@ -126,7 +140,8 @@ var todoGrid = new Ext.grid.GridPanel({
     header   : 'Due Date',
     width    : 75,
     //    sortable : true,
-    dataIndex: 'due_date'
+    dataIndex: 'due_date',
+	renderer: function(date) { return date.format("Y-m-d"); }
   },
   {
     header   : 'Context',
@@ -138,7 +153,23 @@ var todoGrid = new Ext.grid.GridPanel({
     header   : 'Status',
     width    : 75,
     //    sortable : true,
-    dataIndex: 'action_status'
+    dataIndex: 'action_status',	
+	editor: new Ext.form.ComboBox({
+	   /*typeAhead: true,
+	    triggerAction: 'all',
+	    transform:'action_status',
+	    lazyRender: true,
+	    listClass: 'x-combo-list-small'*/
+	    store: todoStatusComboStore,
+		mode: 'local',
+		displayField:'action_status',
+		valueField: 'action_status',		
+		typeAhead: false,
+		triggerAction: 'all',
+		lazyRender: true,
+		emptyText: 'Select status'
+
+	})
   },
   {
     xtype: 'actioncolumn',
@@ -205,27 +236,33 @@ var todoGrid = new Ext.grid.GridPanel({
     }]
   }
   ],
+  clicksToEdit: 1,
   viewConfig: {
-    forceFit: true,
-    showPreview: true, // custom property
+    //forceFit: true,
+    //showPreview: true, // custom property
     //enableRowBody: true, // required to create a second, full-width row to show expanded Record data
-    getRowClass: function(record, rowIndex, rp, ds){ // rp = rowParams
-		//alert(record.data.due_date);
+    getRowClass: function(record, rowIndex, rp, store){ // rp = rowParams
+		var due_date = record.data.due_date;
+		due_date = due_date.format("Y-m-d");		
 		var now = new Date();
-		var today = now.format("Y-m-d");		
-		//alert("today"+today);
-        /*if(this.showPreview){
-            rp.body = '<p>'+record.data.excerpt+'</p>';
-            return 'x-grid3-row-expanded';
-        }
-        return 'x-grid3-row-collapsed';*/
-		
+		var today = now.format("Y-m-d");	
+		if(due_date < today)
+		{			
+			//rowIndexArray.push(rowIndex);			
+		}		
+       if(due_date < today){          
+          return 'x-grid3-row-red';
+       }
+       //return 'x-grid3-row-collapsed';		
     }
   },
   listeners: {
-    //rowclick: {
-      //fn: gridRowClickHandler
-    //}
+		viewready : function(grid){				
+			/*for(var i=0;i<rowIndexArray.length;i++)
+			{
+		  		Ext.fly(grid.getView().getRow(rowIndexArray[i])).addClass('x-grid3-row-red');	
+			}*/
+    	}
   },
   region:'center',
   stripeRows: true,
@@ -237,6 +274,10 @@ var todoGrid = new Ext.grid.GridPanel({
   stateful: true,
   stateId: 'grid'
 });
+/*todoJsonStore.on('load', function(){
+	 var todoview = todoGrid.getView();		
+	 todoview.refresh();
+});*/
 
 // create the Grid
 var referenceGrid = new Ext.grid.GridPanel({
@@ -506,3 +547,15 @@ var actionPanel = new Ext.TabPanel({
   }
 });
 
+/*var combotest = new Ext.form.ComboBox({	   
+	   name: 'combotest',
+	    store: todoStatusComboStore,
+		displayField:'action_status',
+		valueField: 'action_status',		
+		typeAhead: false,
+		triggerAction: 'all',
+		lazyRender: true,
+		emptyText: 'Select status',
+		renderTo: 'combotest'
+
+	});*/
