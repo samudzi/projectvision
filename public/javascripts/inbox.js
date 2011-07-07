@@ -1,13 +1,13 @@
 //Javascript for Inbox Tab
 
 
-var inboxStore = Ext.StoreMgr.get('inbox_store');
+/*var inboxStore = Ext.StoreMgr.get('inbox_store');
 inboxStore.load({
   params: {
     status: 0
   }
 });
-
+*/
 var newThought = false;
 var selectedThoughtID = 0;
 
@@ -86,13 +86,13 @@ function deleteHandler(){
 }
 
 function gridRowClickHandler(addrGrid,rowIndex,e) {
-  detailsPanel.update(inboxStore.getAt(rowIndex).get('detail'));
+  detailsPanel.update(inboxJsonStore.getAt(rowIndex).get('detail'));
 }
 
 
 // create the Grid
 var thoughtGrid = new Ext.grid.GridPanel({
-  store: inboxStore,
+  store: inboxJsonStore,
   columns: [
   {
     id       :'brief',
@@ -152,12 +152,12 @@ var thoughtGrid = new Ext.grid.GridPanel({
         else
           addWindow.setTitle('Edit Thought');
         
-        selectedThoughtID = inboxStore.getAt(rowIndex).data.id;
+        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         addPanel.getForm().reset();
         addPanel.getForm().load({
-          url: '/thoughts/' + inboxStore.getAt(rowIndex).data.id + '.json',
+          url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
-            id: inboxStore.getAt(rowIndex).data.id
+            id: inboxJsonStore.getAt(rowIndex).data.id
           },
           waitMsg: 'Loading...',
           method: 'get',
@@ -175,7 +175,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = inboxStore.getAt(rowIndex).data.id;
+        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
           scope:this,
@@ -185,7 +185,10 @@ var thoughtGrid = new Ext.grid.GridPanel({
           waitMsg:'Deleting...',
           method: 'delete',
           success: function(f,a){
-            inboxStore.reload();
+            globalThoughtStore.reload({callback : function(records,option,success){
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
           }
         });
       //        myData.splice(rowIndex,1);
@@ -201,7 +204,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
       tooltip : 'Move to Organized',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = inboxStore.getAt(rowIndex).data.id;
+        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID+'.json',
           params: {
@@ -211,8 +214,11 @@ var thoughtGrid = new Ext.grid.GridPanel({
           method: 'put',
           waitMsg: 'Saving...',
           success: function(f,a) {
-            inboxStore.reload();
-            organizeStore.reload();
+            globalThoughtStore.reload({callback : function(records,option,success){					
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
+            //organizeStore.reload();
           }
         });
       //        Ext.Ajax.request({
@@ -286,6 +292,14 @@ var inboxPanel = new Ext.TabPanel({
   //        activate: handleActivate
   }
   }
-  ]
+  ],
+  listeners: {
+          activate: function(tab){
+				if(addWindow) addWindow.hide();
+				if(todoEditWindow) todoEditWindow.hide();
+				if(refEditWindow) refEditWindow.hide();
+				if(remindEditWindow) remindEditWindow.hide();				
+		  }
+  }
 });
 

@@ -70,5 +70,6 @@ var mainPanel = new Ext.Panel({
 });
 
 Ext.onReady( function() {
+	Ext.QuickTips.init(); 	
   mainPanel.render('mainDiv');
 });

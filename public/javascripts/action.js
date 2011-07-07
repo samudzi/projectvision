@@ -18,20 +18,6 @@ var reminderData = [
 ['Another thing on Friday','Beer','General','public','0','true','Agricultural','Farm','Food','Active','01/01/2011','todo'],
 ];
 
-var todoStore = Ext.StoreMgr.get('todo_store');
-todoStore.load();
-
-var referenceStore = Ext.StoreMgr.get('reference_store');
-referenceStore.load();
-
-var reminderStore = Ext.StoreMgr.get('reminder_store');
-reminderStore.load();
-
-// manually load local data
-//todoStore.loadData(todoData);
-//referenceStore.loadData(referenceData);
-//reminderStore.loadData(reminderData);
-//
 //var todoEditPanel = new Ext.form.FormPanel({
 //  labelWidth:80,
 //  labelAlign: 'top',
@@ -119,9 +105,23 @@ reminderStore.load();
 //
 //});
 
+//var rowIndexArray = new Array();
 // create the Grid
-var todoGrid = new Ext.grid.GridPanel({
-  store: todoStore,
+var todoGrid = new Ext.grid.EditorGridPanel({
+  store: todoJsonStore,
+  frame: true,
+  tbar:[{
+		text:'Save Record',
+		tooltip:'Update the row',
+		//iconCls:'edit',
+		handler:function(){
+			//var todoStore_temp = todoGrid.getStore();
+		}
+  }],
+  /*selectionchange : function (sm) {
+		todoGrid.stopEditing();
+		todoGrid.store.save();
+  },*/
   columns: [
   {
     id       :'brief',
@@ -140,7 +140,8 @@ var todoGrid = new Ext.grid.GridPanel({
     header   : 'Due Date',
     width    : 75,
     //    sortable : true,
-    dataIndex: 'due_date'
+    dataIndex: 'due_date',
+	renderer: function(date) { return date.format("Y-m-d"); }
   },
   {
     header   : 'Context',
@@ -152,7 +153,23 @@ var todoGrid = new Ext.grid.GridPanel({
     header   : 'Status',
     width    : 75,
     //    sortable : true,
-    dataIndex: 'action_status'
+    dataIndex: 'action_status',	
+	editor: new Ext.form.ComboBox({
+	   /*typeAhead: true,
+	    triggerAction: 'all',
+	    transform:'action_status',
+	    lazyRender: true,
+	    listClass: 'x-combo-list-small'*/
+	    store: todoStatusComboStore,
+		mode: 'local',
+		displayField:'action_status',
+		valueField: 'action_status',		
+		typeAhead: false,
+		triggerAction: 'all',
+		lazyRender: true,
+		emptyText: 'Select status'
+
+	})
   },
   {
     xtype: 'actioncolumn',
@@ -165,7 +182,7 @@ var todoGrid = new Ext.grid.GridPanel({
           title: 'Edit Thought',
           closeAction:'hide',
           width: 380,
-          height: 700,
+          height: 580,
           layout: 'fit',
           plain:true,
           bodyStyle:'padding:5px;',
@@ -175,12 +192,12 @@ var todoGrid = new Ext.grid.GridPanel({
         });
         else
           todoEditWindow.setTitle("Edit To Do");
-        selectedThoughtID = todoStore.getAt(rowIndex).data.id;
+        selectedThoughtID = todoJsonStore.getAt(rowIndex).data.id;
         todoEditPanel.getForm().reset();
         todoEditPanel.getForm().load({
-          url: '/thoughts/' + todoStore.getAt(rowIndex).data.id + '.json',
+          url: '/thoughts/' + todoJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
-            id: todoStore.getAt(rowIndex).data.id
+            id: todoJsonStore.getAt(rowIndex).data.id
           },
           waitMsg: 'Loading...',
           method: 'get',
@@ -197,7 +214,8 @@ var todoGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = todoStore.getAt(rowIndex).data.id;
+		  
+		  selectedThoughtID = todoJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
           scope:this,
@@ -207,17 +225,44 @@ var todoGrid = new Ext.grid.GridPanel({
           waitMsg:'Deleting...',
           method: 'delete',
           success: function(f,a){
-            todoStore.reload();
+            //todoStore.reload();
+			globalThoughtStore.reload({callback : function(records,option,success){
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
           }
         });
       }
     }]
   }
   ],
-  listeners: {
-    rowclick: {
-      fn: gridRowClickHandler
+  clicksToEdit: 1,
+  viewConfig: {
+    //forceFit: true,
+    //showPreview: true, // custom property
+    //enableRowBody: true, // required to create a second, full-width row to show expanded Record data
+    getRowClass: function(record, rowIndex, rp, store){ // rp = rowParams
+		var due_date = record.data.due_date;
+		due_date = due_date.format("Y-m-d");		
+		var now = new Date();
+		var today = now.format("Y-m-d");	
+		if(due_date < today)
+		{			
+			//rowIndexArray.push(rowIndex);			
+		}		
+       if(due_date < today){          
+          return 'x-grid3-row-red';
+       }
+       //return 'x-grid3-row-collapsed';		
     }
+  },
+  listeners: {
+		viewready : function(grid){				
+			/*for(var i=0;i<rowIndexArray.length;i++)
+			{
+		  		Ext.fly(grid.getView().getRow(rowIndexArray[i])).addClass('x-grid3-row-red');	
+			}*/
+    	}
   },
   region:'center',
   stripeRows: true,
@@ -229,10 +274,14 @@ var todoGrid = new Ext.grid.GridPanel({
   stateful: true,
   stateId: 'grid'
 });
+/*todoJsonStore.on('load', function(){
+	 var todoview = todoGrid.getView();		
+	 todoview.refresh();
+});*/
 
 // create the Grid
 var referenceGrid = new Ext.grid.GridPanel({
-  store: referenceStore,
+  store: referenceJsonStore,
   columns: [
   {
     id       : 'ref_detail',
@@ -274,12 +323,12 @@ var referenceGrid = new Ext.grid.GridPanel({
         });
         else
           refEditWindow.setTitle("Edit Reference");
-        selectedThoughtID = referenceStore.getAt(rowIndex).data.id;
+        selectedThoughtID = referenceJsonStore.getAt(rowIndex).data.id;
         refEditPanel.getForm().reset();
         refEditPanel.getForm().load({
-          url: '/thoughts/' + referenceStore.getAt(rowIndex).data.id + '.json',
+          url: '/thoughts/' + referenceJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
-            id: referenceStore.getAt(rowIndex).data.id
+            id: referenceJsonStore.getAt(rowIndex).data.id
           },
           waitMsg: 'Loading...',
           method: 'get',
@@ -296,7 +345,7 @@ var referenceGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = referenceStore.getAt(rowIndex).data.id;
+        selectedThoughtID = referenceJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
           scope:this,
@@ -306,7 +355,12 @@ var referenceGrid = new Ext.grid.GridPanel({
           waitMsg:'Deleting...',
           method: 'delete',
           success: function(f,a){
-            referenceStore.reload();
+            //referenceStore.reload();
+			globalThoughtStore.reload({callback : function(records,option,success){
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
+			
           }
         });
       }
@@ -314,9 +368,9 @@ var referenceGrid = new Ext.grid.GridPanel({
   }
   ],
   listeners: {
-    rowclick: {
-      fn: gridRowClickHandler
-    }
+    //rowclick: {
+      //fn: gridRowClickHandler
+    //}
   },
   region:'center',
   stripeRows: true,
@@ -331,7 +385,7 @@ var referenceGrid = new Ext.grid.GridPanel({
 
 // create the Grid
 var reminderGrid = new Ext.grid.GridPanel({
-  store: reminderStore,
+  store: reminderJsonStore,
   columns: [
   {
     id       : 'remind_details',
@@ -379,12 +433,12 @@ var reminderGrid = new Ext.grid.GridPanel({
         });
         else
           remindEditWindow.setTitle("Edit Reminder");
-        selectedThoughtID = reminderStore.getAt(rowIndex).data.id;
+        selectedThoughtID = reminderJsonStore.getAt(rowIndex).data.id;
         remindEditPanel.getForm().reset();
         remindEditPanel.getForm().load({
-          url: '/thoughts/' + reminderStore.getAt(rowIndex).data.id + '.json',
+          url: '/thoughts/' + reminderJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
-            id: reminderStore.getAt(rowIndex).data.id
+            id: reminderJsonStore.getAt(rowIndex).data.id
           },
           waitMsg: 'Loading...',
           method: 'get',
@@ -401,17 +455,22 @@ var reminderGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = reminderStore.getAt(rowIndex).data.id;
+        selectedThoughtID = reminderJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
-          scope:this,
+          scope: this,
           params: {
             id: selectedThoughtID
           },
-          waitMsg:'Deleting...',
+          waitMsg: 'Deleting...',
           method: 'delete',
           success: function(f,a){
-            reminderStore.reload();
+            //reminderStore.reload();
+			globalThoughtStore.reload({callback : function(records,option,success){
+					globalThoughtStoreCallbackFn(records);		
+				}
+			});
+			
           }
         });
       }
@@ -419,9 +478,9 @@ var reminderGrid = new Ext.grid.GridPanel({
   }
   ],
   listeners: {
-    rowclick: {
-      fn: gridRowClickHandler
-    }
+    //rowclick: {
+     // fn: gridRowClickHandler
+    //}
   },
     viewConfig: {
         forceFit: true,
@@ -477,6 +536,26 @@ var actionPanel = new Ext.TabPanel({
     ref:'reminders_tabs',
     layout: 'border',
     items: [reminderGrid]
-  }]
+  }],
+  listeners: {
+          activate: function(tab){
+				if(addWindow) addWindow.hide();
+				if(todoEditWindow) todoEditWindow.hide();
+				if(refEditWindow) refEditWindow.hide();
+				if(remindEditWindow) remindEditWindow.hide();	
+		  }
+  }
 });
 
+/*var combotest = new Ext.form.ComboBox({	   
+	   name: 'combotest',
+	    store: todoStatusComboStore,
+		displayField:'action_status',
+		valueField: 'action_status',		
+		typeAhead: false,
+		triggerAction: 'all',
+		lazyRender: true,
+		emptyText: 'Select status',
+		renderTo: 'combotest'
+
+	});*/
