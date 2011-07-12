@@ -209,15 +209,14 @@ var thoughtGrid = new Ext.grid.GridPanel({
           url: '/thoughts/'+selectedThoughtID+'.json',
           params: {
             id: selectedThoughtID,
-            status: 1
+            "thought[status]": "1"
           },
           method: 'put',
           waitMsg: 'Saving...',
           success: function(f,a) {
             globalThoughtStore.reload({callback : function(records,option,success){					
-					globalThoughtStoreCallbackFn(records);		
-				}
-			});
+					    globalThoughtStoreCallbackFn(records);}
+			      });
             //organizeStore.reload();
           }
         });

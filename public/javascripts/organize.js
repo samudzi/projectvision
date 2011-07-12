@@ -113,11 +113,11 @@ var organizeDetailsPanel = new Ext.FormPanel({
     items: [{
       xtype: 'radiogroup',
       fieldLabel: 'Is this thought actionable?',
-      name: 'actionable',
+      name: 'thought[actionable]',
       ref: '../actionable',
       items: [{
         boxLabel: 'Yes',
-        name: 'actionable',
+        name: 'thought[actionable]',
         inputValue: 'true',
         listeners: {
           check : function(){
@@ -137,7 +137,7 @@ var organizeDetailsPanel = new Ext.FormPanel({
         }
       },{
         boxLabel: 'No',
-        name: 'actionable',
+        name: 'thought[actionable]',
         inputValue: 'false',
         checked: 'true'
       }]
@@ -148,7 +148,7 @@ var organizeDetailsPanel = new Ext.FormPanel({
       typeAhead: true,
       forceSelection: true,
       fieldLabel: 'Context',
-      name: 'context',
+      name: 'thought[context]',
       triggerAction: 'all',
       displayField: 'name',
       valueField: 'value',
@@ -167,8 +167,8 @@ var organizeDetailsPanel = new Ext.FormPanel({
       xtype: 'datefield',
       fieldLabel: 'Due Date',
       ref:'../due_date',
-      name: 'due_date',
-      format: 'd/m/Y',
+      name: 'thought[due_date]',
+      format: 'Y/m/d',
       editable: false
     }]
   },
@@ -185,11 +185,11 @@ var organizeDetailsPanel = new Ext.FormPanel({
     },
     items: [{
       fieldLabel:"What needs to happen next?",
-      name:'next',
+      name:'thought[next]',
       ref:'next'
     },{
       fieldLabel:"Briefly, descript the successful outcome",
-      name:'outcome',
+      name:'thought[outcome]',
       ref:'outcome'
     },{
       xtype: 'combo',
@@ -198,7 +198,7 @@ var organizeDetailsPanel = new Ext.FormPanel({
       typeAhead: true,
       forceSelection: true,
       fieldLabel: 'Action Status',
-      name: 'action_status',
+      name: 'thought[action_status]',
       triggerAction: 'all',
       displayField: 'name',
       valueField: 'value',
@@ -240,8 +240,8 @@ var organizeDetailsPanel = new Ext.FormPanel({
             url: '/thoughts/'+selectedOrganizeID+'.json',
             params: {
               id: selectedOrganizeID,
-              status: 2,
-              action_type: 1
+              "thought[status]": "2",
+              "thought[action_type]": "1"
             },
             method: 'put',
             waitMsg: 'Saving...',
@@ -266,8 +266,8 @@ var organizeDetailsPanel = new Ext.FormPanel({
             url: '/thoughts/'+selectedOrganizeID+'.json',
             params: {
               id: selectedOrganizeID,
-              status: 2,
-              action_type: 2
+              "thought[status]": "2",
+              "thought[action_type]": "2"
             },
             method: 'put',
             waitMsg: 'Saving...',
@@ -291,8 +291,8 @@ var organizeDetailsPanel = new Ext.FormPanel({
             url: '/thoughts/'+selectedOrganizeID+'.json',
             params: {
               id: selectedOrganizeID,
-              status: 2,
-              action_type: 3
+              "thought[status]": "2",
+              "thought[action_type]": "3"
             },
             method: 'put',
             waitMsg: 'Saving...',
