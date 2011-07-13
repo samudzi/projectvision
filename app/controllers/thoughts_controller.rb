@@ -39,8 +39,13 @@ class ThoughtsController < ApplicationController
 
   def update
     @thought = Thought.find(params[:id])
-
-    @success = @thought.update_attributes(params[:thought])
+    
+    if params[:thought]
+      @success = @thought.update_attributes(params[:thought])
+    else
+      @success = @thought.update_attributes(params)
+    end
+    
     if @success
       render :json => { :success => true}
     else

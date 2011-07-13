@@ -495,7 +495,6 @@ var todoEditPanel = new Ext.form.FormPanel({
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
-    name: 'scope',
     ref: 'thoughtType',
     items: [{
       boxLabel: 'Private',
