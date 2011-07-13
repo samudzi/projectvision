@@ -13,7 +13,6 @@ class ThoughtsController < ApplicationController
 
   def create
     params[:actionable] = false;
-    parser
 
     @thought = Thought.new(params[:thought])
     @thought.user_id = current_user.id
@@ -39,7 +38,6 @@ class ThoughtsController < ApplicationController
   end
 
   def update
-    parser
     @thought = Thought.find(params[:id])
 
     @success = @thought.update_attributes(params[:thought])
@@ -58,25 +56,6 @@ class ThoughtsController < ApplicationController
     render :json => { :success => true }
   end
 
-  def parser
-    id = params[:id]
-    params.delete "id"
-    params.delete "action"
-    params.delete "controller"
-    params.delete "format"
-#    params.delete "utf8"
-#    params.delete "_method"
-#    params.delete "commit"
-#    params.delete "authenticity_token"
-    thought = params.dup
-    params.clear
-    params[:id] = id
-    params[:thought] = thought
-
-    logger.debug "=========================="
-    logger.debug "parser: #{params}"
-  end
-  
   def log_thought
     if @success
       @action_logs = ActionLog.create :model_id => @thought.id, :model => "Thought", 
