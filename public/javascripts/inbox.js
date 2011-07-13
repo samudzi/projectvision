@@ -108,8 +108,9 @@ var thoughtGrid = new Ext.grid.GridPanel({
     dataIndex: 'category'
   },
   {
+    header: 'Edit : Delete',
     xtype: 'actioncolumn',
-    width: 50,
+    width: 70,
     items: [{
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit Thought',
@@ -197,8 +198,9 @@ var thoughtGrid = new Ext.grid.GridPanel({
     }]
   },
   {
+    header: 'Organize',
     xtype: 'actioncolumn',
-    width: 50,
+    width: 70,
     items: [{
       icon : '../images/icons/bell.png',
       tooltip : 'Move to Organized',
@@ -288,9 +290,19 @@ var inboxPanel = new Ext.TabPanel({
     items: [thoughtGrid,detailsPanel]
   },{
     title: 'Team Space',
-    listeners: {
-  //        activate: handleActivate
-  }
+    ref:'teamspace',
+    layout:'table',
+    layoutConfig: {
+      columns:2
+    },
+    defaults: {
+      frame:true,
+      width:600,
+      height:500,
+      bodyStyle:'vertical-align:top'
+    },
+    items: [teamThoughtGrid,calendar,outstandingTaskGrid]
+  
   }
   ],
   listeners: {

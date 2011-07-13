@@ -172,8 +172,9 @@ var todoGrid = new Ext.grid.EditorGridPanel({
 	})
   },
   {
+    header: 'Edit : Delete',
     xtype: 'actioncolumn',
-    width: 50,
+    width: 70,
     items: [{
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit To Do',
@@ -303,8 +304,9 @@ var referenceGrid = new Ext.grid.GridPanel({
     dataIndex: 'scope'
   },
   {
+    header: 'Edit : Delete',
     xtype: 'actioncolumn',
-    width: 50,
+    width: 70,
     items: [{
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit To Do',
@@ -413,8 +415,9 @@ var reminderGrid = new Ext.grid.GridPanel({
     dataIndex: 'due_date'
   },
   {
+    header: 'Edit : Delete',
     xtype: 'actioncolumn',
-    width: 50,
+    width: 70,
     items: [{
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit To Do',

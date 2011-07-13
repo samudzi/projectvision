@@ -26,7 +26,7 @@ var miniTodoGrid = new Ext.grid.GridPanel({
   columns: [
   {
     header   : 'Next Action',
-    width    : 289,
+    width    : 389,
     //    sortable : true,
     dataIndex: 'next'
   },
@@ -47,7 +47,7 @@ var miniThoughtGrid = new Ext.grid.GridPanel({
   {
     id       :'brief',
     header   : 'Thought',
-    width    : 289,
+    width    : 389,
     //    sortable : true,
     dataIndex: 'brief'
   },
@@ -71,7 +71,7 @@ var miniCompltedTodoGrid = new Ext.grid.GridPanel({
   {
     id       :'brief',
     header   : 'Thought',
-    width    : 289,
+    width    : 389,
     //    sortable : true,
     dataIndex: 'brief'
   },
@@ -91,7 +91,7 @@ var quickThoughtPanel = new Ext.FormPanel({
   //  collapsible: 'true',
   labelAlign: 'top',
   defaults: {
-    width: 230
+    width: 330
   },
   defaultType: 'textfield',
   //  disabled: true,
@@ -116,7 +116,7 @@ var recentTeamActivity = new Ext.grid.GridPanel({
   {
     id       :'brief',
     header   : 'Thought',
-    width    : 360,
+    width    : 460,
     //    sortable : true,
     dataIndex: 'brief'
   }]
@@ -142,7 +142,7 @@ var dashboardPanel = new Ext.TabPanel({
     },
     defaults: {
       frame:true,
-      width:400
+      width:500
     },
     items: [userStats,quickThoughtPanel,miniTodoGrid,miniThoughtGrid,miniCompltedTodoGrid,recentTeamActivity]
   },{

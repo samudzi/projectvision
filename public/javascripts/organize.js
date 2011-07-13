@@ -43,6 +43,7 @@ var organizeGrid = new Ext.grid.GridPanel({
     dataIndex: 'category'
   },
   {
+    header: 'Delete',
     xtype: 'actioncolumn',
     width: 50,
     items: [

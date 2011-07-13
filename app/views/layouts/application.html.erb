@@ -9,6 +9,11 @@
 
   <%#*EXTJS%>
   <%= javascript_include_tag "extjs/adapter/ext/ext-base","extjs/ext-all-debug"  %>
+  
+  <!-- Extensible includes -->
+  <%= stylesheet_link_tag "extensible-all" %>
+  <%= javascript_include_tag "extensible-all-debug","MemoryEventStore","events" %>
+  <!-- Any Extensible overrides go here -->  
 
   <%#*Application Specific%>
   <%= javascript_include_tag "VrTabPanel" %>
