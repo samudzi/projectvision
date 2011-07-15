@@ -326,7 +326,7 @@ var addPanel = new Ext.form.FormPanel({
   },
   items:[{
     fieldLabel:"Briefly, what's on your mind?",
-    name:'thought[brief]',
+    name:'brief',
     ref:'brief',
     allowBlank:false
   },{
@@ -336,7 +336,7 @@ var addPanel = new Ext.form.FormPanel({
     typeAhead: true,
     forceSelection: true,
     fieldLabel: 'Category',
-    name: 'thought[category]',
+    name: 'category',
     triggerAction: 'all',
     displayField: 'name',
     valueField: 'value',
@@ -355,7 +355,7 @@ var addPanel = new Ext.form.FormPanel({
     xtype:'textarea',
     ref:'detail',
     fieldLabel:"More Details",
-    name:'thought[detail]',
+    name:'detail',
     height: 200
   },{
     xtype: 'radiogroup',
@@ -363,17 +363,17 @@ var addPanel = new Ext.form.FormPanel({
     ref: 'thoughtType',
     items: [{
       boxLabel: 'Private',
-      name: 'thought[scope]',
+      name: 'scope',
       inputValue: 'private',
       checked: 'true'
     },{
       boxLabel: 'Public',
-      name: 'thought[scope]',
+      name: 'scope',
       inputValue: 'public'
     }]
   },{
     ref: 'status',
-    name: 'thought[status]',
+    name: 'status',
     hidden: true
   }],
   buttons:[{

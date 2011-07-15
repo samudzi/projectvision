@@ -13,8 +13,13 @@ class ThoughtsController < ApplicationController
 
   def create
     params[:actionable] = false;
-
-    @thought = Thought.new(params[:thought])
+    
+    if params[:thought]
+      @thought = Thought.new(params[:thought])
+    else
+      @thought = Thought.new(params)
+    end
+    
     @thought.user_id = current_user.id
     @success = @thought.save
     if @success
