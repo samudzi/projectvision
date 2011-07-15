@@ -1,9 +1,7 @@
 var teamThoughtGrid = new Ext.grid.GridPanel({
   title: 'Shared Team Thoughts',
-  store: recentCompletedJsonStore, //Dummy Store
-  height: 300,
-  
-    
+  store: thoughtGridJsonStore, //Dummy Store
+  height: 300,    
       bodyStyle:'margin-right:20px',
   columns: [
   {
@@ -36,7 +34,7 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
 
 var outstandingTaskGrid = new Ext.grid.GridPanel({
   title: 'Outstanding Tasks',
-  store: recentCompletedJsonStore, //Dummy Store
+  store: outstandingTasksJsonStore, //Dummy Store
   height: 300,
   columns: [
   {

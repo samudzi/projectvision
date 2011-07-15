@@ -56,6 +56,14 @@ var recentCompletedJsonStore = new Ext.data.JsonStore({
 			root: 'recent_completed',
 			fields: fieldsArray
 });
+var thoughtGridJsonStore = new Ext.data.JsonStore({
+			root: 'thought_grid',
+			fields: fieldsArray
+});
+var outstandingTasksJsonStore = new Ext.data.JsonStore({
+			root: 'outstanding_tasks',
+			fields: fieldsArray
+});
 
 var todoStatusComboStore = new Ext.data.SimpleStore({
 	id: 0,
@@ -76,26 +84,30 @@ var todoStatusComboStore = new Ext.data.SimpleStore({
 function globalThoughtStoreCallbackFn(records){
 	
 		var tempJsonInbox = new Array();
-		var finalJsonInbox = [];	
+		var finalJsonInbox = new Array();	
 		var tempJsonOrganize = new Array();
-		var finalJsonOrganize = [];		
+		var finalJsonOrganize = new Array();	
 		var tempJsonTodo = new Array();
-		var finalJsonTodo = [];		
+		var finalJsonTodo = new Array();	
 		var tempJsonReference = new Array();
-		var finalJsonReference = [];		
+		var finalJsonReference = new Array();	
 		var tempJsonReminder = new Array();
-		var finalJsonReminder = [];			
+		var finalJsonReminder = new Array();		
 		var tempJsonUpcoming = new Array();
-		var finalJsonUpcoming = [];	
+		var finalJsonUpcoming = new Array();
 		var tempJsonRecentCompleted = new Array();
-		var finalJsonRecentCompleted = [];
+		var finalJsonRecentCompleted = new Array();
+		var tempJsonThoughtGrid = new Array();
+		var finalJsonThoughtGrid = new Array();
+		var tempJsonOutstandingTasks = new Array();
+		var finalJsonOutstandingTasks = new Array();
 		/*var todoStatusComboStoreData = new Array();
 		var todoStatusComboStoreTemp = new Array();*/
 		records.each(function(rec){
 			var action_status = rec.get('action_status');
 			var action_type = rec.get('action_type');
 			var status = rec.get('status');
-			
+			var scope = rec.get('scope');
 			/*todoStatusComboStoreTemp['value'] = action_status;
 			todoStatusComboStoreTemp['action_status'] = action_status;*/
 			
@@ -182,6 +194,28 @@ function globalThoughtStoreCallbackFn(records){
 				});				
 				tempJsonRecentCompleted.push(tempArray);
 			}		
+			if(scope=='public') // thoughtGrid store
+			{
+				var tempArray = [];
+				rec.fields.each(function(field) 
+				{ 
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonThoughtGrid.push(tempArray);
+			}	
+			if(scope=='public' && action_status!='Completed') // outstandingTasks store
+			{
+				var tempArray = [];
+				rec.fields.each(function(field) 
+				{ 
+					var fieldValue = rec.get(field.name); 
+					tempArray[field.name] = fieldValue;
+					
+				});				
+				tempJsonOutstandingTasks.push(tempArray);
+			}	
 			
 		});		// records.each
 		/*todoStatusComboStoreData["actionstatus"] = todoStatusComboStoreTemp;
@@ -200,6 +234,11 @@ function globalThoughtStoreCallbackFn(records){
 		upcomingJsonStore.loadData(finalJsonUpcoming,false);
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
+		finalJsonThoughtGrid["thought_grid"] = tempJsonThoughtGrid;
+		thoughtGridJsonStore.loadData(finalJsonThoughtGrid,false);
+		finalJsonOutstandingTasks["outstanding_tasks"] = tempJsonOutstandingTasks;
+		outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);
+		
 				
 }  // globalThoughtStoreCallbackFn
 
