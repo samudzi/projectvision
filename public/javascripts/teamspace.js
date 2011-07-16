@@ -63,7 +63,7 @@ var outstandingTaskGrid = new Ext.grid.GridPanel({
     dataIndex: 'due_date'
   }]
 });
-
+Ext.ensible.sample.EventData = Ext.decode(finalJsonEventData);
 var eventStore = new Ext.ensible.sample.MemoryEventStore({
   // defined in events.js
   data: Ext.ensible.sample.EventData

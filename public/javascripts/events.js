@@ -5,7 +5,10 @@
  * http://ext.ensible.com
  */
 var today = new Date().clearTime();
-Ext.ensible.sample.EventData = {
+//alert(today); //Sat Jul 16 2011 00:00:00 GMT+0530 (India Standard Time)
+//alert(today.add(Date.DAY, -20).add(Date.HOUR, 10)); //Sun Jun 26 2011 10:00:00 GMT+0530 (India Standard Time)
+//alert(today.add(Date.DAY, -10).add(Date.HOUR, 15)); //Wed Jul 06 2011 15:00:00 GMT+0530 (India Standard Time)
+/*Ext.ensible.sample.EventData = {
     "evts":[{
         "id":1001,
         "cid":1,
@@ -102,4 +105,4 @@ Ext.ensible.sample.EventData = {
         "start":today.add(Date.DAY, 5).add(Date.HOUR, 10),
         "end":today.add(Date.DAY, 5).add(Date.HOUR, 12)
     }]
-};
+};*/

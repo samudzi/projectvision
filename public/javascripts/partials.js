@@ -76,6 +76,27 @@ var todoStatusComboStore = new Ext.data.SimpleStore({
 	]
 });
 
+var evtsfieldsArray = [ 
+		{name: 'EventId', mapping:'id', type:'int'},   
+		{name: 'CalendarId', mapping: 'cid', type: 'int'},  
+		{name: 'Title', mapping: 'title', type: 'string'},  
+		{name: 'StartDate', mapping: 'due_date', type: 'date'},  
+		{name: 'EndDate', mapping: 'due_date', type: 'date'},
+    	//{name: 'RecurRule', mapping: 'recur_rule'}, // not currently used
+    	{name: 'Location', mapping: 'loc', type: 'string'},
+   	 	{name: 'Notes', mapping: 'notes', type: 'string'},
+    	{name: 'Url', mapping: 'url', type: 'string'},
+    	{name: 'IsAllDay', mapping: 'ad', type: 'boolean'},
+    	{name: 'Reminder', mapping: 'detail', type: 'string'}
+		
+];
+
+var EventDataJsonStore =  new Ext.data.JsonStore({
+			root: 'evts',
+			fields: evtsfieldsArray
+});
+
+
 /*var todoStatusComboStore = new Ext.data.JsonStore({
 	root: 'actionstatus',
 	fields: ['value', 'action_status']
@@ -101,6 +122,9 @@ function globalThoughtStoreCallbackFn(records){
 		var finalJsonThoughtGrid = new Array();
 		var tempJsonOutstandingTasks = new Array();
 		var finalJsonOutstandingTasks = new Array();
+		
+		var tempJsonEventData = new Array();
+		var finalJsonEventData = new Array();
 		/*var todoStatusComboStoreData = new Array();
 		var todoStatusComboStoreTemp = new Array();*/
 		records.each(function(rec){
@@ -162,11 +186,16 @@ function globalThoughtStoreCallbackFn(records){
 			if(status==2 && action_type=='3') // reminder store
 			{
 				var tempArray = [];
+				//var tempArrayED = [];
 				rec.fields.each(function(field) 
 				{ 
 					var fieldValue = rec.get(field.name); 
-					tempArray[field.name] = fieldValue;
-					
+					tempArray[field.name] = fieldValue;					
+					/////////////////
+					//if(field.name == 'id')
+					//	tempArrayED[field.name] = fieldValue;				
+					//if(field.name == 'due_date')
+					//	tempArrayED[field.name] = fieldValue;					
 				});				
 				tempJsonReminder.push(tempArray);
 			}	
@@ -228,8 +257,12 @@ function globalThoughtStoreCallbackFn(records){
 		todoJsonStore.loadData(finalJsonTodo,false);
 		finalJsonReference["reference"] = tempJsonReference;
 		referenceJsonStore.loadData(finalJsonReference,false);
+		
 		finalJsonReminder["reminder"] = tempJsonReminder;
-		reminderJsonStore.loadData(finalJsonReminder,false);		
+		reminderJsonStore.loadData(finalJsonReminder,false);	
+		finalJsonEventData["evts"] = tempJsonReminder;
+		//EventDataJsonStore.loadData(finalJsonEventData,false);	
+		
 		finalJsonUpcoming["upcoming"] = tempJsonUpcoming;
 		upcomingJsonStore.loadData(finalJsonUpcoming,false);
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
@@ -241,6 +274,7 @@ function globalThoughtStoreCallbackFn(records){
 		
 				
 }  // globalThoughtStoreCallbackFn
+
 
 
 globalThoughtStore.load({callback : function(records,option,success){
