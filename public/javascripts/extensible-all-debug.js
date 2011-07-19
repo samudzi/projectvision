@@ -4946,7 +4946,7 @@ Ext.ensible.cal.CalendarView = Ext.extend(Ext.BoxComponent, {
      * True to show a link on the event edit window to allow switching to the detailed edit form (the default), false to remove the
      * link and disable detailed event editing. 
      */
-    enableEditDetails: true,
+    enableEditDetails: false,
     /**
      * @cfg {String} weekendCls
      * A CSS class to apply to weekend days in the current view (defaults to 'ext-cal-day-we' which highlights weekend days in light blue). 
@@ -5070,7 +5070,7 @@ viewConfig: {
              * @param {Ext.ensible.cal.EventRecord} rec The {@link Ext.ensible.cal.EventRecord record} for the event that was clicked on
              * @param {HTMLNode} el The DOM node that was clicked on
              */
-            eventclick: true,
+            eventclick: false,
             /**
              * @event eventover
              * Fires anytime the mouse is over an event element
@@ -5253,7 +5253,7 @@ viewConfig: {
 		this.el.unselectable();
         
         if(this.enableDD && this.readOnly !== true && this.initDD){
-			this.initDD();
+			//this.initDD();
         }
         
         this.on('eventsrendered', this.forceSize);
@@ -6209,8 +6209,8 @@ alert('End: '+bounds.end);
      * @return {Ext.ensible.cal.CalendarView} this
      */
     showEventEditor : function(rec, animateTarget){
-        this.getEventEditor().show(rec, animateTarget, this);
-        return this;
+        //this.getEventEditor().show(rec, animateTarget, this);
+       // return this;
     },
     
     /**
@@ -7942,7 +7942,7 @@ Ext.ensible.cal.DayView = Ext.extend(Ext.Container, {
      * @return {Ext.ensible.cal.DayView} this
      */
     showEventEditor : function(rec, animateTarget){
-        return Ext.ensible.cal.CalendarView.prototype.showEventEditor.apply(this, arguments);
+        //return Ext.ensible.cal.CalendarView.prototype.showEventEditor.apply(this, arguments);
     },
     
     /**

@@ -63,11 +63,24 @@ var outstandingTaskGrid = new Ext.grid.GridPanel({
     dataIndex: 'due_date'
   }]
 });
-Ext.ensible.sample.EventData = Ext.decode(finalJsonEventData);
-var eventStore = new Ext.ensible.sample.MemoryEventStore({
+//alert(finalJsonEventData);
+/*for(var i=0;i<=10000;i++) /// False loop for time delay
+{
+	var x=i;
+}
+*/
+//Ext.ensible.sample.EventData = Ext.decode(finalJsonEventData);
+setTimeout("timedDelay()",5000);
+//Ext.ensible.sample.EventData="";
+function timedDelay()
+{
+	//Ext.ensible.sample.EventData = finalJsonEventData;
+	//eventStore.loadData(Ext.ensible.sample.EventData);
+}
+/*var eventStore = new Ext.ensible.sample.MemoryEventStore({
   // defined in events.js
   data: Ext.ensible.sample.EventData
-});
+});*/
 
 var calendar = new Ext.ensible.cal.CalendarPanel({
   eventStore: eventStore,

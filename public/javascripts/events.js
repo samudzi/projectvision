@@ -8,25 +8,23 @@ var today = new Date().clearTime();
 //alert(today); //Sat Jul 16 2011 00:00:00 GMT+0530 (India Standard Time)
 //alert(today.add(Date.DAY, -20).add(Date.HOUR, 10)); //Sun Jun 26 2011 10:00:00 GMT+0530 (India Standard Time)
 //alert(today.add(Date.DAY, -10).add(Date.HOUR, 15)); //Wed Jul 06 2011 15:00:00 GMT+0530 (India Standard Time)
-/*Ext.ensible.sample.EventData = {
+Ext.ensible.sample.EventData = {
     "evts":[{
         "id":1001,
-        "cid":1,
-        "title":"Vacation",
-        "start":today.add(Date.DAY, -20).add(Date.HOUR, 10),
-        "end":today.add(Date.DAY, -10).add(Date.HOUR, 15),
-		"notes":"Have fun"
+        "id":1,
+        "detail":"Vacation",
+        "due_date":today.add(Date.DAY, -20).add(Date.HOUR, 10),
+        "due_date":today.add(Date.DAY, -10).add(Date.HOUR, 15),
+		"status":"Have fun"
     },{
         "id":1002,
-        "cid":2,
-        "title":"Lunch with Matt",
-        "start":today.add(Date.HOUR, 11).add(Date.MINUTE, 30),
-        "end":today.add(Date.HOUR, 13),
-        "loc":"Chuy's!",
-        "url":"http://chuys.com",
-		"notes":"Order the queso",
-        "rem":"15"
-    },{
+        "id":2,
+        "detail":"Lunch with Matt",
+        "due_date":today.add(Date.HOUR, 11).add(Date.MINUTE, 30),
+        "due_date":today.add(Date.HOUR, 13),        
+		"status":"Order the queso",
+        "brief":"15"
+    }/*,{
         "id":1003,
         "cid":3,
         "title":"Project due",
@@ -104,5 +102,5 @@ var today = new Date().clearTime();
         "title":"Toby's soccer game",
         "start":today.add(Date.DAY, 5).add(Date.HOUR, 10),
         "end":today.add(Date.DAY, 5).add(Date.HOUR, 12)
-    }]
-};*/
+    }*/]
+};

@@ -76,24 +76,9 @@ var todoStatusComboStore = new Ext.data.SimpleStore({
 	]
 });
 
-var evtsfieldsArray = [ 
-		{name: 'EventId', mapping:'id', type:'int'},   
-		{name: 'CalendarId', mapping: 'cid', type: 'int'},  
-		{name: 'Title', mapping: 'title', type: 'string'},  
-		{name: 'StartDate', mapping: 'due_date', type: 'date'},  
-		{name: 'EndDate', mapping: 'due_date', type: 'date'},
-    	//{name: 'RecurRule', mapping: 'recur_rule'}, // not currently used
-    	{name: 'Location', mapping: 'loc', type: 'string'},
-   	 	{name: 'Notes', mapping: 'notes', type: 'string'},
-    	{name: 'Url', mapping: 'url', type: 'string'},
-    	{name: 'IsAllDay', mapping: 'ad', type: 'boolean'},
-    	{name: 'Reminder', mapping: 'detail', type: 'string'}
-		
-];
-
-var EventDataJsonStore =  new Ext.data.JsonStore({
-			root: 'evts',
-			fields: evtsfieldsArray
+var eventStore = new Ext.ensible.sample.MemoryEventStore({
+  // defined in events.js
+  data: Ext.ensible.sample.EventData
 });
 
 
@@ -101,6 +86,7 @@ var EventDataJsonStore =  new Ext.data.JsonStore({
 	root: 'actionstatus',
 	fields: ['value', 'action_status']
 });*/
+var finalJsonEventData = new Array();
 
 function globalThoughtStoreCallbackFn(records){
 	
@@ -123,8 +109,8 @@ function globalThoughtStoreCallbackFn(records){
 		var tempJsonOutstandingTasks = new Array();
 		var finalJsonOutstandingTasks = new Array();
 		
-		var tempJsonEventData = new Array();
-		var finalJsonEventData = new Array();
+		//var tempJsonEventData = new Array();
+		
 		/*var todoStatusComboStoreData = new Array();
 		var todoStatusComboStoreTemp = new Array();*/
 		records.each(function(rec){
@@ -261,6 +247,9 @@ function globalThoughtStoreCallbackFn(records){
 		finalJsonReminder["reminder"] = tempJsonReminder;
 		reminderJsonStore.loadData(finalJsonReminder,false);	
 		finalJsonEventData["evts"] = tempJsonReminder;
+		Ext.ensible.sample.EventData = finalJsonEventData;
+		eventStore.loadData(Ext.ensible.sample.EventData);
+		//Ext.ensible.sample.EventData = finalJsonEventData;
 		//EventDataJsonStore.loadData(finalJsonEventData,false);	
 		
 		finalJsonUpcoming["upcoming"] = tempJsonUpcoming;
@@ -270,8 +259,7 @@ function globalThoughtStoreCallbackFn(records){
 		finalJsonThoughtGrid["thought_grid"] = tempJsonThoughtGrid;
 		thoughtGridJsonStore.loadData(finalJsonThoughtGrid,false);
 		finalJsonOutstandingTasks["outstanding_tasks"] = tempJsonOutstandingTasks;
-		outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);
-		
+		outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
 				
 }  // globalThoughtStoreCallbackFn
 
