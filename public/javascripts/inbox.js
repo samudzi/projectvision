@@ -208,19 +208,19 @@ var thoughtGrid = new Ext.grid.GridPanel({
       {
         selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
-          url: '/thoughts/'+selectedThoughtID+'.json',
-          params: {
-            id: selectedThoughtID,
-            "thought[status]": "1"
-          },
-          method: 'put',
-          waitMsg: 'Saving...',
-          success: function(f,a) {
-            globalThoughtStore.reload({callback : function(records,option,success){					
-					    globalThoughtStoreCallbackFn(records);}
-			      });
-            //organizeStore.reload();
-          }
+			  url: '/thoughts/'+selectedThoughtID+'.json',
+			  params: {
+				id: selectedThoughtID,
+				"thought[status]": "1"
+			  },
+			  method: 'put',
+			  waitMsg: 'Saving...',
+			  success: function(f,a) {
+				globalThoughtStore.reload({callback : function(records,option,success){					
+							globalThoughtStoreCallbackFn(records);}
+					  });
+				//organizeStore.reload();
+			  }
         });
       //        Ext.Ajax.request({
       //          url: '/thoughts/update_status/'+selectedThoughtID,
