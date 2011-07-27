@@ -1,4 +1,7 @@
 class Thought < ActiveRecord::Base
+  has_many :replies, :class_name => 'Thought', :foreign_key => "parent_id", :dependent => :destroy
+  belongs_to :parent, :class_name => 'Thought'
+  belongs_to :assigned_to, :class_name => 'User', :foreign_key => "assignee_id"
 #  include ExtJS::Model
 
   attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type, :scope
@@ -52,7 +55,8 @@ class Thought < ActiveRecord::Base
     self.attributes.each_pair do |name,value|
       thought_data.push(name => value);
     end
-    
+    thought_data.push('assigned_to' => self.assigned_to ? self.assigned_to.email : '') if
+    thought_data.push('replies' => self.replies.collect{|reply| reply.to_record})
   end
   
 end
