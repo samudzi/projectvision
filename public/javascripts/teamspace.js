@@ -3,15 +3,18 @@ function showResultText(btn, text){
 	if(btn == 'ok')
 	{
         Ext.Ajax.request({
-			  url: '/thoughts/'+selectedThoughtID+'.json',
+			  url: '/thoughts',
 			  params: {
-				id: selectedThoughtID,
-				replytext: text,
-				"thought[scope]": "public"
+				parent_id: selectedThoughtID,
+				detail: text
 			  },
 			  method: 'post',
 			  waitMsg: 'Saving....',
-			  success: function(f,a) {				 
+			  success: function(f,a) {	
+			  globalThoughtStore.reload({callback : function(records,option,success){
+					globalThoughtStoreCallbackFn(records);		
+				}
+			  });
 							
 			  }
         });
@@ -65,33 +68,41 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
 function extjsRenderer(value, id, r) {
 	    var id = Ext.id();	
 		var ownerID = r.get('user_id');
+		//var username = r.get('user_name');
 		
+		//if(ownerID == '' || ownerID == 0 || ownerID == 'NULL')
+		//{
 	    (function() { 
-			//if(ownerID == '' || ownerID == 0 || ownerID == 'NULL')
-			//{
+			
 			var assigned_button = new Ext.Button({
 				renderTo: id,
 				text: 'Assign Task',
 				handler: function(btn, e) { 
 					var thoughtID = r.get('id');					
 					Ext.Ajax.request({
-						  url: '/thoughts/'+selectedThoughtID+'.json',
+						  url: '/thoughts/'+thoughtID,
 						  params: {
-							id: thoughtID,
-							ownerID: ownerID,
-							"thought[scope]": "public"
+							owner_id: ownerID
 						  },
 						  method: 'post',
 						  waitMsg: 'Saving....',
-						  success: function(f,a) {				 
-										
+						  success: function(f,a) {	
+							  globalThoughtStore.reload({callback : function(records,option,success){
+										globalThoughtStoreCallbackFn(records);		
+									}
+							   });										
 						  }
 					});
 				}
 			});  
-			//} /// end of if condition
+			
 	 	}).defer(25);
 	   return (String.format('<div id="{0}"></div>', id));
+	   //} /// end of if condition
+	   //else
+	   //{
+		   ///return username;
+	   //}
 };
 
 var outstandingTaskGrid = new Ext.grid.GridPanel({
