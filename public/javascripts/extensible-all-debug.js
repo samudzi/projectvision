@@ -1921,16 +1921,16 @@ var reader = new Ext.data.JsonReader({
  */
 Ext.ensible.cal.EventMappings = {
     EventId:     {name: 'EventId', mapping:'id', type:'int'},
-    CalendarId:  {name: 'CalendarId', mapping: 'id', type: 'int'},
-    Title:       {name: 'Title', mapping: 'detail', type: 'string'},
+    CalendarId:  {name: 'CalendarId', mapping: 'null', type: 'int'},
+    Title:       {name: 'Title', mapping: 'brief', type: 'string'},
     StartDate:   {name: 'StartDate', mapping: 'due_date', type: 'date', dateFormat: 'c'},
     EndDate:     {name: 'EndDate', mapping: 'due_date', type: 'date', dateFormat: 'c'},
     RRule:       {name: 'RecurRule', mapping: 'recur_rule'}, // not currently used
-    Location:    {name: 'Location', mapping: 'context', type: 'string'},
-    Notes:       {name: 'Notes', mapping: 'status', type: 'string'},
-    Url:         {name: 'Url', mapping: 'context', type: 'string'},
-    IsAllDay:    {name: 'IsAllDay', mapping: 'type', type: 'string'},
-    Reminder:    {name: 'Reminder', mapping: 'brief', type: 'string'}
+    Location:    {name: 'Location', mapping: 'null', type: 'string'},
+    Notes:       {name: 'Notes', mapping: 'detail', type: 'string'},
+    Url:         {name: 'Url', mapping: 'null', type: 'string'},
+    IsAllDay:    {name: 'IsAllDay', mapping: 'null', type: 'string'},
+    Reminder:    {name: 'Reminder', mapping: 'null', type: 'string'}
 };/**
  * @class Ext.ensible.cal.CalendarMappings
  * @extends Object
