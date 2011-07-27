@@ -62,30 +62,74 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
     }]
   }]
 });
+function extjsRenderer(value, id, r) {
+	    var id = Ext.id();	
+		var ownerID = r.get('user_id');
+		
+	    (function() { 
+			//if(ownerID == '' || ownerID == 0 || ownerID == 'NULL')
+			//{
+			var assigned_button = new Ext.Button({
+				renderTo: id,
+				text: 'Assign Task',
+				handler: function(btn, e) { 
+					var thoughtID = r.get('id');					
+					Ext.Ajax.request({
+						  url: '/thoughts/'+selectedThoughtID+'.json',
+						  params: {
+							id: thoughtID,
+							ownerID: ownerID,
+							"thought[scope]": "public"
+						  },
+						  method: 'post',
+						  waitMsg: 'Saving....',
+						  success: function(f,a) {				 
+										
+						  }
+					});
+				}
+			});  
+			//} /// end of if condition
+	 	}).defer(25);
+	   return (String.format('<div id="{0}"></div>', id));
+};
 
 var outstandingTaskGrid = new Ext.grid.GridPanel({
   title: 'Outstanding Tasks',
   store: outstandingTasksJsonStore, //Dummy Store
   height: 300,
+  stripeRows: true,
   columns: [
   {
     id       :'brief',
     header   : 'Task',
     width    : 289,
-    //    sortable : true,
+    //sortable : true,
     dataIndex: 'brief'
   },
   {
     header   : 'Status',
     width    : 75,
-    //    sortable : true,
+    //sortable : true,
     dataIndex: 'status'
   },
   {
     header   : 'Assigned',
     width    : 75,
-    //    sortable : true,
-    dataIndex: 'assigned'
+    //xtype: 'button',
+    //width: 50,
+    //items: [assigned_button
+    /*{
+		  icon   : '../images/icons/blue1.png',
+		  tooltip: 'Assigned',
+		  handler: function(grid,rowIndex, colIndex)
+		  {
+				selectedThoughtID = thoughtGridJsonStore.getAt(rowIndex).data.id;
+				alert(colIndex);						
+		  }
+    }*///]
+	//renderer: function(value, id, r){ return assigned_button; }
+	renderer: extjsRenderer
   },
   {
     header   : 'Due Date',

@@ -15,7 +15,8 @@ var fieldsArray = [
 		{name: 'action_status', type: 'string'},
 		{name: 'due_date', type: 'date'},
 		{name: 'action_type', type: 'string'},
-		{name: 'scope', type: 'string'}   
+		{name: 'scope', type: 'string'},
+		{name: 'user_id', type: 'int'} 
 ];
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
