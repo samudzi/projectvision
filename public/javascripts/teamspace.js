@@ -67,10 +67,10 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
 });
 function extjsRenderer(value, id, r) {
 	    var id = Ext.id();	
-		var ownerID = r.get('user_id');
+		var user_id = r.get('user_id');
 		//var username = r.get('user_name');
 		
-		//if(ownerID == '' || ownerID == 0 || ownerID == 'NULL')
+		//if(user_id == '' || user_id == 0 || user_id == 'NULL')
 		//{
 	    (function() { 
 			
@@ -82,10 +82,10 @@ function extjsRenderer(value, id, r) {
 					Ext.Ajax.request({
 						  url: '/thoughts/'+thoughtID,
 						  params: {
-							owner_id: ownerID
+							assignee_id: user_id
 						  },
 						  method: 'post',
-						  waitMsg: 'Saving....',
+						  waitMsg: 'Saving...',
 						  success: function(f,a) {	
 							  globalThoughtStore.reload({callback : function(records,option,success){
 										globalThoughtStoreCallbackFn(records);		
