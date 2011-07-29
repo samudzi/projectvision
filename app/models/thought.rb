@@ -55,7 +55,7 @@ class Thought < ActiveRecord::Base
     self.attributes.each_pair do |name,value|
       thought_data.push(name => value);
     end
-    thought_data.push('assigned_to' => self.assigned_to ? self.assigned_to.email : '') if
+    thought_data.push('assigned_to' => self.assigned_to ? self.assigned_to.email : '')
     thought_data.push('replies' => self.replies.collect{|reply| reply.to_record})
   end
   
