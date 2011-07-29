@@ -11,21 +11,253 @@ function showResultText(btn, text){
 			  method: 'post',
 			  waitMsg: 'Saving....',
 			  success: function(f,a) {	
-			  globalThoughtStore.reload({callback : function(records,option,success){
-					globalThoughtStoreCallbackFn(records);		
-				}
-			  });
+				  //globalThoughtStore.reload({callback : function(records,option,success){
+						//globalThoughtStoreCallbackFn(records);		
+					//}
+				  //});
+				  //f.responseText
+				var responsetext={
+    "data":
+    [
+        [
+            {
+                "scope":"public"
+            },
+            {
+                "outcome":null
+            },
+            {
+                "created_at":"2011-06-09T09:05:29Z"
+            },
+            {
+                "category":"General"
+            },
+            {
+                "assignee_id":null
+            },
+            {
+                "updated_at":"2011-07-27T11:36:02Z"
+            },
+            {
+                "id":1
+            },
+            {
+                "actionable":false
+            },
+            {
+                "user_id":3
+            },
+            {
+                "parent_id":null
+            },
+            {
+                "due_date":null
+            },
+            {
+                "action_type":null
+            },
+            {
+                "action_status":null
+            },
+            {
+                "next":null
+            },
+            {
+                "detail":"adsf"
+            },
+            {
+                "context":null
+            },
+            {
+                "brief":"lsdfjlsadkfj"
+            },
+            {
+                "status":"0"
+            },
+            {
+                "replies":
+                [
+                    [
+                        {
+                            "scope":null
+                        },
+                        {
+                            "outcome":null
+                        },
+                        {
+                            "created_at":"2011-07-27T12:02:42Z"
+                        },
+                        {
+                            "category":null
+                        },
+                        {
+                            "assignee_id":3
+                        },
+                        {
+                            "updated_at":"2011-07-27T12:54:31Z"
+                        },
+                        {
+                            "id":4
+                        },
+                        {
+                            "actionable":null
+                        },
+                        {
+                            "user_id":3
+                        },
+                        {
+                            "parent_id":1
+                        },
+                        {
+                            "due_date":null
+                        },
+                        {
+                            "action_type":null
+                        },
+                        {
+                            "action_status":null
+                        },
+                        {
+                            "next":null
+                        },
+                        {
+                            "detail":"asdflj"
+                        },
+                        {
+                            "context":null
+                        },
+                        {
+                            "brief":"sdf"
+                        },
+                        {
+                            "status":"0"
+                        },
+                        {
+                            "replies":
+                            [
+                            ]
+                        },
+                        {
+                            "assigned_to":"b@b.com"
+                        }
+                    ]
+                ]
+            },
+            {
+                "assigned_to":""
+            }
+        ],
+        [
+            {
+                "scope":null
+            },
+            {
+                "outcome":null
+            },
+            {
+                "created_at":"2011-07-27T12:02:42Z"
+            },
+            {
+                "category":null
+            },
+            {
+                "assignee_id":3
+            },
+            {
+                "updated_at":"2011-07-27T12:54:31Z"
+            },
+            {
+                "id":4
+            },
+            {
+                "actionable":null
+            },
+            {
+                "user_id":3
+            },
+            {
+                "parent_id":1
+            },
+            {
+                "due_date":null
+            },
+            {
+                "action_type":null
+            },
+            {
+                "action_status":null
+            },
+            {
+                "next":null
+            },
+            {
+                "detail":"asdflj"
+            },
+            {
+                "context":null
+            },
+            {
+                "brief":"sdf"
+            },
+            {
+                "status":"0"
+            },
+            {
+                "replies":
+                [
+                ]
+            },
+            {
+                "assigned_to":"b@b.com"
+            }
+        ]
+    ],
+    "success":true,
+    "totalRows":4
+};  ///// end of responsetext
+
+				for(var i in responsetext) /// for start
+				{
+						
+					for(j in responsetext["data"])
+					{
+						for(k in responsetext["data"][j])
+						{
+							for(l in responsetext["data"][j][k])
+							{
+								
+								if(l == 'replies')
+								{
+									//alert(l+"==="+responsetext["data"][j][k][l]);
+									if(responsetext["data"][j][k]["replies"] != "")
+									{
+										alert(responsetext["data"][j][k]["replies"][0][0][""]);
+									}
+								}
+							}
+						}
+					}
+				}////// for end
 							
 			  }
         });
 	}
 };
+
+var expander = new Ext.ux.grid.RowExpander({
+        tpl : new Ext.Template(
+            '<p><b>Reply:</b> {detail}</p><br>'
+        )
+});
+
 var teamThoughtGrid = new Ext.grid.GridPanel({
   title: 'Shared Team Thoughts',
-  store: thoughtGridJsonStore, //Dummy Store
+  store: thoughtGridJsonStore, // Store
   height: 300,    
-      bodyStyle:'margin-right:20px',
+  bodyStyle:'margin-right:20px',
+  plugins: expander,
   columns: [
+   expander,
   {
     id       :'brief',
     header   : 'Thought',

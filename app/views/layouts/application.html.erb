@@ -3,12 +3,12 @@
 <head>
   <title>Project Vision</title>
   <%#= stylesheet_link_tag :all %> 
-  <%= stylesheet_link_tag "application", "resources/css/xtheme-gray","resources/css/ext-all","style","tabs-example.css","Ext.ux.tot2ivn.VrTabPanel"%>
+  <%= stylesheet_link_tag "application", "resources/css/xtheme-gray","resources/css/ext-all","style","tabs-example.css","Ext.ux.tot2ivn.VrTabPanel" %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 
   <%#*EXTJS%>
-  <%= javascript_include_tag "extjs/adapter/ext/ext-base","extjs/ext-all-debug"  %>
+  <%= javascript_include_tag "extjs/adapter/ext/ext-base","extjs/ext-all-debug","extjs/examples/ux/RowExpander"  %>
   
   <!-- Extensible includes -->
   <%= stylesheet_link_tag "extensible-all" %>
@@ -39,12 +39,12 @@
       {"name":"category","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"status","allowBlank":true,"type":"string","defaultValue":null},
-      {"name":"actionable","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"actionable","allowBlank":true,"type":"boolean","defaultValue":null},
       {"name":"context","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"next","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"outcome","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"action_status","allowBlank":true,"type":"string","defaultValue":null},
-      {"name":"due_date","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"due_date","allowBlank":true,"type":"date","defaultValue":null},
       {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},

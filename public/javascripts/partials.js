@@ -119,6 +119,8 @@ function globalThoughtStoreCallbackFn(records){
 			var action_type = rec.get('action_type');
 			var status = rec.get('status');
 			var scope = rec.get('scope');
+			
+			//alert(action_status+""+action_type+"");
 			/*todoStatusComboStoreTemp['value'] = action_status;
 			todoStatusComboStoreTemp['action_status'] = action_status;*/
 			
@@ -128,6 +130,8 @@ function globalThoughtStoreCallbackFn(records){
 				rec.fields.each(function(field) 
 				{ 
 					var fieldValue = rec.get(field.name); 
+					//alert(field.name+"="+fieldValue);
+					//alert(action_type);
 					tempArray[field.name] = fieldValue;
 					
 				});				

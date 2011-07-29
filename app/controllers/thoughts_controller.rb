@@ -70,7 +70,7 @@ class ThoughtsController < ApplicationController
     if @success
       @action_logs = ActionLog.create :model_id => @thought.id, :model => "Thought", 
                                     :user_id =>current_user.id, :action_type => action_name,
-                                    :message => current_user.email + " " + action_name + " " + "Thought" + " " + @thought.brief
+                                    :message => current_user.email + " " + action_name + " " + "Thought" + " " + @thought.brief.to_s
     end
   end
 end
