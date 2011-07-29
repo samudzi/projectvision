@@ -1,7 +1,7 @@
 class Thought < ActiveRecord::Base
 #  include ExtJS::Model
 
-  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type, :scope
+  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type, :scope, :parent_id, :assignee_id
 
 #  extjs_fields :id, :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type
   belongs_to :user
