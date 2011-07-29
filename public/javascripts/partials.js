@@ -16,6 +16,7 @@ var fieldsArray = [
 		{name: 'due_date', type: 'date'},
 		{name: 'action_type', type: 'string'},
 		{name: 'scope', type: 'string'},
+		//{name: 'replies', type: 'string'}, 
 		{name: 'user_id', type: 'int'} 
 ];
 var inboxJsonStore = new Ext.data.JsonStore({
@@ -217,9 +218,10 @@ function globalThoughtStoreCallbackFn(records){
 			if(scope=='public') // thoughtGrid store
 			{
 				var tempArray = [];
+				var id = rec.get("id");
 				rec.fields.each(function(field) 
 				{ 
-					var fieldValue = rec.get(field.name); 
+					var fieldValue = rec.get(field.name);					
 					tempArray[field.name] = fieldValue;
 					
 				});				

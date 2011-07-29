@@ -11,10 +11,10 @@ function showResultText(btn, text){
 			  method: 'post',
 			  waitMsg: 'Saving....',
 			  success: function(f,a) {	
-				  //globalThoughtStore.reload({callback : function(records,option,success){
-						//globalThoughtStoreCallbackFn(records);		
-					//}
-				  //});
+				  globalThoughtStore.reload({callback : function(records,option,success){
+						globalThoughtStoreCallbackFn(records);		
+					}
+				  });
 				  //f.responseText
 				var responsetext={
     "data":
@@ -231,7 +231,7 @@ function showResultText(btn, text){
 									//alert(l+"==="+responsetext["data"][j][k][l]);
 									if(responsetext["data"][j][k]["replies"] != "")
 									{
-										alert(responsetext["data"][j][k]["replies"][0][0][""]);
+										//alert(responsetext["data"][j][k]["replies"][0][0][""]);
 									}
 								}
 							}
