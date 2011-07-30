@@ -141,6 +141,7 @@ function globalThoughtStoreCallbackFn(records){
 			//alert(action_status+""+action_type+"");
 			/*todoStatusComboStoreTemp['value'] = action_status;
 			todoStatusComboStoreTemp['action_status'] = action_status;*/
+			//console.log(rec);
 			if(status==0) // inbox store
 			{
 				var tempArray = [];
@@ -148,7 +149,17 @@ function globalThoughtStoreCallbackFn(records){
 				rec.fields.each(function(field) 
 				{ 
           //var fieldValue = rec.get(field.name); 
-					var fieldValue = rec.json[count][field.name];
+          console.log(rec.json[count]['action_status']);
+          
+					var fieldValue;// = rec.json[count][field.name];
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name])
+            { 
+              //console.log(afield[field.name]);
+              fieldValue = afield[field.name];
+            }
+          });
 					//alert(field.name+"="+fieldValue);
 					//alert(action_type);
 					tempArray[field.name] = fieldValue;
