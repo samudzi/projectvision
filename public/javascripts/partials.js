@@ -127,23 +127,23 @@ function globalThoughtStoreCallbackFn(records){
 			//var status = rec.get('status');
 			//var scope = rec.get('scope');
 			
-      var action_status = rec.json[0].action_status;
-      var action_type = rec.json[1].action_type;
-      var status = rec.json[15].status;
-      var scope = rec.json[14].scope;
+      var action_status;// = rec.json[0].action_status;
+      var action_type;// = rec.json[1].action_type;
+      var status;// = rec.json[15].status;
+      var scope;// = rec.json[14].scope;
       
 			rec.json.each(function(afield)
-          {
-            //console.log(afield);
-            if(afield['action_status'] != undefined)
-              action_status = afield['action_status'];
-              if(afield['action_type'] != undefined)
-              action_type = afield['action_type'];
-              if(afield['status'] != undefined)
-              status = afield['status'];
-              if(afield['scope'] != undefined)
-              scope = afield['scope'];
-          });
+      {
+        //console.log(afield);
+        if(afield['action_status'] != undefined)
+          action_status = afield['action_status'];
+        if(afield['action_type'] != undefined)
+          action_type = afield['action_type'];
+        if(afield['status'] != undefined)
+          status = afield['status'];
+        if(afield['scope'] != undefined)
+          scope = afield['scope'];
+      });
 			
 			
 			//console.log(rec);
@@ -156,7 +156,7 @@ function globalThoughtStoreCallbackFn(records){
 			/*todoStatusComboStoreTemp['value'] = action_status;
 			todoStatusComboStoreTemp['action_status'] = action_status;*/
 			//console.log(rec);
-			console.log(rec.json[1].key);
+			//console.log(rec.json[1].key);
 			if(status==0) // inbox store
 			{
 				var tempArray = [];
@@ -166,21 +166,20 @@ function globalThoughtStoreCallbackFn(records){
           //var fieldValue = rec.get(field.name); 
           //console.log(rec.json[count]['action_status']);
           
+          //alert(field.name+"="+fieldValue);
+          //alert(action_type);
+          //tempArray[field.name] = rec.json[count][field.name];
+          //console.log("Name:" + field.name);
+          //console.log(rec.json[count][field.name]);
 					var fieldValue;// = rec.json[count][field.name];
 					rec.json.each(function(afield)
           {
             if(afield[field.name]!=undefined)
             { 
-              //console.log(afield[field.name]);
               fieldValue = afield[field.name];
             }
           });
-					//alert(field.name+"="+fieldValue);
-					//alert(action_type);
 					tempArray[field.name] = fieldValue;
-					//tempArray[field.name] = rec.json[count][field.name];
-					//console.log("Name:" + field.name);
-					//console.log(rec.json[count][field.name]);
 					count++;
 				});
 				tempJsonInbox.push(tempArray);	
@@ -188,14 +187,20 @@ function globalThoughtStoreCallbackFn(records){
 			
 			if(status==1) // organize store
 			{
-			  console.log("In organize store");
 				var tempArray = [];
         var count = 0;
 				rec.fields.each(function(field) 
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
@@ -210,7 +215,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
@@ -225,7 +237,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
@@ -241,7 +260,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;					
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;					
           count++;
 					/////////////////
 					//if(field.name == 'id')
@@ -260,7 +286,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
@@ -275,7 +308,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
@@ -290,7 +330,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];	
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
@@ -304,7 +351,14 @@ function globalThoughtStoreCallbackFn(records){
 				{ 
           //var fieldValue = rec.get(field.name); 
           var fieldValue = rec.json[count][field.name];
-					tempArray[field.name] = fieldValue;
+					rec.json.each(function(afield)
+          {
+            if(afield[field.name]!=undefined)
+            { 
+              fieldValue = afield[field.name];
+            }
+          });
+          tempArray[field.name] = fieldValue;
           count++;
 					
 				});				
