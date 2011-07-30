@@ -126,10 +126,24 @@ function globalThoughtStoreCallbackFn(records){
 			//var action_type = rec.get('action_type');
 			//var status = rec.get('status');
 			//var scope = rec.get('scope');
-			var action_status = rec.json[0].action_status;
+			
+      var action_status = rec.json[0].action_status;
       var action_type = rec.json[1].action_type;
       var status = rec.json[15].status;
       var scope = rec.json[14].scope;
+      
+			rec.json.each(function(afield)
+          {
+            //console.log(afield);
+            if(afield['action_status'] != undefined)
+              action_status = afield['action_status'];
+              if(afield['action_type'] != undefined)
+              action_type = afield['action_type'];
+              if(afield['status'] != undefined)
+              status = afield['status'];
+              if(afield['scope'] != undefined)
+              scope = afield['scope'];
+          });
 			
 			
 			//console.log(rec);
@@ -142,6 +156,7 @@ function globalThoughtStoreCallbackFn(records){
 			/*todoStatusComboStoreTemp['value'] = action_status;
 			todoStatusComboStoreTemp['action_status'] = action_status;*/
 			//console.log(rec);
+			console.log(rec.json[1].key);
 			if(status==0) // inbox store
 			{
 				var tempArray = [];
@@ -149,12 +164,12 @@ function globalThoughtStoreCallbackFn(records){
 				rec.fields.each(function(field) 
 				{ 
           //var fieldValue = rec.get(field.name); 
-          console.log(rec.json[count]['action_status']);
+          //console.log(rec.json[count]['action_status']);
           
 					var fieldValue;// = rec.json[count][field.name];
 					rec.json.each(function(afield)
           {
-            if(afield[field.name])
+            if(afield[field.name]!=undefined)
             { 
               //console.log(afield[field.name]);
               fieldValue = afield[field.name];
