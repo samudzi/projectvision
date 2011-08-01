@@ -238,7 +238,7 @@ function thoughtSaveHandler()
     });
   }
 //  addWindow.hide();
-  addWindow.hide();
+  if(addWindow) addWindow.hide();
 }
 
 function todoSaveHandler()

@@ -83,6 +83,24 @@ var miniCompltedTodoGrid = new Ext.grid.GridPanel({
   }]
 });
 
+function miniThoughtSaveHandler(){
+  newThought=true;
+  quickThoughtPanel.getForm().submit({
+    url: '/thoughts.json',
+    method: 'post',
+    params: {category:'General', detail:'', scope:'private', status:'0'},
+    waitMsg: 'Saving...',
+    success: function(f,a) {
+        //inboxStore.reload();
+	      globalThoughtStore.reload({callback : function(records,option,success){
+			    globalThoughtStoreCallbackFn(records);		
+		    }
+	    });
+      newThought = false;
+      quickThoughtPanel.getForm().reset();
+    }
+  });
+}
 
 var quickThoughtPanel = new Ext.FormPanel({
   //  title: 'Details',
@@ -99,11 +117,12 @@ var quickThoughtPanel = new Ext.FormPanel({
   //  maxSize: 250,
   items : [{
     fieldLabel:"Quick Thought",
-    name:'quickThought',
+    name:'brief',
     ref:'quickThought'
   }],
   buttons: [{
-    text: 'Save'
+    text: 'Save',
+    handler: miniThoughtSaveHandler
   }]
 });
 
