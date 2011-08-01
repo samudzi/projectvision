@@ -102,10 +102,11 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
 function extjsRenderer(value, id, r) {
 	    var id = Ext.id();	
 		var user_id = r.get('user_id');
-		//var username = r.get('user_name');
+		var assignee_id = r.get('assignee_id');
+		var assigned_to = r.get('assigned_to');
 		
-		//if(user_id == '' || user_id == 0 || user_id == 'NULL')
-		//{
+		if(assignee_id == '' || assignee_id == 0 || assignee_id == 'NULL')
+		{
 	    (function() { 
 			
 			var assigned_button = new Ext.Button({
@@ -118,7 +119,7 @@ function extjsRenderer(value, id, r) {
 						  params: {
 							assignee_id: user_id
 						  },
-						  method: 'post',
+						  method: 'put',
 						  waitMsg: 'Saving...',
 						  success: function(f,a) {	
 							  globalThoughtStore.reload({callback : function(records,option,success){
@@ -132,11 +133,12 @@ function extjsRenderer(value, id, r) {
 			
 	 	}).defer(25);
 	   return (String.format('<div id="{0}"></div>', id));
-	   //} /// end of if condition
-	   //else
-	   //{
-		   ///return username;
-	   //}
+	  } /// end of if condition
+	  else
+	  {
+		  //return (String.format('<div id="{0}"></div>', username));
+		  return assigned_to;
+	  }
 };
 
 var outstandingTaskGrid = new Ext.grid.GridPanel({

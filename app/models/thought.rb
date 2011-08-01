@@ -51,12 +51,13 @@ class Thought < ActiveRecord::Base
 #      thought_data += "},"
 #    end
 #    thought_data = thought_data.chop
-    thought_data = []
+    thought_data = {}
     self.attributes.each_pair do |name,value|
-      thought_data.push(name => value);
+      thought_data[name] = value
     end
-    thought_data.push('assigned_to' => self.assigned_to ? self.assigned_to.email : '')
-    thought_data.push('replies' => self.replies.collect{|reply| reply.to_record})
+    thought_data['assigned_to'] = self.assigned_to ? self.assigned_to.email : ''
+    thought_data['replies'] = self.replies.collect{|reply| reply.to_record}
+    thought_data
   end
   
 end

@@ -116,254 +116,36 @@ function globalThoughtStoreCallbackFn(records){
 		var tempJsonOutstandingTasks = new Array();
 		var finalJsonOutstandingTasks = new Array();
 		
-		//var tempJsonEventData = new Array();
-		
-		/*var todoStatusComboStoreData = new Array();
-		var todoStatusComboStoreTemp = new Array();*/
 		records.each(function(rec){
-		  /* Edited By Bank : Hot Fix store not loading */
-			//var action_status = rec.get('action_status');
-			//var action_type = rec.get('action_type');
-			//var status = rec.get('status');
-			//var scope = rec.get('scope');
+			var action_status = rec.get('action_status');
+			var action_type = rec.get('action_type');
+			var status = rec.get('status');
+			var scope = rec.get('scope');
 			
-      var action_status;// = rec.json[0].action_status;
-      var action_type;// = rec.json[1].action_type;
-      var status;// = rec.json[15].status;
-      var scope;// = rec.json[14].scope;
-      
-			rec.json.each(function(afield)
-      {
-        //console.log(afield);
-        if(afield['action_status'] != undefined)
-          action_status = afield['action_status'];
-        if(afield['action_type'] != undefined)
-          action_type = afield['action_type'];
-        if(afield['status'] != undefined)
-          status = afield['status'];
-        if(afield['scope'] != undefined)
-          scope = afield['scope'];
-      });
-			
-			
-			//console.log(rec);
-			//console.log(globalThoughtStore);
-		  // rec.json.each(function(field){
-		    // console.log(field.brief);
-		  // });
-			//console.log(rec.json[0]['action_status']);
-			//alert(action_status+""+action_type+"");
-			/*todoStatusComboStoreTemp['value'] = action_status;
-			todoStatusComboStoreTemp['action_status'] = action_status;*/
-			//console.log(rec);
-			//console.log(rec.json[1].key);
+			var tempArray = [];
+			rec.fields.keys.each(function(key) 
+			{ 
+        var fieldValue = rec.get(key); 
+        tempArray[key] = fieldValue;
+			});
 			if(status==0) // inbox store
-			{
-				var tempArray = [];
-				var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          //console.log(rec.json[count]['action_status']);
-          
-          //alert(field.name+"="+fieldValue);
-          //alert(action_type);
-          //tempArray[field.name] = rec.json[count][field.name];
-          //console.log("Name:" + field.name);
-          //console.log(rec.json[count][field.name]);
-					var fieldValue;// = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-					tempArray[field.name] = fieldValue;
-					count++;
-				});
 				tempJsonInbox.push(tempArray);	
-			}	
-			
 			if(status==1) // organize store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
 				tempJsonOrganize.push(tempArray);	
-			}	
-			
-			if(status==2 && action_type=='1') // todo store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonTodo.push(tempArray);						
-			}	
-			
+		  if(status==2 && action_type=='1') // todo store
+				tempJsonTodo.push(tempArray);							
 			if(status==2 && action_type=='2') // reference store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonReference.push(tempArray);
-			}	
-			
+				tempJsonReference.push(tempArray);	
 			if(status==2 && action_type=='3') // reminder store
-			{
-				var tempArray = [];
-        var count = 0;
-				//var tempArrayED = [];
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;					
-          count++;
-					/////////////////
-					//if(field.name == 'id')
-					//	tempArrayED[field.name] = fieldValue;				
-					//if(field.name == 'due_date')
-					//	tempArrayED[field.name] = fieldValue;					
-				});				
-				tempJsonReminder.push(tempArray);
-			}	
-			
+				tempJsonReminder.push(tempArray);		
 			if(status==2 && action_status=='Pending' && action_type=='1') // upcoming store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
 				tempJsonUpcoming.push(tempArray);
-			}	
-			
 			if(status==2 && action_status=='Completed' && action_type=='1') // recentCompleted store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonRecentCompleted.push(tempArray);
-			}		
+				tempJsonRecentCompleted.push(tempArray);		
 			if(scope=='public') // thoughtGrid store
-			{
-				var tempArray = [];
-        var count = 0;
-				var id = rec.get("id");
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];	
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonThoughtGrid.push(tempArray);
-			}	
+				tempJsonThoughtGrid.push(tempArray);	
 			if(scope=='public' && action_status!='Completed') // outstandingTasks store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonOutstandingTasks.push(tempArray);
-			}	
+				tempJsonOutstandingTasks.push(tempArray);	
 			
 		});		// records.each
 		/*todoStatusComboStoreData["actionstatus"] = todoStatusComboStoreTemp;
@@ -372,16 +154,15 @@ function globalThoughtStoreCallbackFn(records){
 		//Inbox
 		finalJsonInbox["inbox"] = tempJsonInbox;
 		inboxJsonStore.loadData(finalJsonInbox,false);
-		console.log(inboxJsonStore);
 		
 		//Organize
 		finalJsonOrganize["organize"] = tempJsonOrganize;
 		organizeJsonStore.loadData(finalJsonOrganize,false);
-    console.log(organizeJsonStore);
 		
 		//Action
 		finalJsonTodo["todo"] = tempJsonTodo;
 		todoJsonStore.loadData(finalJsonTodo,false);
+		
 		finalJsonReference["reference"] = tempJsonReference;
 		referenceJsonStore.loadData(finalJsonReference,false);
 		
@@ -399,8 +180,10 @@ function globalThoughtStoreCallbackFn(records){
 		upcomingJsonStore.loadData(finalJsonUpcoming,false);
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
+		
 		finalJsonThoughtGrid["thought_grid"] = tempJsonThoughtGrid;
 		thoughtGridJsonStore.loadData(finalJsonThoughtGrid,false);
+		
 		finalJsonOutstandingTasks["outstanding_tasks"] = tempJsonOutstandingTasks;
 		outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
 				
@@ -455,7 +238,7 @@ function thoughtSaveHandler()
     });
   }
 //  addWindow.hide();
-  addWindow.hide();
+  if(addWindow) addWindow.hide();
 }
 
 function todoSaveHandler()
@@ -565,6 +348,7 @@ var addPanel = new Ext.form.FormPanel({
     xtype: 'radiogroup',
     fieldLabel: 'Type',
     ref: 'thoughtType',
+    name: 'scope',
     items: [{
       boxLabel: 'Private',
       name: 'scope',
@@ -695,7 +479,6 @@ var todoEditPanel = new Ext.form.FormPanel({
         ['Context3','Context3']
         ]
       })
-
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',

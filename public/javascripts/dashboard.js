@@ -83,21 +83,23 @@ var miniCompltedTodoGrid = new Ext.grid.GridPanel({
   }]
 });
 
-function quickThoughtSaveHandler()
-{
-    quickThoughtPanel.getForm().submit({
-      url: '/thoughts.json',
-      method: 'post',
-      waitMsg: 'Saving...',
-      success: function(f,a) {
+function miniThoughtSaveHandler(){
+  newThought=true;
+  quickThoughtPanel.getForm().submit({
+    url: '/thoughts.json',
+    method: 'post',
+    params: {category:'General', detail:'', scope:'private', status:'0'},
+    waitMsg: 'Saving...',
+    success: function(f,a) {
         //inboxStore.reload();
-      globalThoughtStore.reload({callback : function(records,option,success){
-        globalThoughtStoreCallbackFn(records);    
-      }
-    });
-        newThought = false;
-      }
-    });
+	      globalThoughtStore.reload({callback : function(records,option,success){
+			    globalThoughtStoreCallbackFn(records);		
+		    }
+	    });
+      newThought = false;
+      quickThoughtPanel.getForm().reset();
+    }
+  });
 }
 
 var quickThoughtPanel = new Ext.FormPanel({
@@ -116,32 +118,11 @@ var quickThoughtPanel = new Ext.FormPanel({
   items : [{
     fieldLabel:"Quick Thought",
     name:'brief',
-    ref:'brieff'
-  },
-  {
-    fieldLabel:"Category",
-    name:'category',
-    ref:'categoryy',
-    value: 'General',
-    hidden: true
-  },
-  {
-    fieldLabel:"Scope",
-    name:'scope',
-    ref:'scopee',
-    value: 'public',
-    hidden: true
-  },
-  {
-    fieldLabel:"Status",
-    name:'status',
-    ref:'status',
-    value: 0,
-    hidden: true
+    ref:'quickThought'
   }],
   buttons: [{
     text: 'Save',
-    handler: quickThoughtSaveHandler
+    handler: miniThoughtSaveHandler
   }]
 });
 
