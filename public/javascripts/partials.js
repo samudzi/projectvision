@@ -23,8 +23,8 @@ var fieldsArray = [
     {name: 'user_id', type: 'int'}, 
     {name: 'assigned_to', type: 'string'},
 		//{name: 'replies', type: 'string'},
-    {name: 'type', type: 'string'}
-		//{name: 'replies', type: 'string'}, 
+    {name: 'type', type: 'string'},
+		{name: 'replies', type: 'string'}, 
 ];
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
@@ -213,13 +213,13 @@ function teamThoughtStoreCallbackFn(records){
         var fieldValue = rec.get(key); 
         tempArray[key] = fieldValue;
       });
-      if(scope=='public' && action_status!='Completed') // outstandingTasks store
-        tempJsonTeamTasks.push(tempArray); 
+      //if(scope=='public' && action_status!='Completed' && status==2 && action_type=='1') // outstandingTasks store
+        //tempJsonTeamTasks.push(tempArray); 
       
     });
     
     finalJsonTeamTasks["team_tasks"] = tempJsonTeamTasks;
-    outstandingTaskGrid.loadData(finalJsonTeamTasks,false);
+    outstandingTasksJsonStore.loadData(finalJsonTeamTasks,false);
 }
 
 globalThoughtStore.load({callback : function(records,option,success){
