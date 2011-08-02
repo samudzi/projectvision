@@ -22,6 +22,10 @@ class Thought < ActiveRecord::Base
     end
     if(params[:ttype] == "all")
       thoughts = Thought.where(:user_id => params[:user_id])
+    else
+      if(params[:ttype] == "teamThought")
+        thoughts = Thought.where(:scope => 'public', :status => 0);
+      end
     end
     row_count = Thought.count
     [thoughts, row_count]
@@ -51,12 +55,13 @@ class Thought < ActiveRecord::Base
 #      thought_data += "},"
 #    end
 #    thought_data = thought_data.chop
-    thought_data = []
+    thought_data = {}
     self.attributes.each_pair do |name,value|
-      thought_data.push(name => value);
+      thought_data[name] = value
     end
-    thought_data.push('assigned_to' => self.assigned_to ? self.assigned_to.email : '')
-    thought_data.push('replies' => self.replies.collect{|reply| reply.to_record})
+    thought_data['assigned_to'] = self.assigned_to ? self.assigned_to.email : ''
+    thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('\n')
+    thought_data
   end
   
 end

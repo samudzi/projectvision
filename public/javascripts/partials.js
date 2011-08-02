@@ -1,5 +1,6 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
-
+var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
+teamThoughtStore.load();
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
 var fieldsArray = [ 
     {name: 'action_status', type: 'string'},
@@ -21,6 +22,7 @@ var fieldsArray = [
     {name: 'updated_at', type: 'date'},
     {name: 'user_id', type: 'int'}, 
     {name: 'assigned_to', type: 'string'},
+<<<<<<< HEAD
     {name: 'replies', type: 'string'}
 ];
 var fieldsArrayThoughtGrid = [ 
@@ -44,6 +46,11 @@ var fieldsArrayThoughtGrid = [
     {name: 'user_id', type: 'int'}, 
     {name: 'assigned_to', type: 'string'},
     {name: 'replytext', type: 'string'}
+=======
+		//{name: 'replies', type: 'string'},
+    {name: 'type', type: 'string'},
+		{name: 'replies', type: 'string'}, 
+>>>>>>> b917767ee024955a6369164cedd3757a3775d76b
 ];
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
@@ -93,6 +100,11 @@ var outstandingTasksJsonStore = new Ext.data.JsonStore({
 			fields: fieldsArray
 });
 
+var outstandingTasksJsonStore = new Ext.data.JsonStore({
+      root: 'team_tasks',
+      fields: fieldsArray
+});
+
 var todoStatusComboStore = new Ext.data.SimpleStore({
 	id: 0,
 	fields: ['action_status', 'action_status'],
@@ -136,36 +148,13 @@ function globalThoughtStoreCallbackFn(records){
 		var tempJsonOutstandingTasks = new Array();
 		var finalJsonOutstandingTasks = new Array();
 		
-		//var tempJsonEventData = new Array();
-		
-		/*var todoStatusComboStoreData = new Array();
-		var todoStatusComboStoreTemp = new Array();*/
 		records.each(function(rec){
-		  /* Edited By Bank : Hot Fix store not loading */
-			//var action_status = rec.get('action_status');
-			//var action_type = rec.get('action_type');
-			//var status = rec.get('status');
-			//var scope = rec.get('scope');
+			var action_status = rec.get('action_status');
+			var action_type = rec.get('action_type');
+			var status = rec.get('status');
+			var scope = rec.get('scope');
 			
-      var action_status;// = rec.json[0].action_status;
-      var action_type;// = rec.json[1].action_type;
-      var status;// = rec.json[15].status;
-      var scope;// = rec.json[14].scope;
-      
-			rec.json.each(function(afield)
-      {
-        //console.log(afield);
-        if(afield['action_status'] != undefined)
-          action_status = afield['action_status'];
-        if(afield['action_type'] != undefined)
-          action_type = afield['action_type'];
-        if(afield['status'] != undefined)
-          status = afield['status'];
-        if(afield['scope'] != undefined)
-          scope = afield['scope'];
-      });
-			
-			
+<<<<<<< HEAD
 			//console.log(rec);
 			//console.log(globalThoughtStore);
 		  // rec.json.each(function(field){
@@ -177,171 +166,30 @@ function globalThoughtStoreCallbackFn(records){
 			todoStatusComboStoreTemp['action_status'] = action_status;*/
 			//console.log(rec);
 			//console.log(rec.json[1].key);
+=======
+			var tempArray = [];
+			rec.fields.keys.each(function(key) 
+			{ 
+        var fieldValue = rec.get(key); 
+        tempArray[key] = fieldValue;
+			});
+>>>>>>> b917767ee024955a6369164cedd3757a3775d76b
 			if(status==0) // inbox store
-			{
-				var tempArray = [];
-				var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          //console.log(rec.json[count]['action_status']);
-          
-          //alert(field.name+"="+fieldValue);
-          //alert(action_type);
-          //tempArray[field.name] = rec.json[count][field.name];
-          //console.log("Name:" + field.name);
-          //console.log(rec.json[count][field.name]);
-					var fieldValue;// = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-					tempArray[field.name] = fieldValue;
-					count++;
-				});
 				tempJsonInbox.push(tempArray);	
-			}	
-			
 			if(status==1) // organize store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
 				tempJsonOrganize.push(tempArray);	
-			}	
-			
-			if(status==2 && action_type=='1') // todo store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonTodo.push(tempArray);						
-			}	
-			
+		  if(status==2 && action_type=='1') // todo store
+				tempJsonTodo.push(tempArray);							
 			if(status==2 && action_type=='2') // reference store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonReference.push(tempArray);
-			}	
-			
+				tempJsonReference.push(tempArray);	
 			if(status==2 && action_type=='3') // reminder store
-			{
-				var tempArray = [];
-        var count = 0;
-				//var tempArrayED = [];
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;					
-          count++;
-					/////////////////
-					//if(field.name == 'id')
-					//	tempArrayED[field.name] = fieldValue;				
-					//if(field.name == 'due_date')
-					//	tempArrayED[field.name] = fieldValue;					
-				});				
-				tempJsonReminder.push(tempArray);
-			}	
-			
+				tempJsonReminder.push(tempArray);		
 			if(status==2 && action_status=='Pending' && action_type=='1') // upcoming store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
 				tempJsonUpcoming.push(tempArray);
-			}	
-			
 			if(status==2 && action_status=='Completed' && action_type=='1') // recentCompleted store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonRecentCompleted.push(tempArray);
-			}		
+				tempJsonRecentCompleted.push(tempArray);		
 			if(scope=='public') // thoughtGrid store
+<<<<<<< HEAD
 			{
 				var tempArray = [];
         		var count = 0;
@@ -380,27 +228,11 @@ function globalThoughtStoreCallbackFn(records){
 				});					
 				tempJsonThoughtGrid.push(tempArray);
 			}	
+=======
+				tempJsonThoughtGrid.push(tempArray);	
+>>>>>>> b917767ee024955a6369164cedd3757a3775d76b
 			if(scope=='public' && action_status!='Completed') // outstandingTasks store
-			{
-				var tempArray = [];
-        var count = 0;
-				rec.fields.each(function(field) 
-				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];
-					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
-				tempJsonOutstandingTasks.push(tempArray);
-			}	
+				tempJsonOutstandingTasks.push(tempArray);	
 			
 		});		// records.each
 		/*todoStatusComboStoreData["actionstatus"] = todoStatusComboStoreTemp;
@@ -409,16 +241,15 @@ function globalThoughtStoreCallbackFn(records){
 		//Inbox
 		finalJsonInbox["inbox"] = tempJsonInbox;
 		inboxJsonStore.loadData(finalJsonInbox,false);
-		console.log(inboxJsonStore);
 		
 		//Organize
 		finalJsonOrganize["organize"] = tempJsonOrganize;
 		organizeJsonStore.loadData(finalJsonOrganize,false);
-    console.log(organizeJsonStore);
 		
 		//Action
 		finalJsonTodo["todo"] = tempJsonTodo;
 		todoJsonStore.loadData(finalJsonTodo,false);
+		
 		finalJsonReference["reference"] = tempJsonReference;
 		referenceJsonStore.loadData(finalJsonReference,false);
 		
@@ -436,14 +267,41 @@ function globalThoughtStoreCallbackFn(records){
 		upcomingJsonStore.loadData(finalJsonUpcoming,false);
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
+		
 		finalJsonThoughtGrid["thought_grid"] = tempJsonThoughtGrid;
 		thoughtGridJsonStore.loadData(finalJsonThoughtGrid,false);
+		
 		finalJsonOutstandingTasks["outstanding_tasks"] = tempJsonOutstandingTasks;
-		outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
+		//outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
 				
 }  // globalThoughtStoreCallbackFn
 
 
+function teamThoughtStoreCallbackFn(records){
+  
+    var tempJsonTeamTasks = new Array();
+    var finalJsonTeamTasks = new Array();
+    
+    records.each(function(rec){
+      var action_status = rec.get('action_status');
+      var action_type = rec.get('action_type');
+      var status = rec.get('status');
+      var scope = rec.get('scope');
+      
+      var tempArray = [];
+      rec.fields.keys.each(function(key) 
+      { 
+        var fieldValue = rec.get(key); 
+        tempArray[key] = fieldValue;
+      });
+      //if(scope=='public' && action_status!='Completed' && status==2 && action_type=='1') // outstandingTasks store
+        //tempJsonTeamTasks.push(tempArray); 
+      
+    });
+    
+    finalJsonTeamTasks["team_tasks"] = tempJsonTeamTasks;
+    outstandingTasksJsonStore.loadData(finalJsonTeamTasks,false);
+}
 
 globalThoughtStore.load({callback : function(records,option,success){
 		globalThoughtStoreCallbackFn(records);		
@@ -454,6 +312,10 @@ globalThoughtStore.load({callback : function(records,option,success){
 	}
 });*/
 //// grid.getView().refresh();
+teamThoughtStore.load({callback : function(records,option,success){
+    teamThoughtStoreCallbackFn(records);
+  }
+});
 
 function thoughtSaveHandler()
 {
@@ -492,7 +354,7 @@ function thoughtSaveHandler()
     });
   }
 //  addWindow.hide();
-  addWindow.hide();
+  if(addWindow) addWindow.hide();
 }
 
 function todoSaveHandler()
@@ -602,6 +464,7 @@ var addPanel = new Ext.form.FormPanel({
     xtype: 'radiogroup',
     fieldLabel: 'Type',
     ref: 'thoughtType',
+    name: 'scope',
     items: [{
       boxLabel: 'Private',
       name: 'scope',
@@ -732,7 +595,6 @@ var todoEditPanel = new Ext.form.FormPanel({
         ['Context3','Context3']
         ]
       })
-
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',

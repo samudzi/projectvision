@@ -163,8 +163,11 @@ var thoughtGrid = new Ext.grid.GridPanel({
           waitMsg: 'Loading...',
           method: 'get',
           success: function(f,a){
-            
+          },
+          failure: function(form, action){
+            Ext.Msg.alert("Load failed", action.result.errorMessage);
           }
+          
         });
         
         addWindow.show();
