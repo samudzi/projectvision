@@ -15,31 +15,9 @@ function showResultText(btn, text){
 						globalThoughtStoreCallbackFn(records);		
 					}
 				  });
-				  //f.responseText
-				//var responsetext={};  ///// end of responsetext
-
-				/*for(var i in responsetext) /// for start
-				{
-						
-					for(j in responsetext["data"])
-					{
-						for(k in responsetext["data"][j])
-						{
-							for(l in responsetext["data"][j][k])
-							{
-								
-								if(l == 'replies')
-								{
-									//alert(l+"==="+responsetext["data"][j][k][l]);
-									if(responsetext["data"][j][k]["replies"] != "")
-									{
-										//alert(responsetext["data"][j][k]["replies"][0][0][""]);
-									}
-								}
-							}
-						}
-					}
-				}////// for end*/
+				  
+				  //alert(Ext.getCmp('thoughtGridid').getView());
+				  Ext.getCmp('thoughtGridid').getView().refresh();
 							
 			  }
         });
@@ -48,12 +26,13 @@ function showResultText(btn, text){
 
 var expander = new Ext.ux.grid.RowExpander({
         tpl : new Ext.Template(
-            '<p><b>Reply:</b> {detail}</p><br>'
+            '<p><b>Reply:</b> {replytext}</p><br>'
         )
 });
-
+var gridview = new Ext.grid.GridView();
 var teamThoughtGrid = new Ext.grid.GridPanel({
   title: 'Shared Team Thoughts',
+  id: 'thoughtGridid',
   store: thoughtGridJsonStore, // Store
   height: 300,    
   bodyStyle:'margin-right:20px',
@@ -97,7 +76,8 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
 				});				
 		  }
     }]
-  }]
+  }],
+  view: gridview
 });
 function extjsRenderer(value, id, r) {
 	    var id = Ext.id();	

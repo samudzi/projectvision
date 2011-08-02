@@ -12,7 +12,7 @@ var fieldsArray = [
     {name: 'created_at', type: 'date'},
     {name: 'detail', type: 'string'},  
     {name: 'due_date', type: 'date'},
-		{name: 'id', type: 'int'},   
+	{name: 'id', type: 'int'},   
     {name: 'next', type: 'string'}, 
     {name: 'outcome', type: 'string'}, 
     {name: 'parent_id', type: 'int'},   
@@ -21,9 +21,29 @@ var fieldsArray = [
     {name: 'updated_at', type: 'date'},
     {name: 'user_id', type: 'int'}, 
     {name: 'assigned_to', type: 'string'},
-		//{name: 'replies', type: 'string'},
-    {name: 'type', type: 'string'}
-		//{name: 'replies', type: 'string'}, 
+    {name: 'replies', type: 'string'}
+];
+var fieldsArrayThoughtGrid = [ 
+    {name: 'action_status', type: 'string'},
+    {name: 'action_type', type: 'string'},
+    {name: 'actionable', type: 'string'}, 
+    {name: 'assignee_id', type: 'int'},   
+    {name: 'brief', type: 'string'},  
+    {name: 'category', type: 'string'},  
+    {name: 'context', type: 'string'}, 
+    {name: 'created_at', type: 'date'},
+    {name: 'detail', type: 'string'},  
+    {name: 'due_date', type: 'date'},
+	{name: 'id', type: 'int'},   
+    {name: 'next', type: 'string'}, 
+    {name: 'outcome', type: 'string'}, 
+    {name: 'parent_id', type: 'int'},   
+    {name: 'scope', type: 'string'},
+    {name: 'status', type: 'string'},
+    {name: 'updated_at', type: 'date'},
+    {name: 'user_id', type: 'int'}, 
+    {name: 'assigned_to', type: 'string'},
+    {name: 'replytext', type: 'string'}
 ];
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
@@ -66,7 +86,7 @@ var recentCompletedJsonStore = new Ext.data.JsonStore({
 });
 var thoughtGridJsonStore = new Ext.data.JsonStore({
 			root: 'thought_grid',
-			fields: fieldsArray
+			fields: fieldsArrayThoughtGrid
 });
 var outstandingTasksJsonStore = new Ext.data.JsonStore({
 			root: 'outstanding_tasks',
@@ -324,23 +344,40 @@ function globalThoughtStoreCallbackFn(records){
 			if(scope=='public') // thoughtGrid store
 			{
 				var tempArray = [];
-        var count = 0;
+        		var count = 0;
 				var id = rec.get("id");
 				rec.fields.each(function(field) 
 				{ 
-          //var fieldValue = rec.get(field.name); 
-          var fieldValue = rec.json[count][field.name];	
+          			//var fieldValue = rec.get(field.name); 
+			  		var fieldValue = rec.json[count][field.name];					
 					rec.json.each(function(afield)
-          {
-            if(afield[field.name]!=undefined)
-            { 
-              fieldValue = afield[field.name];
-            }
-          });
-          tempArray[field.name] = fieldValue;
-          count++;
-					
-				});				
+					  {
+						if(afield[field.name]!=undefined)
+						{ 
+						  fieldValue = afield[field.name];
+						}
+					  });	
+					if(field.name == 'replies')
+					{							
+						if(fieldValue != '')
+						{
+							  jobj=fieldValue[0];
+							 
+							  for (i in jobj)
+								for(j in jobj[i])
+									if(j=="detail")
+									{
+										//alert("key--"+ j + " val -- "+jobj[i][j]);
+										tempArray['replytext'] = jobj[i][j];
+          								count++;
+										continue;
+									}
+						}						
+					}
+          			tempArray[field.name] = fieldValue;
+          			count++;
+										
+				});					
 				tempJsonThoughtGrid.push(tempArray);
 			}	
 			if(scope=='public' && action_status!='Completed') // outstandingTasks store
