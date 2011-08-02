@@ -60,7 +60,7 @@ class Thought < ActiveRecord::Base
       thought_data[name] = value
     end
     thought_data['assigned_to'] = self.assigned_to ? self.assigned_to.email : ''
-    thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('\n')
+    thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('<br/>')
     thought_data
   end
   
