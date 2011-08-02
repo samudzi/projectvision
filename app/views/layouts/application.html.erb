@@ -291,6 +291,40 @@
     "url":"/thoughts.json",
     "baseParams":{"fieldset":"default","ttype":"all"},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+  new Ext.data.JsonStore(
+  {
+    "storeId":"team_thought_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"action_status","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"actionable","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"assignee_id","allowBlank":true,"type":"int","defaultValue":null},
+      {"name":"brief","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"category","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"context","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"detail","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"due_date","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"id","allowBlank":true,"type":"int","defaultValue":null},
+      {"name":"next","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"outcome","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"parent_id","allowBlank":true,"type":"int","defaultValue":null},
+      {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"status","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"user_id","allowBlank":true,"type":"int","defaultValue":null},
+      {"name":"assigned_to","allowBlank":true,"type":"string","defaultValue":null},
+      //{"name":"replies","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"type","allowBlank":true,"type":"string","defaultValue":null},
+    ],
+    "idProperty":"id",
+    "url":"/thoughts.json",
+    "baseParams":{"fieldset":"default","ttype":"teamThought"},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
 </script> 
 <%= yield %>
 

@@ -1,5 +1,6 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
-
+var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
+teamThoughtStore.load();
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
 var fieldsArray = [ 
     {name: 'action_status', type: 'string'},
@@ -71,6 +72,11 @@ var thoughtGridJsonStore = new Ext.data.JsonStore({
 var outstandingTasksJsonStore = new Ext.data.JsonStore({
 			root: 'outstanding_tasks',
 			fields: fieldsArray
+});
+
+var outstandingTasksJsonStore = new Ext.data.JsonStore({
+      root: 'team_tasks',
+      fields: fieldsArray
 });
 
 var todoStatusComboStore = new Ext.data.SimpleStore({
@@ -185,11 +191,36 @@ function globalThoughtStoreCallbackFn(records){
 		thoughtGridJsonStore.loadData(finalJsonThoughtGrid,false);
 		
 		finalJsonOutstandingTasks["outstanding_tasks"] = tempJsonOutstandingTasks;
-		outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
+		//outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
 				
 }  // globalThoughtStoreCallbackFn
 
 
+function teamThoughtStoreCallbackFn(records){
+  
+    var tempJsonTeamTasks = new Array();
+    var finalJsonTeamTasks = new Array();
+    
+    records.each(function(rec){
+      var action_status = rec.get('action_status');
+      var action_type = rec.get('action_type');
+      var status = rec.get('status');
+      var scope = rec.get('scope');
+      
+      var tempArray = [];
+      rec.fields.keys.each(function(key) 
+      { 
+        var fieldValue = rec.get(key); 
+        tempArray[key] = fieldValue;
+      });
+      if(scope=='public' && action_status!='Completed') // outstandingTasks store
+        tempJsonTeamTasks.push(tempArray); 
+      
+    });
+    
+    finalJsonTeamTasks["team_tasks"] = tempJsonTeamTasks;
+    outstandingTaskGrid.loadData(finalJsonTeamTasks,false);
+}
 
 globalThoughtStore.load({callback : function(records,option,success){
 		globalThoughtStoreCallbackFn(records);		
@@ -200,6 +231,10 @@ globalThoughtStore.load({callback : function(records,option,success){
 	}
 });*/
 //// grid.getView().refresh();
+teamThoughtStore.load({callback : function(records,option,success){
+    teamThoughtStoreCallbackFn(records);
+  }
+});
 
 function thoughtSaveHandler()
 {

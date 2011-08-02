@@ -22,6 +22,10 @@ class Thought < ActiveRecord::Base
     end
     if(params[:ttype] == "all")
       thoughts = Thought.where(:user_id => params[:user_id])
+    else
+      if(params[:ttype] == "teamThought")
+        thoughts = Thought.where(:scope => 'public', :status => 0);
+      end
     end
     row_count = Thought.count
     [thoughts, row_count]

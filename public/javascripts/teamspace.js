@@ -54,7 +54,7 @@ var expander = new Ext.ux.grid.RowExpander({
 
 var teamThoughtGrid = new Ext.grid.GridPanel({
   title: 'Shared Team Thoughts',
-  store: thoughtGridJsonStore, // Store
+  store: teamThoughtStore, // Store
   height: 300,    
   bodyStyle:'margin-right:20px',
   plugins: expander,
@@ -100,7 +100,7 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
   }]
 });
 function extjsRenderer(value, id, r) {
-	    var id = Ext.id();	
+	  var id = Ext.id();	
 		var user_id = r.get('user_id');
 		var assignee_id = r.get('assignee_id');
 		var assigned_to = r.get('assigned_to');
@@ -143,7 +143,7 @@ function extjsRenderer(value, id, r) {
 
 var outstandingTaskGrid = new Ext.grid.GridPanel({
   title: 'Outstanding Tasks',
-  store: outstandingTasksJsonStore, //Dummy Store
+  store: teamThoughtStore, //Dummy Store
   height: 300,
   stripeRows: true,
   columns: [
