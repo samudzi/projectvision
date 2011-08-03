@@ -8,6 +8,8 @@ class Thought < ActiveRecord::Base
 
 #  extjs_fields :id, :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type
   belongs_to :user
+  belongs_to :team
+  has_many :action_logs, :as => :model
 
   def self.list(params=nil)
     row_count = 0;

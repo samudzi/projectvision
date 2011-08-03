@@ -9,6 +9,6 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me
   
   has_many :thoughts
-  belongs_to :team
-  belongs_to :action_log
+  has_and_belongs_to_many :teams
+  has_many :action_logs
 end

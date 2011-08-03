@@ -20,6 +20,8 @@ class ThoughtsController < ApplicationController
       @thought = Thought.new(params)
     end
     
+    @thought.team_id = 1 if @thought.scope == 'public'
+    
     @thought.user_id = current_user.id
     @success = @thought.save
     if @success
@@ -68,9 +70,9 @@ class ThoughtsController < ApplicationController
 
   def log_thought
     if @success
-      @action_logs = ActionLog.create :model_id => @thought.id, :model => "Thought", 
+      @action_logs = ActionLog.create :model_id => @thought.id, :model_type => "Thought", 
                                     :user_id =>current_user.id, :action_type => action_name,
-                                    :message => current_user.email + " " + action_name + " " + "Thought" + " " + @thought.brief.to_s
+                                    :message => current_user.email + " " + action_name + " " + "Thought" + " " + "#{@thought.brief}"
     end
   end
 end

@@ -7,7 +7,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # POST /resource/sign_up
   def create
     build_resource
-    resource[:team_id] = 1
     if resource.save
       if resource.active?
         set_flash_message :notice, :signed_up
