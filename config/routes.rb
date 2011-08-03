@@ -9,6 +9,11 @@ Pv::Application.routes.draw do
   
 
   resources :thoughts
+  resources :action_logs do
+    collection do
+      get 'recent_team_logs'
+    end
+  end
   resources :home
   resources :users
 

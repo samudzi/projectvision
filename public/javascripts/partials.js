@@ -1,6 +1,9 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
-teamThoughtStore.load();
+var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store')
+//teamThoughtStore.load();
+recentTeamStore.load();
+
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
 var fieldsArray = [ 
     {name: 'action_status', type: 'string'},

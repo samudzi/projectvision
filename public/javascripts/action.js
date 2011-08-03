@@ -167,7 +167,26 @@ var todoGrid = new Ext.grid.EditorGridPanel({
 		typeAhead: false,
 		triggerAction: 'all',
 		lazyRender: true,
-		emptyText: 'Select status'
+		emptyText: 'Select status',
+		listeners: {
+		  select: function(){
+		    Ext.Ajax.request({
+          url: '/thoughts/'+selectedThoughtID,
+          scope: todoGrid,
+          params: {
+            action_status: this.value 
+          },
+          waitMsg:'Updating...',
+          method: 'put',
+          success: function(f,a){
+            //todoStore.reload();
+			      globalThoughtStore.reload({callback : function(records,option,success){
+					    globalThoughtStoreCallbackFn(records);		
+				    }});
+				  }
+				});
+		  }
+		}
 
 	})
   },
@@ -263,7 +282,10 @@ var todoGrid = new Ext.grid.EditorGridPanel({
 			{
 		  		Ext.fly(grid.getView().getRow(rowIndexArray[i])).addClass('x-grid3-row-red');	
 			}*/
-    	}
+    	},
+    cellclick: function(grid, rowIndex, columnIndex, e) {
+        selectedThoughtID = todoJsonStore.getAt(rowIndex).data.id;
+    }
   },
   region:'center',
   stripeRows: true,

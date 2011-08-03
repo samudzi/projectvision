@@ -129,16 +129,20 @@ var quickThoughtPanel = new Ext.FormPanel({
 
 var recentTeamActivity = new Ext.grid.GridPanel({
   title: 'Recent team Activities',
-  store: inboxJsonStore,
+  store: recentTeamStore,
   height: 300,
   columns: [
-  {
-    id       :'brief',
-    header   : 'Thought',
-    width    : 460,
-    //    sortable : true,
-    dataIndex: 'brief'
-  }]
+     {
+       id       :'message',
+       header   : 'Message',
+       width    : 340,
+       //    sortable : true,
+       dataIndex: 'message'
+     },
+     {
+       header: 'Created At',
+       dataIndex: 'created_at'
+     }]
 });
 
 var dashboardPanel = new Ext.TabPanel({

@@ -10,11 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110727123538) do
+ActiveRecord::Schema.define(:version => 20110803023838) do
 
   create_table "action_logs", :force => true do |t|
     t.integer  "user_id"
-    t.string   "model"
+    t.string   "model_type"
     t.integer  "model_id"
     t.string   "action_type"
     t.text     "message"
@@ -27,6 +27,11 @@ ActiveRecord::Schema.define(:version => 20110727123538) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "teams_users", :id => false, :force => true do |t|
+    t.string "user_id"
+    t.string "team_id"
   end
 
   create_table "thoughts", :force => true do |t|
@@ -47,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20110727123538) do
     t.datetime "updated_at"
     t.integer  "parent_id"
     t.integer  "assignee_id"
+    t.integer  "team_id"
   end
 
   create_table "users", :force => true do |t|
@@ -61,7 +67,6 @@ ActiveRecord::Schema.define(:version => 20110727123538) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "team_id",                             :default => 1
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
