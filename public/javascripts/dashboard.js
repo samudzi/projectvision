@@ -5,7 +5,7 @@ var userStats = new Ext.FormPanel({
   frame: true,
   title: 'User Stats',
   //Width: 220,
-  //hieght: 200,
+  height: 300,
   items: []
 });
 
@@ -20,7 +20,7 @@ var userStatsItems = {
 userStats.add(userStatsItems);
 
 var miniTodoGrid = new Ext.grid.GridPanel({
-  title: 'Upcoming Tasks',
+  title: 'My Upcoming Tasks',
   store: upcomingJsonStore,
   height: 300,
   columns: [
@@ -40,7 +40,7 @@ var miniTodoGrid = new Ext.grid.GridPanel({
 
 // create the Grid
 var miniThoughtGrid = new Ext.grid.GridPanel({
-  title: 'Recent Thoughts',
+  title: 'My Recent Thoughts',
   store: inboxJsonStore,
   height: 300,
   columns: [
@@ -64,7 +64,7 @@ var miniThoughtGrid = new Ext.grid.GridPanel({
 
 // create the Grid
 var miniCompltedTodoGrid = new Ext.grid.GridPanel({
-  title: 'Completed Items Log',
+  title: 'My Completed Items',
   store: recentCompletedJsonStore,
   height: 300,
   columns: [
@@ -109,9 +109,10 @@ var quickThoughtPanel = new Ext.FormPanel({
   //  collapsible: 'true',
   labelAlign: 'top',
   defaults: {
-    width: 330
+    width: 330,
+  	height: 170
   },
-  defaultType: 'textfield',
+  defaultType: 'textarea',
   //  disabled: true,
   //  minSize: 75,
   //  maxSize: 250,
@@ -120,6 +121,7 @@ var quickThoughtPanel = new Ext.FormPanel({
     name:'brief',
     ref:'quickThought'
   }],
+  buttonAlign: 'left',
   buttons: [{
     text: 'Save',
     handler: miniThoughtSaveHandler
@@ -128,7 +130,7 @@ var quickThoughtPanel = new Ext.FormPanel({
 
 
 var recentTeamActivity = new Ext.grid.GridPanel({
-  title: 'Recent team Activities',
+  title: "Teams' Recent Activities",
   store: recentTeamStore,
   height: 300,
   columns: [
@@ -167,7 +169,7 @@ var dashboardPanel = new Ext.TabPanel({
       frame:true,
       width:500
     },
-    items: [userStats,quickThoughtPanel,miniTodoGrid,miniThoughtGrid,miniCompltedTodoGrid,recentTeamActivity]
+    items: [quickThoughtPanel,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid,userStats]
   },{
     title: 'Community'
   },{

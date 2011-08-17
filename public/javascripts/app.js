@@ -19,7 +19,7 @@ var tabs = new Ext.ux.VrTabPanel({
   ref:'tabs',
   activeTab: 0,
   width:1024,
-  height:900,
+  height:620,
   plain:true,
   tabMarginTop: 30,	/* Push the tab strip down 30px from top. If not set, defaults to 15.*/
   bodyStyle: 'padding: 10px',

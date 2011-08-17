@@ -1,5 +1,5 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
-var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
+var teamStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store')
 //teamThoughtStore.load();
 recentTeamStore.load();
@@ -79,6 +79,11 @@ var outstandingTasksJsonStore = new Ext.data.JsonStore({
 
 var outstandingTasksJsonStore = new Ext.data.JsonStore({
       root: 'team_tasks',
+      fields: fieldsArray
+});
+
+var teamThoughtsJsonStore = new Ext.data.JsonStore({
+      root: 'team_thoughts',
       fields: fieldsArray
 });
 
@@ -202,7 +207,9 @@ function globalThoughtStoreCallbackFn(records){
 function teamThoughtStoreCallbackFn(records){
   
     var tempJsonTeamTasks = new Array();
+    var tempJsonTeamThoughts = new Array();
     var finalJsonTeamTasks = new Array();
+    var finalJsonTeamThoughts = new Array();
     
     records.each(function(rec){
       var action_status = rec.get('action_status');
@@ -215,11 +222,19 @@ function teamThoughtStoreCallbackFn(records){
       { 
         var fieldValue = rec.get(key); 
         tempArray[key] = fieldValue;
+        if(scope=='public' && action_status!='Completed' && status==2) // outstandingTasks store
+			tempJsonTeamTasks.push(tempArray);	
+		if(scope=='public' && status==0)
+			tempJsonTeamThoughts.push(tempArray);
+				
       });
       //if(scope=='public' && action_status!='Completed' && status==2 && action_type=='1') // outstandingTasks store
         //tempJsonTeamTasks.push(tempArray); 
       
     });
+    
+    finalJsonTeamThoughts["team_thoughts"] = tempJsonTeamThoughts;
+    teamThoughtsJsonStore.loadData(finalJsonTeamThoughts,false);
     
     finalJsonTeamTasks["team_tasks"] = tempJsonTeamTasks;
     outstandingTasksJsonStore.loadData(finalJsonTeamTasks,false);
@@ -234,7 +249,7 @@ globalThoughtStore.load({callback : function(records,option,success){
 	}
 });*/
 //// grid.getView().refresh();
-teamThoughtStore.load({callback : function(records,option,success){
+teamStore.load({callback : function(records,option,success){
     teamThoughtStoreCallbackFn(records);
   }
 });
@@ -253,6 +268,11 @@ function thoughtSaveHandler()
 				globalThoughtStoreCallbackFn(records);		
 			}
 		});
+		teamThoughtStore.reload({
+        	callback : function(records, option, success) {
+            teamThoughtStoreCallbackFn(records);
+          }
+        });
         newThought = false;
       }
     });
@@ -272,6 +292,11 @@ function thoughtSaveHandler()
 				globalThoughtStoreCallbackFn(records);		
 			}
 		});
+		teamThoughtStore.reload({
+        	callback : function(records, option, success) {
+            teamThoughtStoreCallbackFn(records);
+          }
+        });
       }
     });
   }

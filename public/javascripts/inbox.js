@@ -257,7 +257,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
   region:'center',
   stripeRows: true,
   autoExpandColumn: 'brief',
-  height: 350,
+  height: 400,
   width: 600,
   //  title: 'Array Grid',
   // config options for stateful behavior
@@ -269,7 +269,7 @@ var detailsPanel = new Ext.Panel({
   title: 'Details',
   region: 'south',
   ref: 'detailsPanel',
-  height: 150,
+  height: 200,
   minSize: 75,
   maxSize: 250,
   cmargins: '5 0 0 0',
