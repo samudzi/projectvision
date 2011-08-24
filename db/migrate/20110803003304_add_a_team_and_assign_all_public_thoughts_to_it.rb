@@ -9,8 +9,8 @@ class AddATeamAndAssignAllPublicThoughtsToIt < ActiveRecord::Migration
   end
 
   def self.down
-    team = Team.find_by_name('Team Space')
-    team.destroy if team
-    Thought.update_all :team_id => nil
+    # team = Team.find_by_name('Team Space')
+    #     team.destroy if team
+    #     Thought.update_all :team_id => nil
   end
 end
