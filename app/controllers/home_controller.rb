@@ -4,11 +4,13 @@ class HomeController < ApplicationController
 #  helper ExtJS::Helpers::Store
 #  helper ExtJS::Helpers::Component
   
-  def index    
-    if(current_user.nil?)
-      render :action => 'login'
-    else
-      if current_user.teams.length == 0
+
+  def index
+		if(current_user.nil?)
+		  render :action => 'login'
+		else
+		  #logger.debug(current_user.id);
+		  if current_user.teams.length == 0
         team = Team.find(1)
         current_user.teams << team
         current_user.save!
