@@ -2,9 +2,9 @@ class AddATeamAndAssignAllPublicThoughtsToIt < ActiveRecord::Migration
   def self.up
     team = Team.create :name => "Team Space", :status => "public"
     Thought.where(:scope=>"public").each do |t|
-      team.thoughts << t
+      t.team_id = team.id
+      t.save!
     end
-    team.save!
   end
 
   def self.down
