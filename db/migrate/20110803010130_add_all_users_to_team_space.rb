@@ -7,10 +7,12 @@ class AddAllUsersToTeamSpace < ActiveRecord::Migration
     end
     
     team = Team.find_by_name('Team Space')
-    User.all.each do |user|
-      team.users << user
+    if team
+      User.all.each do |user|
+        team.users << user
+      end
+      team.save!
     end
-    team.save!
     
   end
 
