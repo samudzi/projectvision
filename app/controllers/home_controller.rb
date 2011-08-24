@@ -1,9 +1,10 @@
 class HomeController < ApplicationController
 
-  #  include ExtJS::Controller
-  #  helper ExtJS::Helpers::Store
-  #  helper ExtJS::Helpers::Component
-  def index
+#  include ExtJS::Controller
+#  helper ExtJS::Helpers::Store
+#  helper ExtJS::Helpers::Component
+  
+  def index    
     if(current_user.nil?)
       render :action => 'login'
     else
@@ -12,7 +13,7 @@ class HomeController < ApplicationController
         current_user.teams << team
         current_user.save!
       end
-    end
+		end
   end
 
   def login
