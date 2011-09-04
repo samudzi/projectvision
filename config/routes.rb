@@ -2,8 +2,6 @@ Pv::Application.routes.draw do
 
   devise_for :users, :controllers => { :sessions => "users/sessions"}
 
-  get "users/index"
-
   root :to => "home#index"
   get "home/index"
   
@@ -15,8 +13,16 @@ Pv::Application.routes.draw do
     end
   end
   resources :home
-  resources :users
-
+  
+  resources :my_users
+  
+  resources :teams do
+    collection do
+      post 'add_user'
+      post 'remove_user'
+    end
+  end
+  
   match 'thoughts/update_status/:id' => 'thought#update_status'
   match 'home/login' => 'home#login'
   

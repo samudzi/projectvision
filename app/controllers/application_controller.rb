@@ -8,4 +8,8 @@ class ApplicationController < ActionController::Base
 	# 		# logger.debug("Signed In")
 	#     "/home/"
 	# end
+	
+	def is_admin?
+	  return true
+	end
 end

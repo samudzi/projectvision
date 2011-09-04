@@ -51,6 +51,7 @@ Ext.onReady(function(){
             }
             login.getForm().reset();
           }
+          
         });
 	} //// loginprocess
   // Create a variable to hold our EXT Form Panel.

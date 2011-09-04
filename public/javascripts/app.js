@@ -5,6 +5,8 @@
 //console.log(inboxStore);
 
 var addWindow;
+var teamWindow;
+var userWindow;
 var todoEditWindow;
 var refEditWindow;
 var remindEditWindow;
@@ -14,6 +16,7 @@ var currentOrganizeIndex;
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
 // Horizontal Tabs ( Ext.TabPanel ) nested inside Vertical TabPanel.
+
 var tabs = new Ext.ux.VrTabPanel({
   title: 'Project Vision',
   ref:'tabs',
@@ -26,7 +29,7 @@ var tabs = new Ext.ux.VrTabPanel({
   defaults: {
     autoScroll: true
   },
-  items:[dashboardPanel,inboxPanel,organizePanel,actionPanel]
+  items:[dashboardPanel,inboxPanel,organizePanel,actionPanel,adminPanel]
 });//,{
 //    title: 'Action',
 //    xtype: 'tabpanel',

@@ -147,6 +147,44 @@ var recentTeamActivity = new Ext.grid.GridPanel({
      }]
 });
 
+var users = new Ext.grid.GridPanel({
+  title: "Users",
+  store: recentCompletedJsonStore,
+  height: 300,
+  columns: [
+     {
+       id       :'users',
+       header   : 'Users',
+       width    : 340,
+       //    sortable : true,
+       dataIndex: 'users'
+     },
+     {
+       header: 'Team_Space',
+       dataIndex: 'teamspace'
+     }]
+});
+
+var teamspace = new Ext.grid.GridPanel({
+  title: "Team Space",
+  store: recentCompletedJsonStore,
+  height: 300,
+  columns: [
+     {
+       id       :'teamspace',
+       header   : 'Team Space',
+       width    : 340,
+       //    sortable : true,
+       dataIndex: 'team_space'
+     },
+     {
+       header: 'Created At',
+       dataIndex: 'created_at'
+     }]
+});
+
+
+
 var dashboardPanel = new Ext.TabPanel({
   title: 'Dashboard',
   id:'main-panel',
@@ -174,6 +212,30 @@ var dashboardPanel = new Ext.TabPanel({
     title: 'Community'
   },{
     title: 'Personal Settings'
+  },{
+     title: 'Users',
+    ref:'user',
+    layout:'table',
+    layoutConfig: {
+      columns:2
+    },
+    defaults: {
+      frame:true,
+      width:500
+    },
+    items: [users]
+  },{
+     title: 'Team Spaces',
+    ref:'team_space',
+    layout:'table',
+    layoutConfig: {
+      columns:2
+    },
+    defaults: {
+      frame:true,
+      width:500
+    },
+    items: [teamspace]
   }
   ],
   listeners: {
@@ -185,3 +247,6 @@ var dashboardPanel = new Ext.TabPanel({
 		  }
   }
 });
+
+
+

@@ -24,7 +24,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       render_with_scope :new
     end
   end
-
+  
   # GET /resource/edit
   def edit
     render_with_scope :edit

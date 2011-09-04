@@ -282,6 +282,53 @@
     "url":"/thoughts.json",
     "baseParams":{"fieldset":"default","ttype":"all"},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+  new Ext.data.JsonStore(
+  {
+    "storeId":"users_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":false,"type":"int","defaultValue": 1},
+      {"name":"email","allowBlank":false,"type":"string","defaultValue":""},
+            ],
+    "idProperty":"id",
+    "url":"/my_users.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+  
+  var teamStoreReader = new Ext.data.JsonReader(
+  {
+    "idProperty":"id",
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":false,"type":"string","defaultValue": "1_1"},
+      {"name":"user_id","allowBlank":false,"type":"int","defaultValue": 1},
+      {"name":"user","allowBlank":false,"type":"string","defaultValue": ""},
+      {"name":"tasks","allowBlank":false,"type":"string","defaultValue": ""},
+      {"name":"team_id","allowBlank":false,"type":"int","defaultValue": 1},
+      {"name":"team","allowBlank":false,"type":"string","defaultValue":"goodlogics"},
+            ]
+  });
+  
+  new Ext.data.GroupingStore(
+  {
+    "storeId":"team_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "reader":teamStoreReader,
+    "url":"/teams.json",
+    "groupField": 'team',
+    "baseParams":{},
+    "format":"json",
+    "writer":new Ext.data.JsonWriter({"encode":false})});
+
+
+
   new Ext.data.JsonStore(
   {
     "storeId":"team_thought_store",

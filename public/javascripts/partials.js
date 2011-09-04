@@ -1,8 +1,14 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
-var teamStore = Ext.StoreMgr.get('team_thought_store');
+var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store')
+var userStore = Ext.StoreMgr.get('users_store')
+var teamUserStore = Ext.StoreMgr.get('team_store')
+
 //teamThoughtStore.load();
 recentTeamStore.load();
+userStore.load();
+teamUserStore.load();
+
 
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
 var fieldsArray = [ 
@@ -29,6 +35,7 @@ var fieldsArray = [
     {name: 'type', type: 'string'},
 		{name: 'replies', type: 'string'}, 
 ];
+
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
 			fields: fieldsArray
@@ -108,6 +115,44 @@ var eventStore = new Ext.ensible.sample.MemoryEventStore({
 	root: 'actionstatus',
 	fields: ['value', 'action_status']
 });*/
+
+var emailOptions=new Ext.data.SimpleStore({
+      fields: ['email','id'],
+    });
+var teamOptions=new Ext.data.SimpleStore({
+      fields: ['team','id'],
+    });
+
+function addUserAndTeamSelectOptions()
+{
+  emailOptions.removeAll(silent=false);
+  userStore.each(function(record){
+    var email = record.get('email');
+    var user_id = record.get('id');
+    var recordData = {
+      email: email, 
+      id: user_id
+      };
+    
+    var emailOptionsRecord = new emailOptions.recordType(recordData)   
+    emailOptions.add(emailOptionsRecord);  
+   }); 
+  teamOptions.removeAll(silent=false);
+  teamUserStore.each(function(record){
+    var team = record.get('team');
+    var team_id = record.get('id');
+    var recordTeamData = {
+      team: team,
+      id: team_id
+      };
+    
+    var teamOptionsRecord = new teamOptions.recordType(recordTeamData)   
+    teamOptions.add(teamOptionsRecord);  
+    }); 
+  
+}
+
+
 var finalJsonEventData = new Array();
 
 function globalThoughtStoreCallbackFn(records){
@@ -249,7 +294,7 @@ globalThoughtStore.load({callback : function(records,option,success){
 	}
 });*/
 //// grid.getView().refresh();
-teamStore.load({callback : function(records,option,success){
+teamThoughtStore.load({callback : function(records,option,success){
     teamThoughtStoreCallbackFn(records);
   }
 });
@@ -303,6 +348,54 @@ function thoughtSaveHandler()
 //  addWindow.hide();
   if(addWindow) addWindow.hide();
 }
+
+function teamAsignHandler()
+{
+  teamAsignPanel.getForm().submit({
+    url: '/teams/add_user.json',
+    method: 'post',
+    waitmsg: 'Saving...',
+    success: function(f,a) {
+      teamUserStore.reload();
+      teamWindow.hide();
+    }
+  });
+  
+}
+
+function userSaveHandler()
+{
+  if(newUser)
+  {
+    userAddPanel.getForm().submit({
+      url: '/my_users.json',
+      method: 'post',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    userStore.reload();
+		  }
+    });
+    newUser = false;
+  }
+  else
+  {
+    userAddPanel.getForm().submit({
+      url: '/my_users/'+selectedUserID+'.json',
+      params: {
+        id: selectedUserID
+      },
+      method: 'put',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    userStore.reload();
+      }
+    });
+  }
+  if(userWindow) userWindow.hide();
+}
+
+
+
 
 function todoSaveHandler()
 {
@@ -433,8 +526,91 @@ var addPanel = new Ext.form.FormPanel({
   },{
     text: 'Close',
     handler: function(){
-//      addWindow.hide();
       addWindow.hide();
+    }
+  }]
+});
+
+var teamAsignPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'teamAsignPanel',
+  defaults: {
+    width: 350
+  },
+  items:[{
+    name: 'user',
+    xtype: 'combo',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Users',
+    triggerAction: 'all',
+    store: emailOptions,
+    displayField: 'email',
+    valueField: 'id',
+    emptyText: 'Select User'
+  },{
+    name: 'team',
+    xtype: 'combo',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Teams',
+    triggerAction: 'all',
+    store: teamOptions,
+    displayField: 'team',
+    valueField: 'id',
+    emptyText: 'Select Team'
+
+  }],
+  buttons:[{
+    text: "Save",
+    handler: teamAsignHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      teamWindow.hide();
+    }
+  }]
+});
+
+var userAddPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'userAddPanel',
+  defaults: {
+    width: 350
+  },
+  items:[{
+    fieldLabel:"Email",
+    name:'email',
+    ref:'email',
+    allowBlank:false
+  },{
+    fieldLabel:"Password",
+    name:'password',
+    ref:'password',
+    allowBlank:false
+  
+  },{
+    fieldLabel:"Confirm Password",
+    name:'password_confirmation',
+    ref:'password_confirmation',
+    allowBlank:false
+  
+  }],
+  buttons:[{
+    text: "Save",
+    handler: userSaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      userWindow.hide();
     }
   }]
 });
@@ -701,3 +877,56 @@ var remindEditPanel = new Ext.form.FormPanel({
     }
   }]
 });
+
+
+/*
+var addToTeam = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'addToTeam',
+  defaults: {
+    width: 350
+  },
+  items:[{
+    xtype: 'combo',
+    ref:'teams',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Teams',
+    name: 'teams',
+    triggerAction: 'all',
+    displayField: 'name',
+    valueField: 'value',
+    emptyText: 'Select Team',
+    
+    store: new Ext.data.SimpleStore({
+      fields: ['name','value'],
+      data: [
+      ['General','General'],
+      ['To Do','To Do'],
+      ['Reference','Reference']
+      ]
+    }),
+    value: 'General'
+
+  },
+  buttons:[{
+    text: "Save",
+    handler: thoughtSaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+//      addWindow.hide();
+      addWindow.hide();
+    }
+  }]
+});*/
+
+
+
+
+
+
