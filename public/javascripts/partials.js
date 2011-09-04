@@ -146,8 +146,9 @@ function addUserAndTeamSelectOptions()
       id: team_id
       };
     
-    var teamOptionsRecord = new teamOptions.recordType(recordTeamData)   
-    teamOptions.add(teamOptionsRecord);  
+    var teamOptionsRecord = new teamOptions.recordType(recordTeamData)
+    if(teamOptions.find('team',team)==-1)
+      teamOptions.add(teamOptionsRecord);  
     }); 
   
 }

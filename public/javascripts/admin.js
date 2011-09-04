@@ -128,7 +128,8 @@ var users = new Ext.grid.GridPanel({
         header   : 'Users',
         width    : 90,
         //    sortable : true,
-        dataIndex: 'id'
+        dataIndex: 'id',
+        hidden: true
       },{
         header: 'Email',
         width    : 250,
@@ -151,10 +152,9 @@ var users = new Ext.grid.GridPanel({
             width: 380,
             applyTo:'user-window',
             closeAction:'hide',
-            height: 200,
+            height: 230,
             layout: 'fit',
             plain:true,
-            hidden: false,
             bodyStyle:'padding:5px;',
             buttonAlign:'center',
               //resizable:false,
@@ -213,9 +213,6 @@ var users = new Ext.grid.GridPanel({
     handler: newUserHandler
   }],
   listeners: {
-    rowclick: {
-      fn: gridRowClickHandler
-    }
   },
   region:'center'
  
