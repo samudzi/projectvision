@@ -3,7 +3,9 @@
 //var inboxStore = Ext.StoreMgr.get('inbox_store');
 //inboxStore.load();
 //console.log(inboxStore);
-
+var newTeamWindow;
+var deleteTeamWindow;
+var editTeamWindow;
 var addWindow;
 var teamWindow;
 var userWindow;

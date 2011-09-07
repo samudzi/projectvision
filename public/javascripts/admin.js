@@ -23,6 +23,78 @@ function newAsignHandler(){
 
 }
 
+function newTeamHandler(){
+    newTeam = true;
+
+  if(!newTeamWindow) newTeamWindow = new Ext.Window({
+    title: 'Add New Team',
+    width: 380,
+    applyTo:'new-team-window',
+    closeAction:'hide',
+    height: 230,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: teamAddPanel
+  });
+  else
+    newTeamWindow.setTitle('Add New Team');
+   
+   console.log("new");
+   teamAddPanel.getForm().reset();
+   newTeamWindow.show();
+
+}
+
+function editTeamHandler(){
+   if(!editTeamWindow) editTeamWindow = new Ext.Window({
+    title: 'Edit Team ',
+    width: 380,
+    applyTo:'edit-team-window',
+    closeAction:'hide',
+    height: 230,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: editTeamPanel
+  });
+  else
+    editTeamWindow.setTitle('Edit Team');
+   
+  editTeamPanel.getForm().reset();
+  addUserAndTeamSelectOptions();
+  editTeamWindow.show();
+}
+
+
+
+function deleteTeamHandler(){
+   if(!deleteTeamWindow) deleteTeamWindow = new Ext.Window({
+    title: 'Delete Team ',
+    width: 380,
+    applyTo:'delete-team-window',
+    closeAction:'hide',
+    height: 230,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: deleteTeamPanel
+  });
+  else
+    deleteTeamWindow.setTitle('Delete Team');
+   
+  deleteTeamPanel.getForm().reset();
+  addUserAndTeamSelectOptions();
+  deleteTeamWindow.show();
+}
+
+
 function newUserHandler(){
     newUser = true;
 
@@ -104,13 +176,25 @@ var teams = new Ext.grid.GridPanel({
         }),
   tbar: [
     {
-      text: 'New Assign',
+      text: 'New Team',
+      iconCls: 'add-prop',
+      handler: newTeamHandler
+    },{
+      text: 'Edit Team',
+      iconCls: 'add-prop',
+      handler: editTeamHandler
+    },{
+      text: 'Delete Team',
+      iconCls: 'add-prop',
+      handler: deleteTeamHandler
+    },{
+      text: 'Assign User',
       iconCls: 'add-prop',
       handler: newAsignHandler
     }],
    listeners: {
     rowclick: {
-      fn: gridRowClickHandler
+     // fn: gridRowClickHandler
     }
    },
    

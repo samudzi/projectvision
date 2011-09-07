@@ -15,7 +15,6 @@ Pv::Application.routes.draw do
   resources :home
   
   resources :my_users
-  
   resources :teams do
     collection do
       post 'add_user'

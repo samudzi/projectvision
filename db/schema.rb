@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110803023838) do
+ActiveRecord::Schema.define(:version => 20110907060449) do
 
   create_table "action_logs", :force => true do |t|
     t.integer  "user_id"
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(:version => 20110803023838) do
   end
 
   create_table "teams_users", :id => false, :force => true do |t|
-    t.string "user_id"
-    t.string "team_id"
+    t.integer "user_id"
+    t.integer "team_id"
   end
 
   create_table "thoughts", :force => true do |t|
@@ -56,8 +56,8 @@ ActiveRecord::Schema.define(:version => 20110803023838) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                               :default => "", :null => false
-    t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
+    t.string   "email",                               :default => "",    :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "remember_created_at"
     t.integer  "sign_in_count",                       :default => 0
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(:version => 20110803023838) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_admin",                            :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

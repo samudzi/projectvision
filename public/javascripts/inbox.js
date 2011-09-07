@@ -77,8 +77,10 @@ function newHandler(){
   addPanel.category.setValue('General');
   addPanel.thoughtType.setValue('private');
   addPanel.status.setValue(0);
+  addPanel.getForm().findField('team').setVisible(false);
   addWindow.show();
-
+  addUserAndTeamSelectOptions();
+  
 }
 
 function deleteHandler(){
@@ -169,7 +171,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
           }
           
         });
-        
+        addUserAndTeamSelectOptions();
         addWindow.show();
         addPanel.brief.focus();
       }

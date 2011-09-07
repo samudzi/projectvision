@@ -361,8 +361,70 @@ function teamAsignHandler()
       teamWindow.hide();
     }
   });
-  
 }
+
+
+function teamDeleteHandler()
+{
+  selectedTeamID = deleteTeamPanel.getForm().findField('team').getValue().split("_")[0];
+  console.log(selectedTeamID);
+  Ext.Ajax.request({
+    url: '/teams/'+selectedTeamID,
+    scope:this,
+    params: {
+      id: selectedTeamID
+      },
+    waitMsg:'Deleting...',
+    method: 'delete',
+    success: function(f,a){
+      teamUserStore.load();
+      }
+    });
+    deleteTeamWindow.hide();
+}
+
+
+function teamEditHandler()
+{
+  selectedTeamID = editTeamPanel.getForm().findField('team').getValue().split("_")[0];
+  console.log(selectedTeamID);
+  
+  if(!newTeamWindow) newTeamWindow = new Ext.Window({
+    title: 'Edit Team',
+    width: 380,
+    applyTo:'new-team-window',
+    closeAction:'hide',
+    height: 230,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: teamAddPanel
+  });
+  else
+    newTeamWindow.setTitle('Edit Team');
+   
+  teamAddPanel.getForm().reset();
+  teamAddPanel.getForm().load({
+          url: '/teams/' + selectedTeamID + '.json',
+          params: {
+            id: selectedTeamID
+          },
+          waitMsg: 'Loading...',
+          method: 'get',
+          success: function(f,a){
+          },
+          failure: function(form, action){
+            Ext.Msg.alert("Load failed", action.result.errorMessage);
+          }
+        });
+              
+  editTeamWindow.hide();
+  newTeam = false;
+  newTeamWindow.show();
+}
+
 
 function userSaveHandler()
 {
@@ -395,8 +457,36 @@ function userSaveHandler()
   if(userWindow) userWindow.hide();
 }
 
-
-
+function teamSaveHandler()
+{
+  if(newTeam)
+  {
+    teamAddPanel.getForm().submit({
+      url: '/teams.json',
+      method: 'post',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    teamUserStore.reload();
+		  }
+    });
+    newTeam = false;
+  }
+  else
+  {
+    teamAddPanel.getForm().submit({
+      url: '/teams/'+selectedTeamID+'.json',
+      params: {
+        id: selectedTeamID
+      },
+      method: 'put',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    teamUserStore.reload();
+      }
+    });
+  }
+ if(newTeamWindow) newTeamWindow.hide();
+}
 
 function todoSaveHandler()
 {
@@ -459,6 +549,7 @@ function remindSaveHandler()
   remindEditWindow.hide();
 }
 
+
 var addPanel = new Ext.form.FormPanel({
   labelWidth:80,
   labelAlign: 'top',
@@ -510,12 +601,39 @@ var addPanel = new Ext.form.FormPanel({
       boxLabel: 'Private',
       name: 'scope',
       inputValue: 'private',
-      checked: 'true'
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            addPanel.getForm().findField('team').setVisible(false);
+          }
+        }
+      }
     },{
       boxLabel: 'Public',
       name: 'scope',
-      inputValue: 'public'
+      inputValue: 'public',
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+            if(checked) {
+               addPanel.getForm().findField('team').setVisible(true);
+            }
+        }
+      }
     }]
+  },{
+      name: 'team',
+      xtype: 'combo',
+      mode: 'local',
+      typeAhead: true,
+      forceSelection: true,
+      fieldLabel: 'Teams',
+      triggerAction: 'all',
+      store: teamOptions,
+      displayField: 'team',
+      valueField: 'id',
+      hidden: true
   },{
     ref: 'status',
     name: 'status',
@@ -615,6 +733,104 @@ var userAddPanel = new Ext.form.FormPanel({
     }
   }]
 });
+
+
+var teamAddPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'teamAddPanel',
+  defaults: {
+    width: 250
+  },
+  items:[{
+    fieldLabel:"Team Name",
+    name:'name',
+    ref:'team',
+    allowBlank:false
+  }],
+  buttons:[{
+    text: "Save",
+    handler: teamSaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      newTeamWindow.hide();
+    }
+  }]
+});
+
+var editTeamPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'editTeamPanel',
+  defaults: {
+    width: 350
+  },
+  items:[{
+    name: 'team',
+    xtype: 'combo',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Teams',
+    triggerAction: 'all',
+    store: teamOptions,
+    displayField: 'team',
+    valueField: 'id',
+    emptyText: 'Select Team'
+
+  }],
+  buttons:[{
+    text: "Edit",
+    handler: teamEditHandler
+  },{
+    text: 'Cancel',
+    handler: function(){
+      editTeamWindow.hide();
+    }
+  }]
+});
+
+
+var deleteTeamPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'deleteTeamPanel',
+  defaults: {
+    width: 350
+  },
+  items:[{
+    name: 'team',
+    xtype: 'combo',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Teams',
+    triggerAction: 'all',
+    store: teamOptions,
+    displayField: 'team',
+    valueField: 'id',
+    emptyText: 'Select Team'
+
+  }],
+  buttons:[{
+    text: "delete",
+    handler: teamDeleteHandler
+  },{
+    text: 'Cancel',
+    handler: function(){
+      deleteTeamWindow.hide();
+    }
+  }]
+});
+
+
 
 var todoEditPanel = new Ext.form.FormPanel({
   labelWidth:80,
@@ -731,8 +947,8 @@ var todoEditPanel = new Ext.form.FormPanel({
     },{
       boxLabel: 'Public',
       name: 'scope',
-      inputValue: 'public'
-    }]
+      inputValue: 'public',
+    }]  
   },{
     ref: 'status',
     name: 'status',

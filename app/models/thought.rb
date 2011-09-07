@@ -4,7 +4,7 @@ class Thought < ActiveRecord::Base
   belongs_to :assigned_to, :class_name => 'User', :foreign_key => "assignee_id"
 #  include ExtJS::Model
 
-  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type, :scope, :parent_id, :assignee_id
+  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type, :scope, :parent_id, :assignee_id, :team_id
 
 #  extjs_fields :id, :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type
   belongs_to :user
@@ -61,6 +61,7 @@ class Thought < ActiveRecord::Base
     self.attributes.each_pair do |name,value|
       thought_data[name] = value
     end
+    thought_data['team'] = self.team ? self.team.name : ''
     thought_data['assigned_to'] = self.assigned_to ? self.assigned_to.email : ''
     thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('<br/>')
     thought_data

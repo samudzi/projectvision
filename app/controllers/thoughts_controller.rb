@@ -20,7 +20,11 @@ class ThoughtsController < ApplicationController
       @thought = Thought.new(params)
     end
     
-    @thought.team_id = 1 if @thought.scope == 'public'
+    #@thought.team_id = 1 if @thought.scope == 'public'
+    if params[:team] and @thought.scope == 'public'
+      team = Team.find_by_name params[:team]
+      @thought.team_id = team.id
+    end
     
     @thought.user_id = current_user.id
     @success = @thought.save
@@ -50,6 +54,12 @@ class ThoughtsController < ApplicationController
     if params[:thought]
       @success = @thought.update_attributes(params[:thought])
     else
+      if params[:team] and @thought.scope == 'public'
+        team = Team.find_by_name params[:team]
+        params[:team_id] = team.id
+      end
+      @thought.team_id = nil if @thought.scope == 'private'
+      
       @success = @thought.update_attributes(params)
     end
     

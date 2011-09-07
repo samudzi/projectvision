@@ -16,6 +16,50 @@ class TeamsController < ApplicationController
    
   end
   
+  def show
+    @team = Team.find params[:id]
+    render :json => {
+      :success => true,
+      :data => @team.attributes
+    }
+  end
+  
+  
+  def create
+    if params[:name]
+      @team = Team.new params
+    else
+      @team = Team.new params[:team]
+    end
+    if @team.save
+      render :json => {
+          :notice => 'Saved',
+          :success => true,
+          :data => @team.id
+      }
+    else
+      render :json => { :success => false }
+    end
+  end
+  
+  def update
+    @team = Team.find(params[:id])
+    if @team.update_attributes params
+      render :json => { :success => true}
+    else
+      render :json => { :success => false}
+    end
+  end
+
+  def destroy
+    @team = Team.find(params[:id])
+    if @team.destroy
+      render :json => { :success => true }
+    else
+      render :json => { :success => false }
+    end
+  end
+  
   def add_user
     team = Team.find_by_name params[:team]
     user = User.find_by_email params[:user]
