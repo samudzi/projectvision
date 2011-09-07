@@ -10,6 +10,6 @@ class ApplicationController < ActionController::Base
 	# end
 	
 	def is_admin?
-	  return true
+	  return current_user.is_admin
 	end
 end

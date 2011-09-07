@@ -163,7 +163,6 @@ function timedDelay() {
 	//Ext.ensible.sample.EventData = finalJsonEventData;
 	//eventStore.loadData(Ext.ensible.sample.EventData);
 }
-
 /*var eventStore = new Ext.ensible.sample.MemoryEventStore({
  // defined in events.js
  data: Ext.ensible.sample.EventData

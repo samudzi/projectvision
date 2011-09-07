@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_filter :is_admin?, :only => [:add_user]
+  before_filter :is_admin?
   
   def index
     @teams = Team.all

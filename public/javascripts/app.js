@@ -18,6 +18,12 @@ var currentOrganizeIndex;
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
 // Horizontal Tabs ( Ext.TabPanel ) nested inside Vertical TabPanel.
+var mainPanel;
+
+if (is_admin == true)
+  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,adminPanel];
+else
+  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel];
 
 var tabs = new Ext.ux.VrTabPanel({
   title: 'Project Vision',
@@ -31,7 +37,8 @@ var tabs = new Ext.ux.VrTabPanel({
   defaults: {
     autoScroll: true
   },
-  items:[dashboardPanel,inboxPanel,organizePanel,actionPanel,adminPanel]
+
+  items:mainPanel
 });//,{
 //    title: 'Action',
 //    xtype: 'tabpanel',

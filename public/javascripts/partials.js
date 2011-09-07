@@ -189,7 +189,7 @@ function globalThoughtStoreCallbackFn(records){
         tempArray[key] = fieldValue;
 			});
 			if(status==0) // inbox store
-				tempJsonInbox.push(tempArray);	
+				tempJsonInbox.push(tempArray);
 			if(status==1) // organize store
 				tempJsonOrganize.push(tempArray);	
 		  if(status==2 && action_type=='1') // todo store
@@ -608,6 +608,7 @@ var addPanel = new Ext.form.FormPanel({
             addPanel.getForm().findField('team').setVisible(false);
           }
         }
+      
       }
     },{
       boxLabel: 'Public',

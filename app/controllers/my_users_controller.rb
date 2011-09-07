@@ -1,4 +1,5 @@
 class MyUsersController < ApplicationController
+ before_filter :is_admin?
   def index
     @users = User.all   
     render :json =>  {:data => @users.collect{|u| u.attributes}, :success => true, :totalRows => @users.count }.to_json

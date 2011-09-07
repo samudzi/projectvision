@@ -277,6 +277,7 @@ var detailsPanel = new Ext.Panel({
   cmargins: '5 0 0 0',
   html: '<p>Select a Thought</p>'
 });
+//loop , array
 
 var inboxPanel = new Ext.TabPanel({
   title: 'Inbox',
