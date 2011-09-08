@@ -52,8 +52,9 @@ class TeamsController < ApplicationController
   end
 
   def destroy
+    
     @team = Team.find(params[:id])
-    if @team.destroy
+    if @team.id!=1 and @team.destroy
       render :json => { :success => true }
     else
       render :json => { :success => false }
