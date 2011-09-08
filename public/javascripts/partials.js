@@ -430,9 +430,11 @@ function teamAsignHandler()
     waitmsg: 'Saving...',
     success: function(f,a) {
       teamUserStore.reload();
-      teamWindow.hide();
+    
     }
+    
   });
+    teamWindow.hide();
 }
 
 
