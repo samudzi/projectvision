@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(:version => 20110907060449) do
   end
 
   create_table "teams_users", :id => false, :force => true do |t|
-    t.integer "user_id"
-    t.integer "team_id"
+    t.string "user_id"
+    t.string "team_id"
   end
 
   create_table "thoughts", :force => true do |t|

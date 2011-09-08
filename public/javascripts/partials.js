@@ -306,12 +306,51 @@ function teamThoughtStoreCallbackFn(records){
           }));
       }
       
-      teamThoughtsJsonStore[i].removeAll();
       teamThoughtsJsonStore[i].loadData(tempJsonTeamThoughts[i],false);
-      outstandingTasksJsonStore[i].removeAll();
       outstandingTasksJsonStore[i].loadData(tempJsonTeamTasks[i],false);
       
       if(cond){
+        var expander = new Ext.ux.grid.RowExpander({
+         tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
+        });
+
+        var teamThoughtColModel = new Ext.grid.ColumnModel({
+          columns : [expander, {
+        		id : 'brief',
+        		header : 'Thought',
+        		width : 389,
+        		//    sortable : true,
+        		dataIndex : 'brief'
+        	}, {
+        		header : 'Category',
+        		width : 75,
+        		//    sortable : true,
+        		dataIndex : 'category'
+        	}, {
+        		header : 'Reply',
+        		xtype : 'actioncolumn',
+        		width : 50,
+        		items : [{
+        			icon : '../images/icons/arrow_undo.gif',
+        			tooltip : 'Reply Thought',
+        			handler : function(grid, rowIndex, colIndex) {
+        				selectedThoughtID = teamThoughtStore.getAt(rowIndex).data.id;
+        				Ext.MessageBox.buttonText.ok = "Save";
+        				Ext.MessageBox.show({
+        					title : 'Reply',
+        					msg : 'Enter reply to thought:',
+        					width : 300,
+        					buttons : Ext.MessageBox.OKCANCEL,
+        					multiline : true,
+        					fn : showResultText//,
+        					//fn: showResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
+        					//animateTarget: 'mb3'
+        				});
+        			}
+        		}]
+        	}]
+        });
+        
         var teamThoughtGrid = new Ext.grid.GridPanel({
 	        title : 'Shared Team Thoughts',
 	        store : teamThoughtsJsonStore[i],   // Store
@@ -330,15 +369,15 @@ function teamThoughtStoreCallbackFn(records){
         });
         
         var calendar = new Ext.ensible.cal.CalendarPanel({
-	        eventStore : eventStore,
-	        title : 'Shared Calendar',
-	        width : 700,
-	        height : 500
+          eventStore : eventStore,
+          title : 'Shared Calendar',
+          width : 700,
+          height : 500
         });
         
         inboxPanel.add({
           title: teams[i]['team'],
-          ref:'teamspace',
+          ref:'teamspace'+i,
           layout:'table',
           layoutConfig: {
             columns:2
@@ -351,9 +390,10 @@ function teamThoughtStoreCallbackFn(records){
           },
           items: [teamThoughtGrid,calendar,outstandingTaskGrid]
         });
+        inboxPanel.doLayout();
       }
     }
-    inboxPanel.doLayout();
+    
     
     
 }

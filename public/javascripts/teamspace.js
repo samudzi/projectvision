@@ -25,46 +25,6 @@ function showResultText(btn, text) {
 	}
 };
 
-var expander = new Ext.ux.grid.RowExpander({
-	tpl : new Ext.Template('<p><b>Reply:</b> {replies}</p><br>')
-});
-
-var teamThoughtColModel = new Ext.grid.ColumnModel({
-  columns : [expander, {
-		id : 'brief',
-		header : 'Thought',
-		width : 389,
-		//    sortable : true,
-		dataIndex : 'brief'
-	}, {
-		header : 'Category',
-		width : 75,
-		//    sortable : true,
-		dataIndex : 'category'
-	}, {
-		header : 'Reply',
-		xtype : 'actioncolumn',
-		width : 50,
-		items : [{
-			icon : '../images/icons/arrow_undo.gif',
-			tooltip : 'Reply Thought',
-			handler : function(grid, rowIndex, colIndex) {
-				selectedThoughtID = teamThoughtStore.getAt(rowIndex).data.id;
-				Ext.MessageBox.buttonText.ok = "Save";
-				Ext.MessageBox.show({
-					title : 'Reply',
-					msg : 'Enter reply to thought:',
-					width : 300,
-					buttons : Ext.MessageBox.OKCANCEL,
-					multiline : true,
-					fn : showResultText//,
-					//fn: showResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
-					//animateTarget: 'mb3'
-				});
-			}
-		}]
-	}]
-});
 
 function extjsRenderer(value, id, r) {
 	var id = Ext.id();
