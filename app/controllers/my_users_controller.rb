@@ -12,6 +12,8 @@ class MyUsersController < ApplicationController
     else
       @user = User.new params
     end
+    team = Team.find(1)
+    @user.teams << team if team
     if @user.save
       render :json => {
           :notice => 'Saved',

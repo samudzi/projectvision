@@ -430,7 +430,6 @@ function teamAsignHandler()
     waitmsg: 'Saving...',
     success: function(f,a) {
       teamUserStore.reload();
-    
     }
     
   });
@@ -466,7 +465,6 @@ function teamDeleteHandler()
 function teamEditHandler()
 {
   selectedTeamID = editTeamPanel.getForm().findField('team').getValue().split("_")[0];
-  console.log(selectedTeamID);
   
   if(!newTeamWindow) newTeamWindow = new Ext.Window({
     title: 'Edit Team',
@@ -519,6 +517,7 @@ function userSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
 		    userStore.reload();
+		    teamUserStore.reload();
 		  }
     });
     newUser = false;
