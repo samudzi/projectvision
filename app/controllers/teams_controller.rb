@@ -2,7 +2,7 @@ class TeamsController < ApplicationController
   before_filter :is_admin?
   
   def index
-    @teams = Team.all
+    @teams = Team.find(:all,:order=>"created_at")
     users = []
     @teams.each do |team|
       if team.users.length == 0
