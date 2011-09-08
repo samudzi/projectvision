@@ -79,20 +79,10 @@ var thoughtGridJsonStore = new Ext.data.JsonStore({
 			root: 'thought_grid',
 			fields: fieldsArray
 });
-var outstandingTasksJsonStore = new Ext.data.JsonStore({
-			root: 'outstanding_tasks',
-			fields: fieldsArray
-});
 
-var outstandingTasksJsonStore = new Ext.data.JsonStore({
-      root: 'team_tasks',
-      fields: fieldsArray
-});
+var outstandingTasksJsonStore = [];
 
-var teamThoughtsJsonStore = new Ext.data.JsonStore({
-      root: 'team_thoughts',
-      fields: fieldsArray
-});
+var teamThoughtsJsonStore = [];
 
 var todoStatusComboStore = new Ext.data.SimpleStore({
 	id: 0,
@@ -171,10 +161,7 @@ function globalThoughtStoreCallbackFn(records){
 		var finalJsonUpcoming = new Array();
 		var tempJsonRecentCompleted = new Array();
 		var finalJsonRecentCompleted = new Array();
-		var tempJsonThoughtGrid = new Array();
-		var finalJsonThoughtGrid = new Array();
-		var tempJsonOutstandingTasks = new Array();
-		var finalJsonOutstandingTasks = new Array();
+
 		
 		records.each(function(rec){
 			var action_status = rec.get('action_status');
@@ -189,7 +176,7 @@ function globalThoughtStoreCallbackFn(records){
         tempArray[key] = fieldValue;
 			});
 			if(status==0) // inbox store
-				tempJsonInbox.push(tempArray);
+				tempJsonInbox.push(tempArray);	
 			if(status==1) // organize store
 				tempJsonOrganize.push(tempArray);	
 		  if(status==2 && action_type=='1') // todo store
@@ -202,10 +189,6 @@ function globalThoughtStoreCallbackFn(records){
 				tempJsonUpcoming.push(tempArray);
 			if(status==2 && action_status=='Completed' && action_type=='1') // recentCompleted store
 				tempJsonRecentCompleted.push(tempArray);		
-			if(scope=='public') // thoughtGrid store
-				tempJsonThoughtGrid.push(tempArray);	
-			if(scope=='public' && action_status!='Completed') // outstandingTasks store
-				tempJsonOutstandingTasks.push(tempArray);	
 			
 		});		// records.each
 		/*todoStatusComboStoreData["actionstatus"] = todoStatusComboStoreTemp;
@@ -241,49 +224,138 @@ function globalThoughtStoreCallbackFn(records){
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
 		
-		finalJsonThoughtGrid["thought_grid"] = tempJsonThoughtGrid;
-		thoughtGridJsonStore.loadData(finalJsonThoughtGrid,false);
-		
-		finalJsonOutstandingTasks["outstanding_tasks"] = tempJsonOutstandingTasks;
-		//outstandingTasksJsonStore.loadData(finalJsonOutstandingTasks,false);		
+
 				
 }  // globalThoughtStoreCallbackFn
 
 
 function teamThoughtStoreCallbackFn(records){
-  
+    addUserAndTeamSelectOptions();
     var tempJsonTeamTasks = new Array();
     var tempJsonTeamThoughts = new Array();
-    var finalJsonTeamTasks = new Array();
-    var finalJsonTeamThoughts = new Array();
+    var numberOfTeams = teamOptions.getCount();
+    
+    teams = [];
+    for(var i=0;i<numberOfTeams;i++)
+    {
+      teams.push({id:teamOptions.getAt(i).get('id').split('_')[0],team:teamOptions.getAt(i).get('team')})
+    }
+    teams.sort(function(a,b){
+      return parseInt(a['id'])>parseInt(b['id']);
+    });
+    
+    for(var i=0;i<numberOfTeams;i++)
+    {
+      var tmp_arr = new Array();
+      tmp_arr["team_thoughts"] = new Array();
+      tempJsonTeamThoughts.push(tmp_arr);
+      
+      var tmp_arr = new Array();
+      tmp_arr["team_tasks"] = new Array();
+      tempJsonTeamTasks.push(tmp_arr);
+    }
+  
     
     records.each(function(rec){
       var action_status = rec.get('action_status');
       var action_type = rec.get('action_type');
       var status = rec.get('status');
       var scope = rec.get('scope');
+      var team_id = rec.get('team_id');
       
       var tempArray = [];
       rec.fields.keys.each(function(key) 
       { 
         var fieldValue = rec.get(key); 
         tempArray[key] = fieldValue;
-        if(scope=='public' && action_status!='Completed' && status==2) // outstandingTasks store
-			tempJsonTeamTasks.push(tempArray);	
-		if(scope=='public' && status==0)
-			tempJsonTeamThoughts.push(tempArray);
-				
       });
+      
+      if(scope=='public' && action_status!='Completed' && status==2){ // outstandingTasks store
+		    for(var i=0;i<numberOfTeams;i++){
+			    if(teams[i]['id']== team_id){
+			      tempJsonTeamTasks[i]["team_tasks"].push(tempArray);
+			      break;
+			    }
+			  }	
+	    }
+	    if(scope=='public' && status==0){
+		    for(var i=0;i<numberOfTeams;i++){
+			    if(teams[i]['id']== team_id){
+			      tempJsonTeamThoughts[i]["team_thoughts"].push(tempArray);
+			      break;
+			    }
+			  }
+			}
+      
       //if(scope=='public' && action_status!='Completed' && status==2 && action_type=='1') // outstandingTasks store
         //tempJsonTeamTasks.push(tempArray); 
       
     });
     
-    finalJsonTeamThoughts["team_thoughts"] = tempJsonTeamThoughts;
-    teamThoughtsJsonStore.loadData(finalJsonTeamThoughts,false);
+    for(var i=0;i<numberOfTeams;i++){
+      var cond = i>=teamThoughtsJsonStore.length;
+      if(cond){
+        teamThoughtsJsonStore.push(new Ext.data.JsonStore({
+            root: 'team_thoughts',
+            fields: fieldsArray
+          }));
+                  
+          outstandingTasksJsonStore.push(new Ext.data.JsonStore({
+                root: 'team_tasks',
+                fields: fieldsArray
+          }));
+      }
+      
+      teamThoughtsJsonStore[i].removeAll();
+      teamThoughtsJsonStore[i].loadData(tempJsonTeamThoughts[i],false);
+      outstandingTasksJsonStore[i].removeAll();
+      outstandingTasksJsonStore[i].loadData(tempJsonTeamTasks[i],false);
+      
+      if(cond){
+        var teamThoughtGrid = new Ext.grid.GridPanel({
+	        title : 'Shared Team Thoughts',
+	        store : teamThoughtsJsonStore[i],   // Store
+	        height : 300,
+	        bodyStyle : 'margin-right:20px',
+	        plugins : expander,
+	        colModel: teamThoughtColModel
+        });
+        
+        var outstandingTaskGrid = new Ext.grid.GridPanel({
+	        title : 'Outstanding Tasks',
+	        store : outstandingTasksJsonStore[i],   //Dummy Store
+	        height : 300,
+	        stripeRows : true,
+          colModel: outstandingTaskColModel
+        });
+        
+        var calendar = new Ext.ensible.cal.CalendarPanel({
+	        eventStore : eventStore,
+	        title : 'Shared Calendar',
+	        width : 700,
+	        height : 500
+        });
+        
+        inboxPanel.add({
+          title: teams[i]['team'],
+          ref:'teamspace',
+          layout:'table',
+          layoutConfig: {
+            columns:2
+          },
+          defaults: {
+            frame:true,
+            width:600,
+            height:500,
+            bodyStyle:'vertical-align:top'
+          },
+          items: [teamThoughtGrid,calendar,outstandingTaskGrid]
+        });
+      }
+    }
+    inboxPanel.doLayout();
     
-    finalJsonTeamTasks["team_tasks"] = tempJsonTeamTasks;
-    outstandingTasksJsonStore.loadData(finalJsonTeamTasks,false);
+    
 }
 
 globalThoughtStore.load({callback : function(records,option,success){
@@ -377,9 +449,14 @@ function teamDeleteHandler()
     waitMsg:'Deleting...',
     method: 'delete',
     success: function(f,a){
-      teamUserStore.load();
-      }
-    });
+      teamUserStore.load();     
+      teamThoughtStore.load({callback : function(records,option,success){
+        teamThoughtStoreCallbackFn(records);
+        }
+      });
+    
+    }
+  });
     deleteTeamWindow.hide();
 }
 
@@ -414,6 +491,10 @@ function teamEditHandler()
           waitMsg: 'Loading...',
           method: 'get',
           success: function(f,a){
+            teamThoughtStore.load({callback : function(records,option,success){
+            teamThoughtStoreCallbackFn(records);
+        }
+      });
           },
           failure: function(form, action){
             Ext.Msg.alert("Load failed", action.result.errorMessage);
@@ -467,6 +548,10 @@ function teamSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
 		    teamUserStore.reload();
+		    teamThoughtStore.load({callback : function(records,option,success){
+	        teamThoughtStoreCallbackFn(records);
+		      }
+	      });
 		  }
     });
     newTeam = false;
@@ -482,10 +567,13 @@ function teamSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
 		    teamUserStore.reload();
+		    
       }
     });
   }
- if(newTeamWindow) newTeamWindow.hide();
+ 
+  if(newTeamWindow) newTeamWindow.hide();
+ 
 }
 
 function todoSaveHandler()

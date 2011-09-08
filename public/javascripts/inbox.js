@@ -293,30 +293,15 @@ var inboxPanel = new Ext.TabPanel({
     ref:'myspace',
     layout: 'border',
     items: [thoughtGrid,detailsPanel]
-  },{
-    title: 'Team Space',
-    ref:'teamspace',
-    layout:'table',
-    layoutConfig: {
-      columns:2
-    },
-    defaults: {
-      frame:true,
-      width:600,
-      height:500,
-      bodyStyle:'vertical-align:top'
-    },
-    items: [teamThoughtGrid,calendar,outstandingTaskGrid]
-  
   }
   ],
   listeners: {
           activate: function(tab){
-				if(addWindow) addWindow.hide();
-				if(todoEditWindow) todoEditWindow.hide();
-				if(refEditWindow) refEditWindow.hide();
-				if(remindEditWindow) remindEditWindow.hide();				
-		  }
+				    if(addWindow) addWindow.hide();
+				    if(todoEditWindow) todoEditWindow.hide();
+				    if(refEditWindow) refEditWindow.hide();
+				    if(remindEditWindow) remindEditWindow.hide();				
+		      }
   }
 });
 

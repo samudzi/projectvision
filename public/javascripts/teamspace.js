@@ -29,13 +29,8 @@ var expander = new Ext.ux.grid.RowExpander({
 	tpl : new Ext.Template('<p><b>Reply:</b> {replies}</p><br>')
 });
 
-var teamThoughtGrid = new Ext.grid.GridPanel({
-	title : 'Shared Team Thoughts',
-	store : teamThoughtsJsonStore,   // Store
-	height : 300,
-	bodyStyle : 'margin-right:20px',
-	plugins : expander,
-	columns : [expander, {
+var teamThoughtColModel = new Ext.grid.ColumnModel({
+  columns : [expander, {
 		id : 'brief',
 		header : 'Thought',
 		width : 389,
@@ -70,6 +65,7 @@ var teamThoughtGrid = new Ext.grid.GridPanel({
 		}]
 	}]
 });
+
 function extjsRenderer(value, id, r) {
 	var id = Ext.id();
 	var user_id = r.get('user_id');
@@ -110,11 +106,7 @@ function extjsRenderer(value, id, r) {
 	}
 };
 
-var outstandingTaskGrid = new Ext.grid.GridPanel({
-	title : 'Outstanding Tasks',
-	store : outstandingTasksJsonStore,   //Dummy Store
-	height : 300,
-	stripeRows : true,
+var outstandingTaskColModel = new Ext.grid.ColumnModel({
 	columns : [{
 		id : 'next',
 		header : 'Task',
@@ -150,6 +142,7 @@ var outstandingTaskGrid = new Ext.grid.GridPanel({
 		dataIndex : 'due_date'
 	}]
 });
+
 //alert(finalJsonEventData);
 /*for(var i=0;i<=10000;i++) /// False loop for time delay
 {
@@ -168,9 +161,4 @@ function timedDelay() {
  data: Ext.ensible.sample.EventData
  });*/
 
-var calendar = new Ext.ensible.cal.CalendarPanel({
-	eventStore : eventStore,
-	title : 'Shared Calendar',
-	width : 700,
-	height : 500
-});
+

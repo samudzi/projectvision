@@ -45,7 +45,6 @@ function newTeamHandler(){
    console.log("new");
    teamAddPanel.getForm().reset();
    newTeamWindow.show();
-
 }
 
 function editTeamHandler(){
@@ -68,6 +67,7 @@ function editTeamHandler(){
   editTeamPanel.getForm().reset();
   addUserAndTeamSelectOptions();
   editTeamWindow.show();
+
 }
 
 
@@ -92,6 +92,7 @@ function deleteTeamHandler(){
   deleteTeamPanel.getForm().reset();
   addUserAndTeamSelectOptions();
   deleteTeamWindow.show();
+ 
 }
 
 
