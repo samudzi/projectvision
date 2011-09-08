@@ -7,7 +7,7 @@ var teamUserStore = Ext.StoreMgr.get('team_store')
 //teamThoughtStore.load();
 recentTeamStore.load();
 userStore.load();
-teamUserStore.load();
+//teamUserStore.load();
 
 
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
@@ -398,19 +398,21 @@ function teamThoughtStoreCallbackFn(records){
     
 }
 
-globalThoughtStore.load({callback : function(records,option,success){
-		globalThoughtStoreCallbackFn(records);		
-	}
-});  // globalThoughtStore.load
-/*globalThoughtStore.reload({callback : function(records,option,success){
-		globalThoughtStoreCallbackFn(records);		
-	}
-});*/
-//// grid.getView().refresh();
-teamThoughtStore.load({callback : function(records,option,success){
-    teamThoughtStoreCallbackFn(records);
-  }
-});
+teamUserStore.load({callback : function(records,option,success){
+  globalThoughtStore.load({callback : function(records,option,success){
+  		globalThoughtStoreCallbackFn(records);		
+  	}
+  });  // globalThoughtStore.load
+  /*globalThoughtStore.reload({callback : function(records,option,success){
+  		globalThoughtStoreCallbackFn(records);		
+  	}
+  });*/
+  //// grid.getView().refresh();
+  teamThoughtStore.load({callback : function(records,option,success){
+      teamThoughtStoreCallbackFn(records);
+    }
+  });
+}});
 
 function thoughtSaveHandler()
 {
