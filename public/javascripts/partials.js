@@ -341,20 +341,14 @@ function teamThoughtStoreCallbackFn(records){
 	                  header: 'Replies',
 	                  dataIndex: 'reply',
 	                  width: '1',
-	                  tpl: '<div style="padding:5px; border:1px solid #CCCCCC;"><b>{user}:</b> {reply}</div>'
+	                  tpl: '<div style="padding:5px; border:1px solid #CCCCCC; background-color:#FFFFFF;"><b>{user}:</b> {reply}</div>'
 	                }
 	              ]
               });
               element && childGrid.render(element);
-              if(this.actAsTree) {
-
-                childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
-
-              } 
-						  //getGrid(
-							//  data,
-							// Ext.get( this.grid.getView().getRow( rowIndex)).child( '.ux-row-expander-box')
-						  //);
+              //if(this.actAsTree) {
+                //childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
+              //}
 					  }
 				  }
         });
