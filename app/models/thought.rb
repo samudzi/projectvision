@@ -63,7 +63,8 @@ class Thought < ActiveRecord::Base
     end
     thought_data['team'] = self.team ? self.team.name : ''
     thought_data['assigned_to'] = self.assigned_to ? self.assigned_to.email : ''
-    thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('<br/>')
+    #thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('<br/>')
+    thought_data['replies'] = self.replies.collect{|reply| {:detail=>reply.detail,:user => reply.user.email}}
     thought_data
   end
   

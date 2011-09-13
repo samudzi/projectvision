@@ -79,7 +79,10 @@ function newHandler(){
   addPanel.status.setValue(0);
   addPanel.getForm().findField('team').setVisible(false);
   addWindow.show();
-  addUserAndTeamSelectOptions();
+  //addUserAndTeamSelectOptions();
+  myTeamStore.load();
+  //userStore.load();
+
   
 }
 
@@ -102,14 +105,12 @@ var thoughtGrid = new Ext.grid.GridPanel({
     width    : 160,
     //    sortable : true,
     dataIndex: 'brief'
-  },
-  {
+  },{
     header   : 'Category',
     width    : 75,
     //    sortable : true,
     dataIndex: 'category'
-  },
-  {
+  },{
     header: 'Edit : Delete',
     xtype: 'actioncolumn',
     width: 70,
@@ -156,7 +157,10 @@ var thoughtGrid = new Ext.grid.GridPanel({
           addWindow.setTitle('Edit Thought');
         
         selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
+        console.log("selcted id");
+    
         addPanel.getForm().reset();
+       
         addPanel.getForm().load({
           url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
@@ -169,9 +173,10 @@ var thoughtGrid = new Ext.grid.GridPanel({
           failure: function(form, action){
             Ext.Msg.alert("Load failed", action.result.errorMessage);
           }
-          
+        
         });
-        addUserAndTeamSelectOptions();
+        //addUserAndTeamSelectOptions();
+        myTeamStore.load();
         addWindow.show();
         addPanel.brief.focus();
       }

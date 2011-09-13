@@ -1,6 +1,5 @@
 class TeamsController < ApplicationController
   before_filter :is_admin?
-  
   def index
     @teams = Team.find(:all,:order=>"created_at")
     users = []
@@ -13,7 +12,15 @@ class TeamsController < ApplicationController
       end  
     end   
     render :json =>  {:data => users, :success => true, :totalRows => users.count }.to_json
-   
+  end
+  
+  def list
+    if(current_user.is_admin)
+      @teams = Team.find(:all, :order=>"created_at")       
+    else
+      @teams = current_user.teams.find(:all,:order=>"created_at")
+    end
+    render :json => {:data =>@teams, :success =>true, :totalRows => @teams.count}.to_json
   end
   
   def show
@@ -29,7 +36,7 @@ class TeamsController < ApplicationController
     if params[:name]
       @team = Team.new params
     else
-      @team = Team.new params[:team]
+      @team = Team.new params[:name]
     end
     if @team.save
       render :json => {
@@ -62,7 +69,7 @@ class TeamsController < ApplicationController
   end
   
   def add_user
-    team = Team.find_by_name params[:team]
+    team = Team.find_by_name params[:name]
     user = User.find_by_email params[:user]
     team.users << user
     team.save

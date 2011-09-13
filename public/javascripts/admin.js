@@ -17,8 +17,10 @@ function newAsignHandler(){
     teamWindow.setTitle('Assing Team to User');
    
   teamAsignPanel.getForm().reset();
-  
+ 
   addUserAndTeamSelectOptions();
+  myTeamStore.load();
+
   teamWindow.show();
 
 }
@@ -65,7 +67,9 @@ function editTeamHandler(){
     editTeamWindow.setTitle('Edit Team');
    
   editTeamPanel.getForm().reset();
-  addUserAndTeamSelectOptions();
+  //addUserAndTeamSelectOptions();
+  myTeamStore.load();
+  teamUserStore.load();
   editTeamWindow.show();
 
 }
@@ -90,7 +94,8 @@ function deleteTeamHandler(){
     deleteTeamWindow.setTitle('Delete Team');
    
   deleteTeamPanel.getForm().reset();
-  addUserAndTeamSelectOptions();
+  //addUserAndTeamSelectOptions();
+  myTeamStore.load();
   deleteTeamWindow.show();
  
 }
@@ -303,8 +308,6 @@ var users = new Ext.grid.GridPanel({
  
 	
 });
-
-
 
 var adminPanel = new Ext.TabPanel({
   title: 'Admin',

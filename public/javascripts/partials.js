@@ -3,11 +3,13 @@ var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store')
 var userStore = Ext.StoreMgr.get('users_store')
 var teamUserStore = Ext.StoreMgr.get('team_store')
+var myTeamStore = Ext.StoreMgr.get('my_team_store')
 
 //teamThoughtStore.load();
 recentTeamStore.load();
 userStore.load();
-//teamUserStore.load();
+//myTeamStore.load();
+teamUserStore.load();
 
 
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
@@ -33,8 +35,11 @@ var fieldsArray = [
     {name: 'assigned_to', type: 'string'},
 		//{name: 'replies', type: 'string'},
     {name: 'type', type: 'string'},
-		{name: 'replies', type: 'string'}, 
+		{name: 'replies', type: 'array'}, 
+  
 ];
+
+var replyFieldsArray = [{name:'reply', type:'text'},{name:'user', type:'string'}];
 
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
@@ -109,10 +114,10 @@ var eventStore = new Ext.ensible.sample.MemoryEventStore({
 var emailOptions=new Ext.data.SimpleStore({
       fields: ['email','id'],
     });
-var teamOptions=new Ext.data.SimpleStore({
+/*var teamOptions=new Ext.data.SimpleStore({
       fields: ['team','id'],
     });
-
+*/
 function addUserAndTeamSelectOptions()
 {
   emailOptions.removeAll(silent=false);
@@ -126,23 +131,8 @@ function addUserAndTeamSelectOptions()
     
     var emailOptionsRecord = new emailOptions.recordType(recordData)   
     emailOptions.add(emailOptionsRecord);  
-   }); 
-  teamOptions.removeAll(silent=false);
-  teamUserStore.each(function(record){
-    var team = record.get('team');
-    var team_id = record.get('id');
-    var recordTeamData = {
-      team: team,
-      id: team_id
-      };
-    
-    var teamOptionsRecord = new teamOptions.recordType(recordTeamData)
-    if(teamOptions.find('team',team)==-1)
-      teamOptions.add(teamOptionsRecord);  
-    }); 
-  
+   });   
 }
-
 
 var finalJsonEventData = new Array();
 
@@ -223,23 +213,23 @@ function globalThoughtStoreCallbackFn(records){
 		upcomingJsonStore.loadData(finalJsonUpcoming,false);
 		finalJsonRecentCompleted["recent_completed"] = tempJsonRecentCompleted;
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
-		
-
-				
+					
 }  // globalThoughtStoreCallbackFn
 
-
 function teamThoughtStoreCallbackFn(records){
-    addUserAndTeamSelectOptions();
     var tempJsonTeamTasks = new Array();
     var tempJsonTeamThoughts = new Array();
-    var numberOfTeams = teamOptions.getCount();
     
+    var numberOfTeams = myTeamStore.getCount();
+    //console.log(numberOfTeams);
+  
     teams = [];
     for(var i=0;i<numberOfTeams;i++)
     {
-      teams.push({id:teamOptions.getAt(i).get('id').split('_')[0],team:teamOptions.getAt(i).get('team')})
+      //console.log({id:myTeamStore.getAt(i).get('id'),team:myTeamStore.getAt(i).get('team')})
+      teams.push({id:myTeamStore.getAt(i).get('id'),team:myTeamStore.getAt(i).get('name')})
     }
+    
     teams.sort(function(a,b){
       return parseInt(a['id'])>parseInt(b['id']);
     });
@@ -255,13 +245,13 @@ function teamThoughtStoreCallbackFn(records){
       tempJsonTeamTasks.push(tmp_arr);
     }
   
-    
     records.each(function(rec){
       var action_status = rec.get('action_status');
       var action_type = rec.get('action_type');
       var status = rec.get('status');
       var scope = rec.get('scope');
       var team_id = rec.get('team_id');
+
       
       var tempArray = [];
       rec.fields.keys.each(function(key) 
@@ -308,10 +298,65 @@ function teamThoughtStoreCallbackFn(records){
       
       teamThoughtsJsonStore[i].loadData(tempJsonTeamThoughts[i],false);
       outstandingTasksJsonStore[i].loadData(tempJsonTeamTasks[i],false);
-      
+			
       if(cond){
         var expander = new Ext.ux.grid.RowExpander({
-         tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
+         //tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
+          tpl: '<div class="ux-row-expander-box"></div>',
+				  actAsTree: true,
+				  treeLeafProperty: 'is_leaf',
+				  listeners: {
+					  expand: function( expander, record, body, rowIndex){
+						  var tempData = new Array();
+						  var replies = record.get('replies');
+						  
+						  for(var i=0;i<replies.length;i++){
+						    tempData[i] = [];
+						    tempData[i]['user'] = replies[i].user;
+						    tempData[i]['reply'] = replies[i].detail.replace(/\n/g,'<br>');
+						  }
+						  
+						  var replyStore = new Ext.data.JsonStore({
+                root: 'replies',
+                fields: replyFieldsArray
+              });
+              
+              var newArray = new Array();
+              newArray["replies"] = tempData;
+              replyStore.loadData(newArray,false);
+              
+              var element = Ext.get(this.grid.getView().getRow(rowIndex)).child('.ux-row-expander-box');
+              
+              var childGrid = new Ext.list.ListView({
+	              title : 'Replies',
+	              store : replyStore,   // Store
+	              autoHeight: true,
+	              emptyText: 'No replies to display',
+                reserveScrollOffset: true,
+	              width : '100%',
+	              //bodyStyle : 'margin-right:20px',
+	              columns:[
+	                {
+	                  id: 'reply',
+	                  header: 'Replies',
+	                  dataIndex: 'reply',
+	                  width: '1',
+	                  tpl: '<div style="padding:5px; border:1px solid #CCCCCC;"><b>{user}:</b> {reply}</div>'
+	                }
+	              ]
+              });
+              element && childGrid.render(element);
+              if(this.actAsTree) {
+
+                childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
+
+              } 
+						  //getGrid(
+							//  data,
+							// Ext.get( this.grid.getView().getRow( rowIndex)).child( '.ux-row-expander-box')
+						  //);
+					  }
+				  }
         });
 
         var teamThoughtColModel = new Ext.grid.ColumnModel({
@@ -334,7 +379,10 @@ function teamThoughtStoreCallbackFn(records){
         			icon : '../images/icons/arrow_undo.gif',
         			tooltip : 'Reply Thought',
         			handler : function(grid, rowIndex, colIndex) {
-        				selectedThoughtID = teamThoughtStore.getAt(rowIndex).data.id;
+        				selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+        			  var expander = grid.getColumnModel().getColumnAt(0);
+        			  console.log(expander);
+        			  //expander.collapse(rowIndex);
         				Ext.MessageBox.buttonText.ok = "Save";
         				Ext.MessageBox.show({
         					title : 'Reply',
@@ -343,7 +391,7 @@ function teamThoughtStoreCallbackFn(records){
         					buttons : Ext.MessageBox.OKCANCEL,
         					multiline : true,
         					fn : showResultText//,
-        					//fn: showResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
+        					//fn: FshowResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
         					//animateTarget: 'mb3'
         				});
         			}
@@ -393,20 +441,20 @@ function teamThoughtStoreCallbackFn(records){
         inboxPanel.doLayout();
       }
     }
-    
-    
-    
+        
 }
 
-teamUserStore.load({callback : function(records,option,success){
-  globalThoughtStore.load({callback : function(records,option,success){
+globalThoughtStore.load({callback : function(records,option,success){
   		globalThoughtStoreCallbackFn(records);		
   	}
   });  // globalThoughtStore.load
   /*globalThoughtStore.reload({callback : function(records,option,success){
+
   		globalThoughtStoreCallbackFn(records);		
   	}
   });*/
+  
+myTeamStore.load({callback : function(records,option,success){
   //// grid.getView().refresh();
   teamThoughtStore.load({callback : function(records,option,success){
       teamThoughtStoreCallbackFn(records);
@@ -433,6 +481,7 @@ function thoughtSaveHandler()
             teamThoughtStoreCallbackFn(records);
           }
         });
+      myTeamStore.load();
         newThought = false;
       }
     });
@@ -472,16 +521,19 @@ function teamAsignHandler()
     waitmsg: 'Saving...',
     success: function(f,a) {
       teamUserStore.reload();
+      addUserAndTeamSelectOptions();
+
+      myTeamStore.load();
+      
     }
     
   });
     teamWindow.hide();
 }
 
-
 function teamDeleteHandler()
 {
-  selectedTeamID = deleteTeamPanel.getForm().findField('team').getValue().split("_")[0];
+  selectedTeamID = deleteTeamPanel.getForm().findField('name').getValue();
   console.log(selectedTeamID);
   Ext.Ajax.request({
     url: '/teams/'+selectedTeamID,
@@ -492,7 +544,9 @@ function teamDeleteHandler()
     waitMsg:'Deleting...',
     method: 'delete',
     success: function(f,a){
-      teamUserStore.load();     
+      teamUserStore.reload();
+      myTeamStore.load();     
+      
       teamThoughtStore.load({callback : function(records,option,success){
         teamThoughtStoreCallbackFn(records);
         }
@@ -506,7 +560,7 @@ function teamDeleteHandler()
 
 function teamEditHandler()
 {
-  selectedTeamID = editTeamPanel.getForm().findField('team').getValue().split("_")[0];
+  selectedTeamID = editTeamPanel.getForm().findField('name').getValue();
   
   if(!newTeamWindow) newTeamWindow = new Ext.Window({
     title: 'Edit Team',
@@ -590,6 +644,7 @@ function teamSaveHandler()
       method: 'post',
       waitMsg: 'Saving...',
       success: function(f,a) {
+		    myTeamStore.reload();
 		    teamUserStore.reload();
 		    teamThoughtStore.load({callback : function(records,option,success){
 	        teamThoughtStoreCallbackFn(records);
@@ -609,6 +664,7 @@ function teamSaveHandler()
       method: 'put',
       waitMsg: 'Saving...',
       success: function(f,a) {
+		    myTeamStore.reload();
 		    teamUserStore.reload();
 		    
       }
@@ -679,7 +735,6 @@ function remindSaveHandler()
   });
   remindEditWindow.hide();
 }
-
 
 var addPanel = new Ext.form.FormPanel({
   labelWidth:80,
@@ -755,15 +810,16 @@ var addPanel = new Ext.form.FormPanel({
       }
     }]
   },{
-      name: 'team',
+    
       xtype: 'combo',
       mode: 'local',
       typeAhead: true,
       forceSelection: true,
       fieldLabel: 'Teams',
+      name: 'team',
       triggerAction: 'all',
-      store: teamOptions,
-      displayField: 'team',
+      store: myTeamStore,
+      displayField: 'name',
       valueField: 'id',
       hidden: true
   },{
@@ -804,15 +860,15 @@ var teamAsignPanel = new Ext.form.FormPanel({
     valueField: 'id',
     emptyText: 'Select User'
   },{
-    name: 'team',
+    name: 'name',
     xtype: 'combo',
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
     fieldLabel: 'Teams',
     triggerAction: 'all',
-    store: teamOptions,
-    displayField: 'team',
+    store: myTeamStore,
+    displayField: 'name',
     valueField: 'id',
     emptyText: 'Select Team'
 
@@ -879,7 +935,7 @@ var teamAddPanel = new Ext.form.FormPanel({
   items:[{
     fieldLabel:"Team Name",
     name:'name',
-    ref:'team',
+    ref:'name',
     allowBlank:false
   }],
   buttons:[{
@@ -903,15 +959,15 @@ var editTeamPanel = new Ext.form.FormPanel({
     width: 350
   },
   items:[{
-    name: 'team',
+    name: 'name',
     xtype: 'combo',
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
     fieldLabel: 'Teams',
     triggerAction: 'all',
-    store: teamOptions,
-    displayField: 'team',
+    store: myTeamStore,
+    displayField: 'name',
     valueField: 'id',
     emptyText: 'Select Team'
 
@@ -938,15 +994,15 @@ var deleteTeamPanel = new Ext.form.FormPanel({
     width: 350
   },
   items:[{
-    name: 'team',
+    name: 'name',
     xtype: 'combo',
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
     fieldLabel: 'Teams',
     triggerAction: 'all',
-    store: teamOptions,
-    displayField: 'team',
+    store: myTeamStore,
+    displayField: 'name',
     valueField: 'id',
     emptyText: 'Select Team'
 
@@ -1075,12 +1131,39 @@ var todoEditPanel = new Ext.form.FormPanel({
       boxLabel: 'Private',
       name: 'scope',
       inputValue: 'private',
-      checked: 'true'
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            todoEditPanel.getForm().findField('team').setVisible(false);
+          }
+        }
+      }
     },{
       boxLabel: 'Public',
       name: 'scope',
       inputValue: 'public',
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            todoEditPanel.getForm().findField('team').setVisible(true);
+          }
+        }
+      }
     }]  
+  },{
+     name: 'team',
+     xtype: 'combo',
+     mode: 'local',
+     typeAhead: true,
+     forceSelection: true,
+     fieldLabel: 'Teams',
+     triggerAction: 'all',
+     store: myTeamStore,
+     displayField: 'name',
+     valueField: 'id',
+     hidden: true
   },{
     ref: 'status',
     name: 'status',
@@ -1147,12 +1230,39 @@ var refEditPanel = new Ext.form.FormPanel({
       boxLabel: 'Private',
       name: 'scope',
       inputValue: 'private',
-      checked: 'true'
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            refEditPanel.getForm().findField('team').setVisible(false);
+          }
+        }
+      }
     },{
       boxLabel: 'Public',
       name: 'scope',
-      inputValue: 'public'
+      inputValue: 'public',
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            refEditPanel.getForm().findField('team').setVisible(true);
+          }
+        }
+      }
     }]
+  },{
+     name: 'team',
+     xtype: 'combo',
+     mode: 'local',
+     typeAhead: true,
+     forceSelection: true,
+     fieldLabel: 'Teams',
+     triggerAction: 'all',
+     store: myTeamStore,
+     displayField: 'name',
+     valueField: 'id',
+     hidden: true
   },{
     ref: 'status',
     name: 'status',
@@ -1205,12 +1315,39 @@ var remindEditPanel = new Ext.form.FormPanel({
       boxLabel: 'Private',
       name: 'scope',
       inputValue: 'private',
-      checked: 'true'
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            remindEditPanel.getForm().findField('team').setVisible(false);
+          }
+        }
+      }
     },{
       boxLabel: 'Public',
       name: 'scope',
-      inputValue: 'public'
+      inputValue: 'public',
+      listeners:{
+        check:function(field,checked) {
+            //console.log("Hit");
+          if(checked) {
+            remindEditPanel.getForm().findField('team').setVisible(true);
+          }
+        }
+      }
     }]
+  },{
+     name: 'team',
+     xtype: 'combo',
+     mode: 'local',
+     typeAhead: true,
+     forceSelection: true,
+     fieldLabel: 'Teamms',
+     triggerAction: 'all',
+     store: myTeamStore,
+     displayField: 'name',
+     valueField: 'id',
+     hidden: true
   },{
     ref: 'status',
     name: 'status',

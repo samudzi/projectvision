@@ -5,11 +5,13 @@ function showResultText(btn, text) {
 			url : '/thoughts',
 			params : {
 				parent_id : selectedThoughtID,
+			
 				detail : text,
 				status : '4'
 			},
 			waitMsg : 'Saving....',
 			success : function(f, a) {
+			  //console.log(selectedThoughtID);
 				// globalThoughtStore.reload({
 				// callback : function(records, option, success) {
 				// globalThoughtStoreCallbackFn(records);
@@ -36,28 +38,33 @@ function extjsRenderer(value, id, r) {
 		(function() {
 
 		var assigned_button = new Ext.Button({
-		renderTo: id,
-		text: 'Assign Task',
-		handler: function(btn, e) {
-		var thoughtID = r.get('id');
-		Ext.Ajax.request({
-		url: '/thoughts/'+thoughtID,
-		params: {
-		assignee_id: user_id
-		},
-		method: 'put',
-		waitMsg: 'Saving...',
-		success: function(f,a) {
-		globalThoughtStore.reload({callback : function(records,option,success){
-		globalThoughtStoreCallbackFn(records);
-		}
-		});
-		}
-		});
-		}
+		  renderTo: id,
+		  text: 'Assign Task',
+		  handler: function(btn, e) {
+		    var thoughtID = r.get('id');
+		    Ext.Ajax.request({
+		      url: '/thoughts/'+thoughtID,
+		      params: {
+		      assignee_id: user_id
+		      },
+		      method: 'put',
+		      waitMsg: 'Saving...',
+		      success: function(f,a) {
+		        teamThoughtStore.reload({
+			        callback : function(records, option, success) {
+						      teamThoughtStoreCallbackFn(records);
+				      }
+			      });
+		        globalThoughtStore.reload({callback : function(records,option,success){
+		          globalThoughtStoreCallbackFn(records);
+		          }
+		        });
+		      }
+		    });
+		  }
 		});
 
-		}).defer(25);
+	}).defer(25);
 		return (String.format('<div id="{0}"></div>', id));
 	} /// end of if condition
 	else {

@@ -50,6 +50,7 @@
       {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
       {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"}
+     
     ],
     "idProperty":"id",
     "url":"/thoughts.json",
@@ -302,6 +303,21 @@
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
 
   
+  new Ext.data.JsonStore(
+  {
+    "storeId":"my_team_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":false,"type":"int","defaultValue": 10},
+      {"name":"name","allowBlank":false,"type":"string","defaultValue":""},
+            ],
+    "idProperty":"id",
+    "url":"/teams/list.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
   var teamStoreReader = new Ext.data.JsonReader(
   {
     "idProperty":"id",
@@ -328,8 +344,6 @@
     "baseParams":{},
     "format":"json",
     "writer":new Ext.data.JsonWriter({"encode":false})});
-
-
 
   new Ext.data.JsonStore(
   {
@@ -361,7 +375,7 @@
       {"name":"type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"team_id","allowBlank":true,"type":"int","defaultValue":null},
       {"name":"team","allowBlank":true,"type":"string","defaultValue":null},
-      {"name":"replies","allowBlank":true,"type":"string","defaultValue":null}
+      {"name":"replies","allowBlank":true,"type":"array","defaultValue":null}
     ],
     "idProperty":"id",
     "url":"/thoughts.json",

@@ -57,6 +57,7 @@ class ThoughtsController < ApplicationController
       if params[:team] and @thought.scope == 'public'
         team = Team.find_by_name params[:team]
         params[:team_id] = team.id
+       
       end
       @thought.team_id = nil if @thought.scope == 'private'
       

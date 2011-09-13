@@ -18,8 +18,11 @@ Pv::Application.routes.draw do
   resources :teams do
     collection do
       post 'add_user'
-      post 'remove_user'
+      post 'remove_user' 
     end
+    collection do
+      get 'list'
+      end
   end
   
   match 'thoughts/update_status/:id' => 'thought#update_status'
