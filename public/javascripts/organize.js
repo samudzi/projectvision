@@ -254,7 +254,12 @@ var organizeDetailsPanel = new Ext.FormPanel({
 			  globalThoughtStore.reload({callback : function(records,option,success){					
 						globalThoughtStoreCallbackFn(records);		
 					}
-				});
+				});				
+			  teamThoughtStore.reload({
+          callback : function(records, option, success) {
+            teamThoughtStoreCallbackFn(records);
+          }
+        });
 			  
             }
           });
@@ -263,51 +268,61 @@ var organizeDetailsPanel = new Ext.FormPanel({
       text: 'Reference',
       handler: function(){
         if(selectedOrganizeID != 0)
-          organizeDetailsPanel.getForm().submit({
-            url: '/thoughts/'+selectedOrganizeID+'.json',
-            params: {
-              id: selectedOrganizeID,
-              "thought[status]": "2",
-              "thought[action_type]": "2"
-            },
-            method: 'put',
-            waitMsg: 'Saving...',
-            success: function(f,a) {
-				organizeDetailsPanel.getForm().reset();
-				organizeDetailsPanel.disable();
-              //organizeStore.reload();
-              //referenceStore.reload();
-			 globalThoughtStore.reload({callback : function(records,option,success){					
-						globalThoughtStoreCallbackFn(records);		
-					}
-				});
-            }
-          });
+        organizeDetailsPanel.getForm().submit({
+          url: '/thoughts/'+selectedOrganizeID+'.json',
+          params: {
+            id: selectedOrganizeID,
+            "thought[status]": "2",
+            "thought[action_type]": "2"
+          },
+          method: 'put',
+          waitMsg: 'Saving...',
+          success: function(f,a) {
+			      organizeDetailsPanel.getForm().reset();
+			      organizeDetailsPanel.disable();
+            //organizeStore.reload();
+            //referenceStore.reload();
+		        globalThoughtStore.reload({callback : function(records,option,success){					
+					    globalThoughtStoreCallbackFn(records);		
+				      }
+			      });
+		        teamThoughtStore.reload({
+              callback : function(records, option, success) {
+                teamThoughtStoreCallbackFn(records);
+              }
+            });
+          }
+        });
       }
     },'|',{
       text: 'Reminder',
       handler: function(){
         if(selectedOrganizeID != 0)
-          organizeDetailsPanel.getForm().submit({
-            url: '/thoughts/'+selectedOrganizeID+'.json',
-            params: {
-              id: selectedOrganizeID,
-              "thought[status]": "2",
-              "thought[action_type]": "3"
-            },
-            method: 'put',
-            waitMsg: 'Saving...',
-            success: function(f,a) {
-				organizeDetailsPanel.getForm().reset();
-				organizeDetailsPanel.disable();
+        organizeDetailsPanel.getForm().submit({
+          url: '/thoughts/'+selectedOrganizeID+'.json',
+          params: {
+            id: selectedOrganizeID,
+            "thought[status]": "2",
+            "thought[action_type]": "3"
+          },
+          method: 'put',
+          waitMsg: 'Saving...',
+          success: function(f,a) {
+				    organizeDetailsPanel.getForm().reset();
+				    organizeDetailsPanel.disable();
              // organizeStore.reload();
               //reminderStore.reload();
-			  globalThoughtStore.reload({callback : function(records,option,success){					
-						globalThoughtStoreCallbackFn(records);		
-					}
-				});
-            }
-          });
+			      globalThoughtStore.reload({callback : function(records,option,success){					
+						  globalThoughtStoreCallbackFn(records);		
+					    }
+				    });
+				    teamThoughtStore.reload({
+              callback : function(records, option, success) {
+                teamThoughtStoreCallbackFn(records);
+              }
+            });
+          }
+        });
       }
     }]
 //  cmargins: '5 0 0 0',
@@ -318,12 +333,12 @@ var organizePanel = new Ext.Panel({
   title: 'Organize',
   layout: 'border',
   items: [organizeGrid,organizeDetailsPanel],
-  listeners: {
-          activate: function(){
-				if(addWindow) addWindow.hide();
-				if(todoEditWindow) todoEditWindow.hide();
-				if(refEditWindow) refEditWindow.hide();
-				if(remindEditWindow) remindEditWindow.hide();	
-		  }
+  listeners:{
+    activate: function(){
+		  if(addWindow) addWindow.hide();
+		  if(todoEditWindow) todoEditWindow.hide();
+		  if(refEditWindow) refEditWindow.hide();
+		  if(remindEditWindow) remindEditWindow.hide();	
+    }
   }
 });

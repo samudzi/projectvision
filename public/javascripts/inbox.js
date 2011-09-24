@@ -9,6 +9,7 @@ inboxStore.load({
 });
 */
 var newThought = false;
+var newTask = false;
 var selectedThoughtID = 0;
 
 var myData = [
@@ -75,7 +76,7 @@ function newHandler(){
   addPanel.brief.setValue('');
   addPanel.detail.setValue('');
   addPanel.category.setValue('General');
-  addPanel.thoughtType.setValue('private');
+  addPanel.thoughtType.setValue('private').setVisible(true);
   addPanel.status.setValue(0);
   addPanel.getForm().findField('team').setVisible(false);
   addWindow.show();
@@ -118,68 +119,77 @@ var thoughtGrid = new Ext.grid.GridPanel({
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit Thought',
       handler: function(grid, rowIndex, colIndex) {
-        //        currentIndex = rowIndex;
-        //        var data = myData[rowIndex];
-        //        if(!addWindow) addWindow = new Ext.Window({
-        //          title: 'Edit Thought',
-        //          closeAction:'hide',
-        //          width: 380,
-        //          height: 500,
-        //          layout: 'fit',
-        //          plain:true,
-        //          bodyStyle:'padding:5px;',
-        //          buttonAlign:'center',
-        //          //resizable:false,
-        //          items: addPanel
-        //        });
-        //        else
-        //          addWindow.setTitle("Edit Thought");
-        //
-        //        addPanel.getForm().reset();
-        //        addPanel.brief.setValue(data[0]);
-        //        addPanel.detail.setValue(data[1]);
-        //        addPanel.category.setValue(data[2]);
-        //        addPanel.thoughtType.setValue(data[3]);
-        if(!addWindow) addWindow = new Ext.Window({
-          title: 'Edit Thought',
-          width: 380,
-          applyTo:'hello-win',
-          closeAction:'hide',
-          height: 500,
-          layout: 'fit',
-          plain:true,
-          bodyStyle:'padding:5px;',
-          buttonAlign:'center',
-          //resizable:false,
-          items: addPanel
-        });
-        else
-          addWindow.setTitle('Edit Thought');
+      selectedUserID = inboxJsonStore.getAt(rowIndex).data.user_id;
+      
+        if(is_admin == true || currentUser == selectedUserID){
         
-        selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
-        console.log("selcted id");
-    
-        addPanel.getForm().reset();
-       
-        addPanel.getForm().load({
-          url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
-          params: {
-            id: inboxJsonStore.getAt(rowIndex).data.id
-          },
-          waitMsg: 'Loading...',
-          method: 'get',
-          success: function(f,a){
-          },
-          failure: function(form, action){
-            Ext.Msg.alert("Load failed", action.result.errorMessage);
-          }
         
-        });
-        //addUserAndTeamSelectOptions();
-        myTeamStore.load();
-        addWindow.show();
-        addPanel.brief.focus();
+          //        currentIndex = rowIndex;
+          //        var data = myData[rowIndex];
+          //        if(!addWindow) addWindow = new Ext.Window({
+          //          title: 'Edit Thought',
+          //          closeAction:'hide',
+          //          width: 380,
+          //          height: 500,
+          //          layout: 'fit',
+          //          plain:true,
+          //          bodyStyle:'padding:5px;',
+          //          buttonAlign:'center',
+          //          //resizable:false,
+          //          items: addPanel
+          //        });
+          //        else
+          //          addWindow.setTitle("Edit Thought");
+          //
+          //        addPanel.getForm().reset();
+          //        addPanel.brief.setValue(data[0]);
+          //        addPanel.detail.setValue(data[1]);
+          //        addPanel.category.setValue(data[2]);
+          //        addPanel.thoughtType.setValue(data[3]);
+          if(!addWindow) addWindow = new Ext.Window({
+            title: 'Edit Thought',
+            width: 380,
+            applyTo:'hello-win',
+            closeAction:'hide',
+            height: 500,
+            layout: 'fit',
+            plain:true,
+            bodyStyle:'padding:5px;',
+            buttonAlign:'center',
+            //resizable:false,
+            items: addPanel
+          });
+          else
+            addWindow.setTitle('Edit Thought');                  
+          selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
+          console.log("selcted id");      
+          addPanel.getForm().reset();         
+          addPanel.getForm().load({
+            url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
+            params: {
+              id: inboxJsonStore.getAt(rowIndex).data.id
+            },
+            waitMsg: 'Loading...',
+            method: 'get',
+            success: function(f,a){
+            },
+            failure: function(form, action){
+              Ext.Msg.alert("Load failed", action.result.errorMessage);
+            }
+          
+          });
+          //addUserAndTeamSelectOptions();
+          myTeamStore.load();
+          addWindow.show();
+          addPanel.brief.focus();
+        
+        }
+        else{
+          alert("You don't have access to edit ");
+        }              
       }
+      
+      
     },
     {
       icon   : '../images/icons/delete.gif',
@@ -187,23 +197,31 @@ var thoughtGrid = new Ext.grid.GridPanel({
       handler: function(grid,rowIndex, colIndex)
       {
         selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
-        Ext.Ajax.request({
-          url: '/thoughts/'+selectedThoughtID,
-          scope:this,
-          params: {
-            id: selectedThoughtID
-          },
-          waitMsg:'Deleting...',
-          method: 'delete',
-          success: function(f,a){
-            globalThoughtStore.reload({callback : function(records,option,success){
-					globalThoughtStoreCallbackFn(records);		
-				}
-			});
-          }
-        });
-      //        myData.splice(rowIndex,1);
-      //        thoughtStore.loadData(myData);
+        selectedUserID = inboxJsonStore.getAt(rowIndex).data.user_id;
+        if(is_admin == true || currentUser == selectedUserID)
+        {
+          Ext.Ajax.request({
+            url: '/thoughts/'+selectedThoughtID,
+            scope:this,
+            params: {
+              id: selectedThoughtID
+            },
+            waitMsg:'Deleting...',
+            method: 'delete',
+            success: function(f,a){
+              globalThoughtStore.reload({callback : function(records,option,success){
+					  globalThoughtStoreCallbackFn(records);		
+				  }
+			  });
+            }
+          });
+        //        myData.splice(rowIndex,1);
+        //        thoughtStore.loadData(myData);
+        }
+        else
+        {
+        alert("You don't have access to delete it");
+        }
       }
     }]
   },
@@ -309,8 +327,16 @@ var inboxPanel = new Ext.TabPanel({
 				    if(addWindow) addWindow.hide();
 				    if(todoEditWindow) todoEditWindow.hide();
 				    if(refEditWindow) refEditWindow.hide();
-				    if(remindEditWindow) remindEditWindow.hide();				
+				    if(remindEditWindow) remindEditWindow.hide();	
+				    			
+		      },
+		      tabchange: function(panel ,tab)
+		      {	
+		        tabTeamId = tab.getItemId();	      
+		        //console.log(tabTeamId);
+		      
 		      }
+		      
   }
 });
 

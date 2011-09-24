@@ -17,6 +17,7 @@ function newAsignHandler(){
     teamWindow.setTitle('Assing Team to User');
    
   teamAsignPanel.getForm().reset();
+  teamAsignPanel.getForm().findField('name').setVisible(true); 
  
   addUserAndTeamSelectOptions();
   myTeamStore.load();

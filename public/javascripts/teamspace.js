@@ -26,7 +26,85 @@ function showResultText(btn, text) {
 		});
 	}
 };
+function userTaskAsignHandler(asignThoughtID){
+   if(!userTaskWindow) userTaskWindow = new Ext.Window({
+    title: 'Assing Task to User',
+    width: 380,
+    applyTo:'team-task-window',
+    closeAction:'hide',
+    height: 230,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: userTaskAsignPanel
+  });
+  else
+    userTaskWindow.setTitle('Assing Task to User');        
+  userTaskAsignPanel.getForm().reset();
+  addUserAndTeamSelectOptions(); 
+  userTaskWindow.show();
+}
 
+var userTaskAsignPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'userTaskAsignPanel',
+  defaults: {
+    width: 350
+  },
+  items:[{
+    name: 'user',
+    xtype: 'combo',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Users',
+    triggerAction: 'all',
+    store: emailOptions,
+    displayField: 'email',
+    valueField: 'id',
+    emptyText: 'Select User'
+  }],
+  buttons:[{
+    text: "Asign",
+    handler: myTaskAsignHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      userTaskWindow.hide();
+    }
+  }]
+})
+
+function myTaskAsignHandler()
+{
+
+  var user_id = userTaskAsignPanel.getForm().findField('user').getValue();
+  Ext.Ajax.request({
+    url: '/thoughts/'+asignThoughtID,
+    params: {
+    assignee_id: user_id
+    },
+    method: 'put',
+    waitMsg: 'Saving...',
+    success: function(f,a) {
+      teamThoughtStore.reload({
+        callback : function(records, option, success) {
+	          teamThoughtStoreCallbackFn(records);
+        }
+      });
+      globalThoughtStore.reload({callback : function(records,option,success){
+        globalThoughtStoreCallbackFn(records);
+        }
+      });
+    }
+  });
+    userTaskWindow.hide();
+}
 
 function extjsRenderer(value, id, r) {
 	var id = Ext.id();
@@ -41,26 +119,35 @@ function extjsRenderer(value, id, r) {
 		  renderTo: id,
 		  text: 'Assign Task',
 		  handler: function(btn, e) {
-		    var thoughtID = r.get('id');
-		    Ext.Ajax.request({
-		      url: '/thoughts/'+thoughtID,
-		      params: {
-		      assignee_id: user_id
-		      },
-		      method: 'put',
-		      waitMsg: 'Saving...',
-		      success: function(f,a) {
-		        teamThoughtStore.reload({
-			        callback : function(records, option, success) {
-						      teamThoughtStoreCallbackFn(records);
-				      }
-			      });
-		        globalThoughtStore.reload({callback : function(records,option,success){
-		          globalThoughtStoreCallbackFn(records);
-		          }
-		        });
-		      }
-		    });
+		    asignThoughtID = r.get('id');
+		    
+		    if(is_admin == true){		    
+		    userTaskAsignHandler(asignThoughtID);
+		    }
+		    else
+		    {
+		      Ext.Ajax.request({
+		        url: '/thoughts/'+thoughtID,
+		        params: {
+		        assignee_id: user_id
+		        },
+		        method: 'put',
+		        waitMsg: 'Saving...',
+		        success: function(f,a) {
+		          teamThoughtStore.reload({
+			          callback : function(records, option, success) {
+						        teamThoughtStoreCallbackFn(records);
+				        }
+			        });
+		          globalThoughtStore.reload({callback : function(records,option,success){
+		            globalThoughtStoreCallbackFn(records);
+		            }
+		          });
+		        }
+		      });
+		    }
+		    
+		    
 		  }
 		});
 

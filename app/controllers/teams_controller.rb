@@ -8,7 +8,7 @@ class TeamsController < ApplicationController
         users << {:id => team.id.to_s+'_0', :user_id => team.id, :user => "no users", :tasks => "", :team_id => team.id, :team => team.name} 
       end
       team.users.each do |user|
-        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :user => user.email, :tasks => user.assigned_thoughts.length.to_s, :team_id => team.id, :team => team.name} 
+        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :user => user.email, :tasks => user.assigned_thoughts.length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at} 
       end  
     end   
     render :json =>  {:data => users, :success => true, :totalRows => users.count }.to_json
@@ -18,7 +18,7 @@ class TeamsController < ApplicationController
     if(current_user.is_admin)
       @teams = Team.find(:all, :order=>"created_at")       
     else
-      @teams = current_user.teams.find(:all,:order=>"created_at")
+      @teams = Teams.find(:all,:order=>"created_at")
     end
     render :json => {:data =>@teams, :success =>true, :totalRows => @teams.count}.to_json
   end

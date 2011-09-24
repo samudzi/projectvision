@@ -14,6 +14,7 @@ var refEditWindow;
 var remindEditWindow;
 var currentIndex;
 var currentOrganizeIndex;
+var userTaskWindow;
 
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
