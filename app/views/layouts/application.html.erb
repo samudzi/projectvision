@@ -25,8 +25,8 @@
 
 
 <script>
-  var is_admin = <%= current_user and current_user.is_admin ? 'true' : 'false' %> ;
-  var currentUser = <%= current_user.id %>;
+  var is_admin = <%= (current_user and current_user.is_admin) ? 'true' : 'false' %> ;
+  var currentUser = <%= current_user ? current_user.id : 0 %>;
   new Ext.data.JsonStore(
   {
     "storeId":"inbox_store",

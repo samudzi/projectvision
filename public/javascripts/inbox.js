@@ -185,7 +185,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
         
         }
         else{
-          alert("You don't have access to edit ");
+          Ext.Msg.alert("Access violation","You don't have access to edit ");
         }              
       }
       
@@ -220,7 +220,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
         }
         else
         {
-        alert("You don't have access to delete it");
+        Ext.Msg.alert("Access violation","You don't have access to delete it");
         }
       }
     }]

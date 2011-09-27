@@ -173,7 +173,7 @@ function  deleteTeamThought(selected_thoughtID,selected_userID)
   }
   else
   {
-  alert("You don't have access to delete it");
+  Ext.Msg.alert("Access violation","You don't have access to delete it");
   }
 }
 
@@ -292,7 +292,7 @@ function replyThoughtDeleteHandler(selectedThoughtID, userId)
  else
 
   {
-  alert("You don't have access to delete it");
+  Ext.Msg.alert("Access violation","You don't have access to delete it");
   }
 }
 
@@ -575,7 +575,7 @@ function teamThoughtStoreCallbackFn(records){
                   
                   }
                   else{
-                    alert("You don't have access to edit ");
+                    Ext.Msg.alert("Access violation","You don't have access to edit ");
                   }                                                                                                                
                 }                
               },
@@ -615,8 +615,8 @@ function teamThoughtStoreCallbackFn(records){
 	        stripeRows : true,
           colModel: outstandingTaskColModel,
           view: new Ext.grid.GroupingView({
-            forceFit:true
-            //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
+            forceFit:true,
+            groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
           }),
           tbar: [
             {
@@ -722,41 +722,46 @@ myTeamStore.load({callback : function(records,option,success){
 
 //my local handlers
 function newextjsRenderer(value, id, r) {
-	var id = Ext.id();
-	var user_id = r.get('user_id');
-
-	(function(){
+  var id = Ext.id();
+  var user_id = r.get('user_id');
+  (function(){
     var remove_button = new Ext.Button({
       renderTo: id,
       text: 'Remove',
       handler: function(btn, e){
+       if(is_admin == true)
+       {
         var teamID = tabTeamId;
         Ext.Ajax.request({
           url: '/teams/remove_user.json',
           params: {
-            team_id: tabTeamId+'_'+user_id,
-           
+            team_id: tabTeamId+'_'+user_id,           
           },
           method: 'post',
           waitMsg: 'Saving...',
           success: function(f,a) {
             teamUserStore.reload();
             globalThoughtStore.load({callback : function(records,option,success){
-  		      globalThoughtStoreCallbackFn(records);		
-  	          }
+		        globalThoughtStoreCallbackFn(records);		
+	            }
             });
            teamThoughtStore.load({callback : function(records,option,success){
             teamThoughtStoreCallbackFn(records);
               }
-           });
-            
-            
+           });                        
           }
         });
+        }
+      else
+      {
+      Ext.Msg.alert("Access violation","Only admin have access ");
+      }
+        
       }
     });
-	}).defer(25);
-	return (String.format('<div id="{0}"></div>', id));
+  }).defer(25);
+  return (String.format('<div id="{0}"></div>', id));
+  
 }
 
 function myTeamThoughtHandler(){
@@ -820,7 +825,7 @@ function userAsignHandler(){
   teamWindow.show();
   }
   else{
-    alert("You are not admin, You don't have access");
+    Ext.Msg.alert("Access violation","You don't have access");
   }
 }
 
@@ -844,8 +849,9 @@ function todoTaskAsignHandler()
   todoEditPanel.getForm().reset();
   todoEditPanel.thoughtType.setValue('public').setVisible(false);
   todoEditPanel.status.setValue(2); 
-  todoEditPanel.team.setValue(tabTeamId); 
   todoEditPanel.team.setVisible(false);
+  todoEditPanel.team.setValue(tabTeamId); 
+  
   todoEditPanel.action_type.setValue(1);
   todoEditPanel.action_type.setVisible(false);     
   todoEditPanel.actionable.setValue('t');  
@@ -1645,7 +1651,7 @@ var todoEditPanel = new Ext.form.FormPanel({
       listeners:{
         check:function(field,checked) {
             //console.log("Hit");
-          if(checked) {
+          if(checked && newThought) {
             todoEditPanel.getForm().findField('team').setVisible(true);
           }
         }

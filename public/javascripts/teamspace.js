@@ -127,9 +127,9 @@ function extjsRenderer(value, id, r) {
 		    else
 		    {
 		      Ext.Ajax.request({
-		        url: '/thoughts/'+thoughtID,
+		        url: '/thoughts/'+asignThoughtID,
 		        params: {
-		        assignee_id: user_id
+		        assignee_id: currentUser
 		        },
 		        method: 'put',
 		        waitMsg: 'Saving...',
@@ -201,7 +201,7 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
       tooltip: 'Edit To Do',
       handler: function(grid, rowIndex, colIndex) {
         selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
-        if(is_admin==true && currentUser == selectedUserID)
+        if(is_admin==true || currentUser == selectedUserID)
         {
           newTask=false;
           if(!todoEditWindow) todoEditWindow = new Ext.Window({
@@ -243,7 +243,7 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
           todoEditWindow.show();
         }
         else        {
-          alert("You dont have access to edit");
+          Ext.Msg.alert("Access violation","You dont have access to edit");
         }
       }
       
@@ -280,7 +280,7 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
           }
         else
         {
-          alert("You dont have access to delete it");
+          Ext.Msg.alert("Access violation","You dont have access to delete it");
         }
       }
     }]

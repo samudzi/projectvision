@@ -18,7 +18,7 @@ class TeamsController < ApplicationController
     if(current_user.is_admin)
       @teams = Team.find(:all, :order=>"created_at")       
     else
-      @teams = Teams.find(:all,:order=>"created_at")
+      @teams = current_user.teams.find(:all,:order=>"created_at")
     end
     render :json => {:data =>@teams, :success =>true, :totalRows => @teams.count}.to_json
   end
