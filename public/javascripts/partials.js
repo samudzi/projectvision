@@ -498,36 +498,31 @@ function teamThoughtStoreCallbackFn(records){
         		width : 75,
         		//    sortable : true,
         		dataIndex : 'category'
-        	}, {
-        		header : 'Reply',
-        		xtype : 'actioncolumn',
-        		width : 50,
-        		items : [{
-        			icon : '../images/icons/arrow_undo.gif',
-        			tooltip : 'Reply Thought',
-        			handler : function(grid, rowIndex, colIndex) {
-        				selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
-        			  var expander = grid.getColumnModel().getColumnAt(0);
-        			  console.log(expander);
-        			  //expander.collapse(rowIndex);
-        				Ext.MessageBox.buttonText.ok = "Save";
-        				Ext.MessageBox.show({
-        					title : 'Reply',
-        					msg : 'Enter reply to thought:',
-        					width : 300,
-        					buttons : Ext.MessageBox.OKCANCEL,
-        					multiline : true,
-        					fn : showResultText//,
-        					//fn: FshowResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
-        					//animateTarget: 'mb3'
-        				});
-        			}
-        		}]
         	},{
-              header: 'Edit : Delete',
+              header: 'Actions',
               xtype: 'actioncolumn',
               width: 70,
               items: [{
+          			icon : '../images/icons/arrow_undo.gif',
+          			tooltip : 'Reply Thought',
+          			handler : function(grid, rowIndex, colIndex) {
+          				selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+          			  var expander = grid.getColumnModel().getColumnAt(0);
+          			  console.log(expander);
+          			  //expander.collapse(rowIndex);
+          				Ext.MessageBox.buttonText.ok = "Save";
+          				Ext.MessageBox.show({
+          					title : 'Reply',
+          					msg : 'Enter reply to thought:',
+          					width : 300,
+          					buttons : Ext.MessageBox.OKCANCEL,
+          					multiline : true,
+          					fn : showResultText//,
+          					//fn: FshowResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
+          					//animateTarget: 'mb3'
+          				});
+          			}
+          		},{
                 icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
                 tooltip: 'Edit Thought',
                 handler: function(grid, rowIndex, colIndex) {

@@ -166,7 +166,7 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
 		//sortable : true,
 		dataIndex : 'next'
 	},{
-		header : 'Task Type',
+		header : 'Type',
 		width : 70,
 		dataIndex : 'action_type_str',
 		hidden: true
