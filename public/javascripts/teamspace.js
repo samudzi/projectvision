@@ -255,7 +255,7 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
       {		  
 		    selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
 		    selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
-        if(is_admin==true && currentUser == selectedUserID)
+        if(is_admin==true || currentUser == selectedUserID)
         {
           Ext.Ajax.request({
             url: '/thoughts/'+selectedThoughtID,
