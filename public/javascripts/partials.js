@@ -1534,7 +1534,25 @@ var todoEditPanel = new Ext.form.FormPanel({
   defaults: {
     width: 350
   },
-  items:[{
+  items:[
+    {
+    xtype: 'combo',
+    ref:'action_type',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Action Type',
+    name: 'action_type',
+    triggerAction: 'all',
+    emptyText: 'Select Action',
+    store: new Ext.data.ArrayStore({
+      id:0,
+      fields: ['val','name'],
+      data: [ [1,'To Do'], [2,'Reference'],[3,'Reminder']]
+    }),
+    displayField: 'name',
+    valueField: 'val'
+  },{
     fieldLabel:"Brief Thought",
     name:'brief',
     ref:'brief',
@@ -1674,23 +1692,6 @@ var todoEditPanel = new Ext.form.FormPanel({
     ref: 'status',
     name: 'status',
     hidden: true
-  },{
-      xtype: 'combo',
-      ref:'action_type',
-      mode: 'local',
-      typeAhead: true,
-      forceSelection: true,
-      fieldLabel: 'Action Type',
-      name: 'action_type',
-      triggerAction: 'all',
-      emptyText: 'Select Action',
-      store: new Ext.data.ArrayStore({
-        id:0,
-        fields: ['val','name'],
-        data: [ [1,'To Do'], [2,'Reference'],[3,'Reminder']]
-      }),
-      displayField: 'name',
-      valueField: 'val'
   },{
     ref: 'actionable',
     name: 'actionable',
