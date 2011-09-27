@@ -50,7 +50,8 @@
       {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
-      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"}
+      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
      
     ],
     "idProperty":"id",
@@ -109,7 +110,8 @@
       {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
-      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"}
+      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
     ],
     "idProperty":"id",
     "url":"/thoughts.json",
@@ -138,7 +140,8 @@
       {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
-      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"}
+      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
     ],
     "idProperty":"id",
     "url":"/thoughts.json",
@@ -167,7 +170,8 @@
       {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"scope","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
-      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"}
+      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
     ],
     "idProperty":"id",
     "url":"/thoughts.json",
@@ -280,6 +284,7 @@
       {"name":"assigned_to","allowBlank":true,"type":"string","defaultValue":null},
       //{"name":"replies","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"type","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
     ],
     "idProperty":"id",
     "url":"/thoughts.json",
@@ -319,6 +324,7 @@
     "url":"/teams/list.json",
     "baseParams":{},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+  
   var teamStoreReader = new Ext.data.JsonReader(
   {
     "idProperty":"id",
@@ -378,7 +384,8 @@
       {"name":"type","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"team_id","allowBlank":true,"type":"int","defaultValue":null},
       {"name":"team","allowBlank":true,"type":"string","defaultValue":null},
-      {"name":"replies","allowBlank":true,"type":"array","defaultValue":null}
+      {"name":"replies","allowBlank":true,"type":"array","defaultValue":null},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
     ],
     "idProperty":"id",
     "url":"/thoughts.json",

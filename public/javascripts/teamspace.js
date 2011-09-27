@@ -145,9 +145,7 @@ function extjsRenderer(value, id, r) {
 		          });
 		        }
 		      });
-		    }
-		    
-		    
+		    }		    		    
 		  }
 		});
 
@@ -164,15 +162,15 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
 	columns : [{
 		id : 'next',
 		header : 'Task',
-		width : 289,
+		width : 280,
 		//sortable : true,
 		dataIndex : 'next'
-	}, {
-		header : 'Status',
-		width : 75,
-		//sortable : true,
-		dataIndex : 'status'
-	}, {
+	},{
+		header : 'Task Type',
+		width : 70,
+		dataIndex : 'action_type_str',
+		hidden: true
+	},{
 		header : 'Assigned',
 		width : 75,
 		//xtype: 'button',
@@ -189,12 +187,104 @@ var outstandingTaskColModel = new Ext.grid.ColumnModel({
 		}*///]
 		//renderer: function(value, id, r){ return assigned_button; }
 		renderer : extjsRenderer
-	}, {
+	},{
 		header : 'Due Date',
-		width : 75,
+		width : 100,
 		//    sortable : true,
-		dataIndex : 'due_date'
-	}]
+	dataIndex : 'due_date'
+	},{
+    header: 'Edit : Delete',
+    xtype: 'actioncolumn',
+    width: 70,
+    items: [{
+      icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
+      tooltip: 'Edit To Do',
+      handler: function(grid, rowIndex, colIndex) {
+        selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
+        if(is_admin==true && currentUser == selectedUserID)
+        {
+          newTask=false;
+          if(!todoEditWindow) todoEditWindow = new Ext.Window({
+            title: 'Edit Thought',
+            closeAction:'hide',
+            width: 380,
+            height: 580,
+            layout: 'fit',
+            plain:true,
+            bodyStyle:'padding:5px;',
+            buttonAlign:'center',
+            //resizable:false,
+            items: todoEditPanel
+          });
+          else
+            todoEditWindow.setTitle("Edit To Do");
+          selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+          todoEditPanel.getForm().reset();
+          todoEditPanel.thoughtType.setValue('public').setVisible(false);
+          todoEditPanel.status.setValue(2); 
+          //todoEditPanel.team.setValue(tabTeamId); 
+          todoEditPanel.team.setVisible(true);
+          todoEditPanel.action_type.setVisible(true);  
+          todoEditPanel.actionable.setValue('t');  
+          todoEditPanel.action_status.setValue('Active');
+          todoEditPanel.action_status.setVisible(false);  
+          todoEditPanel.getForm().load({
+            url: '/thoughts/' + grid.getStore().getAt(rowIndex).data.id + '.json',
+            params: {
+              id: grid.getStore().getAt(rowIndex).data.id
+            },
+            waitMsg: 'Loading...',
+            method: 'get',
+            success: function(f,a){
+
+            }
+          });
+
+          todoEditWindow.show();
+        }
+        else        {
+          alert("You dont have access to edit");
+        }
+      }
+      
+    },
+    {
+      icon   : '../images/icons/delete.gif',
+      tooltip: 'Delete Thought',
+      handler: function(grid,rowIndex, colIndex)
+      {		  
+		    selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+		    selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
+        if(is_admin==true && currentUser == selectedUserID)
+        {
+          Ext.Ajax.request({
+            url: '/thoughts/'+selectedThoughtID,
+            scope:this,
+            params: {
+              id: selectedThoughtID
+            },
+            waitMsg:'Deleting...',
+            method: 'delete',
+            success: function(f,a){
+              //todoStore.reload();
+		          globalThoughtStore.reload({callback : function(records,option,success){
+				        globalThoughtStoreCallbackFn(records);		
+			          }
+		          });
+		          teamThoughtStore.reload({callback: function(records, option, success){
+		            teamThoughtStoreCallbackFn(records);
+		            }
+		          });
+            }
+          });
+          }
+        else
+        {
+          alert("You dont have access to delete it");
+        }
+      }
+    }]
+  }]
 });
 
 //alert(finalJsonEventData);

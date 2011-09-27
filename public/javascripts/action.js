@@ -198,6 +198,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit To Do',
       handler: function(grid, rowIndex, colIndex) {
+      newTask=false;
         if(!todoEditWindow) todoEditWindow = new Ext.Window({
           title: 'Edit Thought',
           closeAction:'hide',
@@ -214,6 +215,14 @@ var todoGrid = new Ext.grid.EditorGridPanel({
           todoEditWindow.setTitle("Edit To Do");
         selectedThoughtID = todoJsonStore.getAt(rowIndex).data.id;
         todoEditPanel.getForm().reset();
+        todoEditPanel.thoughtType.setValue('public').setVisible(false);
+        todoEditPanel.status.setValue(2); 
+        //todoEditPanel.team.setValue(tabTeamId); 
+        todoEditPanel.team.setVisible(true);
+       // todoEditPanel.action_type.setValue(1);  
+        todoEditPanel.actionable.setValue('t');  
+        todoEditPanel.action_status.setValue('Active');
+        todoEditPanel.action_status.setVisible(false);  
         todoEditPanel.getForm().load({
           url: '/thoughts/' + todoJsonStore.getAt(rowIndex).data.id + '.json',
           params: {

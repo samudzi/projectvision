@@ -53,7 +53,9 @@ class ThoughtsController < ApplicationController
 
   def update
     @thought = Thought.find(params[:id])
-    
+    params[:action_type] = 1 if params[:action_type] == "To Do"
+    params[:action_type] = 2 if params[:action_type] == "Reference"
+    params[:action_type] = 3 if params[:action_type] == "Reminder"
     if params[:thought]
       @success = @thought.update_attributes(params[:thought])
     else

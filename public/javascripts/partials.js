@@ -36,6 +36,7 @@ var fieldsArray = [
 		//{name: 'replies', type: 'string'},
     {name: 'type', type: 'string'},
 		{name: 'replies', type: 'array'}, 
+		{name: 'action_type_str', type: 'string'},
   
 ];
 
@@ -140,12 +141,42 @@ function  editTeamThought(selectedThoughtID,selectedUserID)
 {
              
 }
-
-function  deleteTeamThought(selectedThoughtID,selectedUserID)
-{
-
-}
 */
+function  deleteTeamThought(selected_thoughtID,selected_userID)
+{
+ var user_id= selected_userID;
+ var thought_id = selected_thoughtID;
+
+  if(is_admin == true || currentUser == user_id)
+  {
+    Ext.Ajax.request({
+      url: '/thoughts/'+thought_id,
+      scope:this,
+      params: {
+        id: thought_id
+      },
+      waitMsg:'Deleting...',
+      method: 'delete',
+      success: function(f,a){
+        globalThoughtStore.reload({callback : function(records,option,success){
+          globalThoughtStoreCallbackFn(records);		
+          }
+        });
+        teamThoughtStore.load({callback : function(records,option,success){
+          teamThoughtStoreCallbackFn(records);
+          }
+        });
+      }
+    });
+  //        myData.splice(rowIndex,1);
+  //        thoughtStore.loadData(myData);
+  }
+  else
+  {
+  alert("You don't have access to delete it");
+  }
+}
+
 var finalJsonEventData = new Array();
 
 function globalThoughtStoreCallbackFn(records){
@@ -259,6 +290,7 @@ function replyThoughtDeleteHandler(selectedThoughtID, userId)
   //        thoughtStore.loadData(myData);
   }
  else
+
   {
   alert("You don't have access to delete it");
   }
@@ -266,6 +298,14 @@ function replyThoughtDeleteHandler(selectedThoughtID, userId)
 
 
 
+  var thoughtStoreReader = new Ext.data.JsonReader(
+  {
+    idProperty:"id",
+    successProperty:"success",
+    root:"team_tasks",
+    messageProperty:"message",
+    fields:fieldsArray
+  });
 
 function teamThoughtStoreCallbackFn(records){
     var tempJsonTeamTasks = new Array();
@@ -309,8 +349,7 @@ function teamThoughtStoreCallbackFn(records){
       var status = rec.get('status');
       var scope = rec.get('scope');
       var team_id = rec.get('team_id');
-
-      
+      var action_status_str = rec.get('action_status_str');
       var tempArray = [];
       rec.fields.keys.each(function(key) 
       { 
@@ -370,9 +409,15 @@ function teamThoughtStoreCallbackFn(records){
             fields: fieldsArray
           }));
                   
-          outstandingTasksJsonStore.push(new Ext.data.JsonStore({
+          outstandingTasksJsonStore.push(new Ext.data.GroupingStore({
                 root: 'team_tasks',
-                fields: fieldsArray
+               
+                reader:thoughtStoreReader,
+               // "url":"/thoughts.json",
+                groupField: 'action_type_str',
+               
+                format:"json",
+                writer:new Ext.data.JsonWriter({encode:false})
           }));
           
           teamUsersJsonStore.push(new Ext.data.JsonStore({
@@ -486,9 +531,10 @@ function teamThoughtStoreCallbackFn(records){
                 icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
                 tooltip: 'Edit Thought',
                 handler: function(grid, rowIndex, colIndex) {
-                selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
-                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;   
+                  selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
+                  selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;   
                 //editTeamThought(selectedThoughtID,selectedUserID);
+            
                   if(is_admin == true || currentUser == selectedUserID){                                    
                     if(!addWindow) addWindow = new Ext.Window({
                       title: 'Edit Thought',
@@ -538,34 +584,9 @@ function teamThoughtStoreCallbackFn(records){
                 tooltip: 'Delete Thought',
                 handler: function(grid,rowIndex, colIndex)
                 {
-                  selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
-                  selectedUserID = grid.getSotre().getAt(rowIndex).data.user_id;
-                  //deleteTeamThought(selectedThoughtID,selectedUserID);
-                    if(is_admin == true || currentUser == selectedUserID)
-                    {
-                      Ext.Ajax.request({
-                        url: '/thoughts/'+selectedThoughtID,
-                        scope:this,
-                        params: {
-                          id: selectedThoughtID
-                        },
-                        waitMsg:'Deleting...',
-                        method: 'delete',
-                        success: function(f,a){
-                          globalThoughtStore.reload({callback : function(records,option,success){
-                            globalThoughtStoreCallbackFn(records);		
-                            }
-                          });
-                        }
-                      });
-                    //        myData.splice(rowIndex,1);
-                    //        thoughtStore.loadData(myData);
-                    }
-                    else
-                    {
-                    alert("You don't have access to delete it");
-                    }
-                 
+                  selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
+                  selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;                  
+                  deleteTeamThought(selectedThoughtID,selectedUserID);                                   
                 }
               }]
             }                	
@@ -593,11 +614,23 @@ function teamThoughtStoreCallbackFn(records){
 	        height : 300,
 	        stripeRows : true,
           colModel: outstandingTaskColModel,
+          view: new Ext.grid.GroupingView({
+            forceFit:true
+            //groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
+          }),
           tbar: [
             {
-              text: 'New Task',
+              text: 'New To Do',
               iconCls: 'add-prop',
-              handler: taskAsignHandler
+              handler: todoTaskAsignHandler
+          },{
+              text: 'New Reference',
+              iconCls: 'add-prop',
+              handler: referenceTaskAsignHandler
+          },{
+              text: 'New Reminder',
+              iconCls: 'add-prop',
+              handler: reminderTaskAsignHandler
           }],
         });
         
@@ -791,7 +824,7 @@ function userAsignHandler(){
   }
 }
 
-function taskAsignHandler()
+function todoTaskAsignHandler()
 {
   newTask= true;
   if(!todoEditWindow) todoEditWindow = new Ext.Window({
@@ -813,12 +846,73 @@ function taskAsignHandler()
   todoEditPanel.status.setValue(2); 
   todoEditPanel.team.setValue(tabTeamId); 
   todoEditPanel.team.setVisible(false);
-  todoEditPanel.action_type.setValue(2);  
+  todoEditPanel.action_type.setValue(1);
+  todoEditPanel.action_type.setVisible(false);     
   todoEditPanel.actionable.setValue('t');  
   todoEditPanel.action_status.setValue('Active');
   todoEditPanel.action_status.setVisible(false);  
   todoEditWindow.show();
 }
+
+function referenceTaskAsignHandler()
+{
+  newTask= true;
+  if(!todoEditWindow) todoEditWindow = new Ext.Window({
+    title: 'Asign New Task',
+    closeAction:'hide',
+    width: 380,
+    height: 580,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: todoEditPanel
+  });
+  else
+    todoEditWindow.setTitle("Asign New Task");    
+  todoEditPanel.getForm().reset();
+  todoEditPanel.thoughtType.setValue('public').setVisible(false);
+  todoEditPanel.status.setValue(2); 
+  todoEditPanel.team.setValue(tabTeamId); 
+  todoEditPanel.team.setVisible(false);
+  todoEditPanel.action_type.setValue(2);
+  todoEditPanel.action_type.setVisible(false);     
+  todoEditPanel.actionable.setValue('t');  
+  todoEditPanel.action_status.setValue('Active');
+  todoEditPanel.action_status.setVisible(false);  
+  todoEditWindow.show();
+}
+function reminderTaskAsignHandler()
+{
+  newTask= true;
+  if(!todoEditWindow) todoEditWindow = new Ext.Window({
+    title: 'Asign New Task',
+    closeAction:'hide',
+    width: 380,
+    height: 580,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: todoEditPanel
+  });
+  else
+    todoEditWindow.setTitle("Asign New Task");    
+  todoEditPanel.getForm().reset();
+  todoEditPanel.thoughtType.setValue('public').setVisible(false);
+  todoEditPanel.status.setValue(2); 
+  todoEditPanel.team.setValue(tabTeamId); 
+  todoEditPanel.team.setVisible(false);
+  todoEditPanel.action_type.setValue(3);
+  todoEditPanel.action_type.setVisible(false);   
+  todoEditPanel.actionable.setValue('t');  
+  todoEditPanel.action_status.setValue('Active');
+  todoEditPanel.action_status.setVisible(false);  
+  todoEditWindow.show();
+}
+
 
 //my handlers ends
 
@@ -952,6 +1046,7 @@ function teamEditHandler()
   teamAddPanel.getForm().load({
           url: '/teams/' + selectedTeamID + '.json',
           params: {
+
             id: selectedTeamID
           },
           waitMsg: 'Loading...',
@@ -1047,7 +1142,7 @@ function teamSaveHandler()
 
 function todoSaveHandler()
 {
-//  console.log("saving");
+
   console.log(todoEditPanel.action_type.getValue());
   if(newTask)
   {
@@ -1072,6 +1167,7 @@ function todoSaveHandler()
     });
   }
   else{
+
     todoEditPanel.getForm().submit({
       url: '/thoughts/'+selectedThoughtID+'.json',
       params: {
@@ -1085,6 +1181,11 @@ function todoSaveHandler()
 			    globalThoughtStoreCallbackFn(records);		
 		    }
 	    });
+	    teamThoughtStore.reload({
+        	callback : function(records, option, success) {
+            teamThoughtStoreCallbackFn(records);
+          }
+        });
       }
     });
   }
@@ -1469,7 +1570,7 @@ var todoEditPanel = new Ext.form.FormPanel({
   },{
       xtype: 'datefield',
       fieldLabel: 'Due Date',
-      ref:'../due_date',
+      ref:'due_date',
       name: 'due_date',
       format: 'c',
       editable: false
@@ -1503,7 +1604,7 @@ var todoEditPanel = new Ext.form.FormPanel({
 
   },{
       xtype: 'combo',
-      ref:'../context',
+      ref:'context',
       mode: 'local',
       typeAhead: true,
       forceSelection: true,

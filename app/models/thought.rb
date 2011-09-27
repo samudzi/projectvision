@@ -62,6 +62,11 @@ class Thought < ActiveRecord::Base
       thought_data[name] = value
     end
     thought_data['team'] = self.team ? self.team.name : ''
+    
+    thought_data['action_type_str'] = "Todo" if thought_data['action_type'].to_i == 1
+    thought_data['action_type_str'] = "Reference" if thought_data['action_type'].to_i == 2
+    thought_data['action_type_str'] = "Reminder" if thought_data['action_type'].to_i == 3
+     
     thought_data['assigned_to'] = self.assigned_to ? self.assigned_to.email : ''
     #thought_data['replies'] = self.replies.collect{|reply| reply.detail}.join('<br/>')
     thought_data['replies'] = self.replies.collect{|reply| {:detail=>reply.detail,:user => reply.user.email, :thought_id => reply.id, :user_id =>reply.user.id}}
