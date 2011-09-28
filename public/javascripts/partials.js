@@ -296,7 +296,62 @@ function replyThoughtDeleteHandler(selectedThoughtID, userId)
   }
 }
 
-
+function getExpander(){
+  return new Ext.ux.grid.RowExpander({
+   //tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
+    tpl: '<div class="ux-row-expander-box"></div>',
+    actAsTree: true,
+    treeLeafProperty: 'is_leaf',
+    listeners: {
+  	  expand: function( expander, record, body, rowIndex){
+  		  var tempData = new Array();
+  		  var replies = record.get('replies');
+		  
+  		  for(var i=0;i<replies.length;i++){
+  		    tempData[i] = [];
+  		    tempData[i]['user'] = replies[i].user;
+  		    tempData[i]['reply'] = replies[i].detail.replace(/\n/g,'<br>');
+  		    tempData[i]['thought_id'] = replies[i].thought_id;
+  		    tempData[i]['user_id'] = replies[i].user_id;
+  		  }
+		  
+  		  var replyStore = new Ext.data.JsonStore({
+          root: 'replies',
+          fields: replyFieldsArray
+        });
+      
+        var newArray = new Array();
+        newArray["replies"] = tempData;
+        replyStore.loadData(newArray,false);
+      
+        var element = Ext.get(this.grid.getView().getRow(rowIndex)).child('.ux-row-expander-box');
+      
+        var childGrid = new Ext.list.ListView({
+          title : 'Replies',
+          store : replyStore,   // Store
+          autoHeight: true,
+          emptyText: 'No replies to display',
+          reserveScrollOffset: true,
+          width : '100%',
+          //bodyStyle : 'margin-right:20px',
+          columns:[
+            {
+              id: 'reply',
+              header: 'Replies',
+              dataIndex: 'reply',
+              width: '1',
+              tpl: '<div style="padding:5px; border:1px solid #CCCCCC; background-color:#FFFFFF;"><b>{user}:</b> {reply}<a href="#" onclick="replyThoughtDeleteHandler({thought_id},{user_id})">:delete</a><div>'
+            }
+          ]
+        });
+        element && childGrid.render(element);
+        //if(this.actAsTree) {
+          //childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
+        //}
+  	  }
+    }
+  });
+}
 
   var thoughtStoreReader = new Ext.data.JsonReader(
   {
@@ -431,61 +486,7 @@ function teamThoughtStoreCallbackFn(records){
       teamUsersJsonStore[i].loadData(tempJsonTeamUsers[i],false);
 			
       if(cond){
-        var expander = new Ext.ux.grid.RowExpander({
-         //tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
-          tpl: '<div class="ux-row-expander-box"></div>',
-				  actAsTree: true,
-				  treeLeafProperty: 'is_leaf',
-				  listeners: {
-					  expand: function( expander, record, body, rowIndex){
-						  var tempData = new Array();
-						  var replies = record.get('replies');
-						  
-						  for(var i=0;i<replies.length;i++){
-						    tempData[i] = [];
-						    tempData[i]['user'] = replies[i].user;
-						    tempData[i]['reply'] = replies[i].detail.replace(/\n/g,'<br>');
-						    tempData[i]['thought_id'] = replies[i].thought_id;
-						    tempData[i]['user_id'] = replies[i].user_id;
-						  }
-						  
-						  var replyStore = new Ext.data.JsonStore({
-                root: 'replies',
-                fields: replyFieldsArray
-              });
-              
-              var newArray = new Array();
-              newArray["replies"] = tempData;
-              replyStore.loadData(newArray,false);
-              
-              var element = Ext.get(this.grid.getView().getRow(rowIndex)).child('.ux-row-expander-box');
-              
-              var childGrid = new Ext.list.ListView({
-	              title : 'Replies',
-	              store : replyStore,   // Store
-	              autoHeight: true,
-	              emptyText: 'No replies to display',
-                reserveScrollOffset: true,
-	              width : '100%',
-	              //bodyStyle : 'margin-right:20px',
-	              columns:[
-	                {
-	                  id: 'reply',
-	                  header: 'Replies',
-	                  dataIndex: 'reply',
-	                  width: '1',
-	                  tpl: '<div style="padding:5px; border:1px solid #CCCCCC; background-color:#FFFFFF;"><b>{user}:</b> {reply}<a href="#" onclick="replyThoughtDeleteHandler({thought_id},{user_id})">:delete</a><div>'
-	                }
-	              ]
-              });
-              element && childGrid.render(element);
-              //if(this.actAsTree) {
-                //childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
-              //}
-					  }
-				  }
-        });
-
+        var expander = getExpander();
         var teamThoughtColModel = new Ext.grid.ColumnModel({
           columns : [expander, {
         		id : 'brief',
@@ -588,63 +589,10 @@ function teamThoughtStoreCallbackFn(records){
         	]
         });
         
-        var expander1 = new Ext.ux.grid.RowExpander({
-         //tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
-          tpl: '<div class="ux-row-expander-box"></div>',
-				  actAsTree: true,
-				  treeLeafProperty: 'is_leaf',
-				  listeners: {
-					  expand: function( expander, record, body, rowIndex){
-						  var tempData = new Array();
-						  var replies = record.get('replies');
-						  
-						  for(var i=0;i<replies.length;i++){
-						    tempData[i] = [];
-						    tempData[i]['user'] = replies[i].user;
-						    tempData[i]['reply'] = replies[i].detail.replace(/\n/g,'<br>');
-						    tempData[i]['thought_id'] = replies[i].thought_id;
-						    tempData[i]['user_id'] = replies[i].user_id;
-						  }
-						  
-						  var replyStore = new Ext.data.JsonStore({
-                root: 'replies',
-                fields: replyFieldsArray
-              });
-              
-              var newArray = new Array();
-              newArray["replies"] = tempData;
-              replyStore.loadData(newArray,false);
-              
-              var element = Ext.get(this.grid.getView().getRow(rowIndex)).child('.ux-row-expander-box');
-              
-              var childGrid = new Ext.list.ListView({
-	              title : 'Replies',
-	              store : replyStore,   // Store
-	              autoHeight: true,
-	              emptyText: 'No replies to display',
-                reserveScrollOffset: true,
-	              width : '100%',
-	              //bodyStyle : 'margin-right:20px',
-	              columns:[
-	                {
-	                  id: 'reply',
-	                  header: 'Replies',
-	                  dataIndex: 'reply',
-	                  width: '1',
-	                  tpl: '<div style="padding:5px; border:1px solid #CCCCCC; background-color:#FFFFFF;"><b>{user}:</b> {reply}<a href="#" onclick="replyThoughtDeleteHandler({thought_id},{user_id})">:delete</a><div>'
-	                }
-	              ]
-              });
-              element && childGrid.render(element);
-              //if(this.actAsTree) {
-                //childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
-              //}
-					  }
-				  }
-        });
+        var expander1 = getExpander();
         
         var outstandingTaskColModel = new Ext.grid.ColumnModel({
-        	columns : [expander1,{
+        	columns : [expander1, {
         		id : 'next',
         		header : 'Task',
         		width : 280,
@@ -671,12 +619,12 @@ function teamThoughtStoreCallbackFn(records){
         		}
         		}*///]
         		//renderer: function(value, id, r){ return assigned_button; }
-        		renderer : extjsRenderer
+        		renderer : extjsAssignRenderer
         	},{
         		header : 'Due Date',
         		width : 100,
         		//    sortable : true,
-        	dataIndex : 'due_date'
+        	  dataIndex : 'due_date'
         	},{
             header: 'Actions',
             xtype: 'actioncolumn',

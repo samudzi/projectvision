@@ -106,7 +106,7 @@ function myTaskAsignHandler()
     userTaskWindow.hide();
 }
 
-function extjsRenderer(value, id, r) {
+function extjsAssignRenderer(value, id, r) {
 	var id = Ext.id();
 	var user_id = r.get('user_id');
 	var assignee_id = r.get('assignee_id');
@@ -122,7 +122,7 @@ function extjsRenderer(value, id, r) {
 		    asignThoughtID = r.get('id');
 		    
 		    if(is_admin == true){		    
-		    userTaskAsignHandler(asignThoughtID);
+		      userTaskAsignHandler(asignThoughtID);
 		    }
 		    else
 		    {
