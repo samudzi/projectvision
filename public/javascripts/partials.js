@@ -588,6 +588,210 @@ function teamThoughtStoreCallbackFn(records){
         	]
         });
         
+        var expander1 = new Ext.ux.grid.RowExpander({
+         //tpl : new Ext.Template('<p><b>Replies:</b><br> {replies}</p><br>')
+          tpl: '<div class="ux-row-expander-box"></div>',
+				  actAsTree: true,
+				  treeLeafProperty: 'is_leaf',
+				  listeners: {
+					  expand: function( expander, record, body, rowIndex){
+						  var tempData = new Array();
+						  var replies = record.get('replies');
+						  
+						  for(var i=0;i<replies.length;i++){
+						    tempData[i] = [];
+						    tempData[i]['user'] = replies[i].user;
+						    tempData[i]['reply'] = replies[i].detail.replace(/\n/g,'<br>');
+						    tempData[i]['thought_id'] = replies[i].thought_id;
+						    tempData[i]['user_id'] = replies[i].user_id;
+						  }
+						  
+						  var replyStore = new Ext.data.JsonStore({
+                root: 'replies',
+                fields: replyFieldsArray
+              });
+              
+              var newArray = new Array();
+              newArray["replies"] = tempData;
+              replyStore.loadData(newArray,false);
+              
+              var element = Ext.get(this.grid.getView().getRow(rowIndex)).child('.ux-row-expander-box');
+              
+              var childGrid = new Ext.list.ListView({
+	              title : 'Replies',
+	              store : replyStore,   // Store
+	              autoHeight: true,
+	              emptyText: 'No replies to display',
+                reserveScrollOffset: true,
+	              width : '100%',
+	              //bodyStyle : 'margin-right:20px',
+	              columns:[
+	                {
+	                  id: 'reply',
+	                  header: 'Replies',
+	                  dataIndex: 'reply',
+	                  width: '1',
+	                  tpl: '<div style="padding:5px; border:1px solid #CCCCCC; background-color:#FFFFFF;"><b>{user}:</b> {reply}<a href="#" onclick="replyThoughtDeleteHandler({thought_id},{user_id})">:delete</a><div>'
+	                }
+	              ]
+              });
+              element && childGrid.render(element);
+              //if(this.actAsTree) {
+                //childGrid.getGridEl().swallowEvent(['mouseover', 'mouseout', 'mousedown', 'click', 'dblclick']);
+              //}
+					  }
+				  }
+        });
+        
+        var outstandingTaskColModel = new Ext.grid.ColumnModel({
+        	columns : [expander1,{
+        		id : 'next',
+        		header : 'Task',
+        		width : 280,
+        		//sortable : true,
+        		dataIndex : 'next'
+        	},{
+        		header : 'Type',
+        		width : 70,
+        		dataIndex : 'action_type_str',
+        		hidden: true
+        	},{
+        		header : 'Assigned',
+        		width : 75,
+        		//xtype: 'button',
+        		//width: 50,
+        		//items: [assigned_button
+        		/*{
+        		icon   : '../images/icons/blue1.png',
+        		tooltip: 'Assigned',
+        		handler: function(grid,rowIndex, colIndex)
+        		{
+        		selectedThoughtID = thoughtGridJsonStore.getAt(rowIndex).data.id;
+        		alert(colIndex);
+        		}
+        		}*///]
+        		//renderer: function(value, id, r){ return assigned_button; }
+        		renderer : extjsRenderer
+        	},{
+        		header : 'Due Date',
+        		width : 100,
+        		//    sortable : true,
+        	dataIndex : 'due_date'
+        	},{
+            header: 'Actions',
+            xtype: 'actioncolumn',
+            width: 70,
+            items: [{
+        			icon : '../images/icons/arrow_undo.gif',
+        			tooltip : 'Reply Thought',
+        			handler : function(grid, rowIndex, colIndex) {
+        				selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+        			  var expander = grid.getColumnModel().getColumnAt(0);
+        			  console.log(expander);
+        			  //expander.collapse(rowIndex);
+        				Ext.MessageBox.buttonText.ok = "Save";
+        				Ext.MessageBox.show({
+        					title : 'Reply',
+        					msg : 'Enter reply to thought:',
+        					width : 300,
+        					buttons : Ext.MessageBox.OKCANCEL,
+        					multiline : true,
+        					fn : showResultText//,
+        					//fn: FshowResultText.createDelegate(scopeHere, ['your', 'custom' 'parameters'], true)
+        					//animateTarget: 'mb3'
+        				});
+        			}
+        		},{
+              icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
+              tooltip: 'Edit To Do',
+              handler: function(grid, rowIndex, colIndex) {
+                selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
+                if(is_admin==true || currentUser == selectedUserID)
+                {
+                  newTask=false;
+                  if(!todoEditWindow) todoEditWindow = new Ext.Window({
+                    title: 'Edit Thought',
+                    closeAction:'hide',
+                    width: 380,
+                    height: 580,
+                    layout: 'fit',
+                    plain:true,
+                    bodyStyle:'padding:5px;',
+                    buttonAlign:'center',
+                    //resizable:false,
+                    items: todoEditPanel
+                  });
+                  else
+                    todoEditWindow.setTitle("Edit To Do");
+                  selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+                  todoEditPanel.getForm().reset();
+                  todoEditPanel.thoughtType.setValue('public').setVisible(false);
+                  todoEditPanel.status.setValue(2); 
+                  //todoEditPanel.team.setValue(tabTeamId); 
+                  todoEditPanel.team.setVisible(true);
+                  todoEditPanel.action_type.setVisible(true);  
+                  todoEditPanel.actionable.setValue('t');  
+                  todoEditPanel.action_status.setValue('Active');
+                  todoEditPanel.action_status.setVisible(false);  
+                  todoEditPanel.getForm().load({
+                    url: '/thoughts/' + grid.getStore().getAt(rowIndex).data.id + '.json',
+                    params: {
+                      id: grid.getStore().getAt(rowIndex).data.id
+                    },
+                    waitMsg: 'Loading...',
+                    method: 'get',
+                    success: function(f,a){
+
+                    }
+                  });
+
+                  todoEditWindow.show();
+                }
+                else        {
+                  Ext.Msg.alert("Access violation","You dont have access to edit");
+                }
+              }
+
+            },
+            {
+              icon   : '../images/icons/delete.gif',
+              tooltip: 'Delete Thought',
+              handler: function(grid,rowIndex, colIndex)
+              {		  
+        		    selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+        		    selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
+                if(is_admin==true && currentUser == selectedUserID)
+                {
+                  Ext.Ajax.request({
+                    url: '/thoughts/'+selectedThoughtID,
+                    scope:this,
+                    params: {
+                      id: selectedThoughtID
+                    },
+                    waitMsg:'Deleting...',
+                    method: 'delete',
+                    success: function(f,a){
+                      //todoStore.reload();
+        		          globalThoughtStore.reload({callback : function(records,option,success){
+        				        globalThoughtStoreCallbackFn(records);		
+        			          }
+        		          });
+        		          teamThoughtStore.reload({callback: function(records, option, success){
+        		            teamThoughtStoreCallbackFn(records);
+        		            }
+        		          });
+                    }
+                  });
+                  }
+                else
+                {
+                  Ext.Msg.alert("Access violation","You dont have access to delete it");
+                }
+              }
+            }]
+          }]
+        });
+        
         var teamThoughtGrid = new Ext.grid.GridPanel({
 	        title : 'Shared Team Thoughts',
 	        store : teamThoughtsJsonStore[i],   // Store
@@ -608,6 +812,7 @@ function teamThoughtStoreCallbackFn(records){
 	        store : outstandingTasksJsonStore[i],   //Dummy Store
 	        height : 300,
 	        stripeRows : true,
+	        plugins : expander1,
           colModel: outstandingTaskColModel,
           view: new Ext.grid.GroupingView({
             forceFit:true,

@@ -141,7 +141,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     width    : 75,
     //    sortable : true,
     dataIndex: 'due_date',
-	renderer: function(date) { return date.format("Y-m-d"); }
+	renderer: function(date) { if(date) return date.format("Y-m-d"); }
   },
   {
     header   : 'Context',
