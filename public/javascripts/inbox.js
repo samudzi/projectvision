@@ -10,6 +10,7 @@ inboxStore.load({
 */
 var newThought = false;
 var newTask = false;
+var newUser = false;
 var selectedThoughtID = 0;
 var newButtonTask= true;
 
