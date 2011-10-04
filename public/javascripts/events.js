@@ -15,14 +15,14 @@ Ext.ensible.sample.EventData = {
         "detail":"Vacation",
         "due_date":today.add(Date.DAY, -20).add(Date.HOUR, 10),
         "due_date":today.add(Date.DAY, -10).add(Date.HOUR, 15),
-		"status":"Have fun"
+		    "status":"Have fun"
     },{
         "id":1002,
         "id":2,
         "detail":"Lunch with Matt",
         "due_date":today.add(Date.HOUR, 11).add(Date.MINUTE, 30),
         "due_date":today.add(Date.HOUR, 13),        
-		"status":"Order the queso",
+		    "status":"Order the queso",
         "brief":"15"
     }/*,{
         "id":1003,

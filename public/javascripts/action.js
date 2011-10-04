@@ -200,7 +200,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
       handler: function(grid, rowIndex, colIndex) {
       newTask=false;
         if(!todoEditWindow) todoEditWindow = new Ext.Window({
-          title: 'Edit Thought',
+          title: 'Edit To do',
           closeAction:'hide',
           width: 380,
           height: 580,
@@ -340,7 +340,7 @@ var referenceGrid = new Ext.grid.GridPanel({
     width: 70,
     items: [{
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
-      tooltip: 'Edit To Do',
+      tooltip: 'Edit Reference',
       handler: function(grid, rowIndex, colIndex) {
         if(!refEditWindow) refEditWindow = new Ext.Window({
           title: 'Edit Thought',
@@ -358,6 +358,7 @@ var referenceGrid = new Ext.grid.GridPanel({
           refEditWindow.setTitle("Edit Reference");
         selectedThoughtID = referenceJsonStore.getAt(rowIndex).data.id;
         refEditPanel.getForm().reset();
+        refEditPanel.action_type.setVisible(false); 
         refEditPanel.getForm().load({
           url: '/thoughts/' + referenceJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
@@ -454,10 +455,10 @@ var reminderGrid = new Ext.grid.GridPanel({
       tooltip: 'Edit To Do',
       handler: function(grid, rowIndex, colIndex) {
         if(!remindEditWindow) remindEditWindow = new Ext.Window({
-          title: 'Edit Thought',
+          title: 'Edit Reminder',
           closeAction:'hide',
           width: 380,
-          height: 500,
+          height: 550,
           layout: 'fit',
           plain:true,
           bodyStyle:'padding:5px;',
@@ -469,6 +470,7 @@ var reminderGrid = new Ext.grid.GridPanel({
           remindEditWindow.setTitle("Edit Reminder");
         selectedThoughtID = reminderJsonStore.getAt(rowIndex).data.id;
         remindEditPanel.getForm().reset();
+        remindEditPanel.action_type.setVisible(false); 
         remindEditPanel.getForm().load({
           url: '/thoughts/' + reminderJsonStore.getAt(rowIndex).data.id + '.json',
           params: {
@@ -580,6 +582,10 @@ var actionPanel = new Ext.TabPanel({
 		  }
   }
 });
+
+
+
+
 
 /*var combotest = new Ext.form.ComboBox({	   
 	   name: 'combotest',

@@ -15,12 +15,32 @@ class ThoughtsController < ApplicationController
     params[:actionable] = false;
     params[:action_type] = 1 if params[:action_type] == "To Do"
     params[:action_type] = 2 if params[:action_type] == "Reference"
-    params[:action_type] = 3 if params[:action_type] == "Reminder"
+    params[:action_type] = 3 if params[:action_type] == "Reminder"    
     
     if params[:thought]
       @thought = Thought.new(params[:thought])
     else
       @thought = Thought.new(params)
+    end
+    
+    # if this is event form
+    if params[:start_date_time]
+      #then merge fields to set data
+      sdate = params[:start_date].split('/')
+      
+      stime = params[:start_date_time].split(':')
+      sstime = stime[1].split(' ')
+      
+   
+      @thought.start_date = Time.utc(sdate[2],sdate[0],sdate[1],stime[0],sstime[0])
+     #puts(@thought.start_date);              
+    end
+    if params[:due_date_time]
+      ddate = params[:due_date].split('/')
+      dtime = params[:due_date_time].split(':')
+      ddtime = dtime[1].split(' ')
+      debugger
+      @thought.due_date = Time.utc(ddate[2],ddate[0],ddate[1],dtime[0],ddtime[0])
     end
     
     #@thought.team_id = 1 if @thought.scope == 'public'
@@ -59,10 +79,28 @@ class ThoughtsController < ApplicationController
     if params[:thought]
       @success = @thought.update_attributes(params[:thought])
     else
+    
       if params[:team] and @thought.scope == 'public'
         team = Team.find_by_name params[:team]
         params[:team_id] = team.id
        
+      end
+      if params[:start_date_time]
+        #then merge fields to set data
+        sdate = params[:start_date].split('/')
+        
+        stime = params[:start_date_time].split(':')
+        sstime = stime[1].split(' ')
+        
+        #debugger
+        @thought.start_date = Time.utc(sdate[2],sdate[1],sdate[0],stime[0],sstime[0])
+       #puts(@thought.start_date);              
+      end
+      if params[:due_date_time]
+        ddate = params[:due_date].split('/')
+        dtime = params[:due_date_time].split(':')
+        ddtime = dtime[1].split(' ')
+        @thought.due_date = Time.utc(ddate[2],ddate[1],ddate[0],dtime[0],ddtime[0])
       end
       @thought.team_id = nil if @thought.scope == 'private'
       

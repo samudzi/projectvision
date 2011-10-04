@@ -26,6 +26,7 @@ function showResultText(btn, text) {
 		});
 	}
 };
+
 function userTaskAsignHandler(asignThoughtID){
    if(!userTaskWindow) userTaskWindow = new Ext.Window({
     title: 'Assing Task to User',

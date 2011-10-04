@@ -185,6 +185,7 @@
                 
                 return (startsInRange || endsInRange || spansRange);
             },
+
             
             /**
              * Returns true if the specified date is a Saturday or Sunday, else false.

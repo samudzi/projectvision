@@ -72,6 +72,7 @@ Ext.calendar.CalendarPanel = Ext.extend(Ext.Panel, {
      * @cfg {String} monthText
      * Alternate text to use for the 'Month' nav bar button.
      */
+
     monthText: 'Month',
 
     // private

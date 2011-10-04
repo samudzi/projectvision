@@ -15,8 +15,54 @@ var remindEditWindow;
 var currentIndex;
 var currentOrganizeIndex;
 var userTaskWindow;
+var eventEditWindow;
 
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
+
+var newThoughtButton = new Ext.Button({
+  text    : 'New Task',
+  width : 125,
+  height :25,
+  style: "z-index:1000",
+  x:5,
+  y:100,
+  handler : function() {
+             newHandler();
+            } 
+});
+var newTodoButton = new Ext.Button({
+  text    : 'New Todo',
+  width : 125,
+  height :25,
+  style: "z-index:1000",
+  x:5,
+  y:125,
+  handler : function() {
+             btnTodoTaskHandler();
+            } 
+});
+var newReferenceButton = new Ext.Button({
+  text    : 'New Reference',
+  width : 125,
+  height :25,
+  style: "z-index:1000",
+  x:5,
+  y:150,
+  handler : function() {
+             btnReferenceTaskHandler();
+            } 
+});
+var newReminderButton = new Ext.Button({
+  text    : 'New Reminder',
+  width : 125,
+  height :25,
+  style: "z-index:1000",
+  x:5,
+  y:175,
+  handler : function() {
+             btnReminderTaskHandler();
+            } 
+});
 
 // Horizontal Tabs ( Ext.TabPanel ) nested inside Vertical TabPanel.
 var mainPanel;
@@ -30,17 +76,25 @@ var tabs = new Ext.ux.VrTabPanel({
   title: 'Project Vision',
   ref:'tabs',
   activeTab: 0,
-  width:1024,
+  x: 0,
+  y: 0,
+  width:"100%",
   height:620,
   plain:true,
-  tabMarginTop: 30,	/* Push the tab strip down 30px from top. If not set, defaults to 15.*/
+  tabMarginTop: 250,	/* Push the tab strip down 30px from top. If not set, defaults to 15.*/
   bodyStyle: 'padding: 10px',
+  
+            
   defaults: {
     autoScroll: true
   },
 
-  items:mainPanel
-});//,{
+  items: [mainPanel]
+  
+  
+});
+
+//,{
 //    title: 'Action',
 //    xtype: 'tabpanel',
 //    activeTab: 0,
@@ -64,10 +118,14 @@ var tabs = new Ext.ux.VrTabPanel({
 //    }]
 //  }
 
+
+
+
 var mainPanel = new Ext.Panel({
   // title: 'Project Vision',
-  layout: 'fit',
-  items: [tabs],
+  layout: 'absolute',
+  height: 620,
+  items: [newThoughtButton,newTodoButton,newReferenceButton,newReminderButton,tabs],
   tbar: new Ext.Toolbar({
     cls: 'x-panel-header',
     height: 25,
@@ -79,7 +137,9 @@ var mainPanel = new Ext.Panel({
         document.location = 'users/sign_out'
       }
     },' ']
+  
   })
+ 
 });
 
 Ext.onReady( function() {

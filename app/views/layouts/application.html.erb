@@ -177,6 +177,32 @@
     "url":"/thoughts.json",
     "baseParams":{"fieldset":"default","ttype":"action", "status":2, "action_type":3},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+  new Ext.data.JsonStore(
+  {
+    "storeId":"event_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":true,"type":"int","defaultValue":null},
+      {"name":"brief","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"detail","allowBlank":true,"type":"string","defaultValue":null},     
+      {"name":"type","allowBlank":true,"type":"string","defaultValue":null},      
+      {"name":"start_date","allowBlank":true,"type":"datetime","defaultValue":null,"dateFormate":"c"},                 
+      {"name":"action_status","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"due_date","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"action_type","allowBlank":true,"type":"string","defaultValue":null},      
+      {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"updated_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
+      {"name":"action_type_str","allowBlank":true,"type":"string","defaultValue":null}
+    ],
+    "idProperty":"id",
+    "url":"/thoughts.json",
+    "baseParams":{"fieldset":"default","ttype":"action", "status":2, "action_type":5},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
   new Ext.data.JsonStore(
   {
     "storeId":"recent_completed_store",
@@ -273,6 +299,7 @@
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
       {"name":"detail","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"due_date","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"start_date","allowBlank":true,"type":"datetime","defaultValue":null,"dateFormate":"c"},
       {"name":"id","allowBlank":true,"type":"int","defaultValue":null},
       {"name":"next","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"outcome","allowBlank":true,"type":"string","defaultValue":null},
@@ -372,6 +399,7 @@
       {"name":"created_at","allowBlank":true,"type":"date","defaultValue":null,"dateFormat":"c"},
       {"name":"detail","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"due_date","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"start_date","allowBlank":true,"type":"datetime","defaultValue":null,"dateFormate":"c"},
       {"name":"id","allowBlank":true,"type":"int","defaultValue":null},
       {"name":"next","allowBlank":true,"type":"string","defaultValue":null},
       {"name":"outcome","allowBlank":true,"type":"string","defaultValue":null},
