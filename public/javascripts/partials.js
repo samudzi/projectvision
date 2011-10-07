@@ -458,8 +458,7 @@ function teamThoughtStoreCallbackFn(records){
   });
   
   function new_entry(){ 
-    
-     
+    var token = google.accounts.user.login(EVENT_FEED_URL);
     records.each(function(rec){
       var status = rec.get('status');
       var team_id = rec.get('team_id');

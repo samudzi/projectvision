@@ -176,10 +176,12 @@ function handleError(e) {
 <script>
   var is_admin = <%= (current_user and current_user.is_admin) ? 'true' : 'false' %> ;
   var currentUser = <%= current_user ? current_user.id : 0 %>;
-  <%- tdate = (current_user and current_user.synchronization_date) ? current_user.synchronization_date : current_user.created_at %>
-  console.log('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
-  var sync_date =  new Date('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
-  console.log(sync_date);
+  <%- if current_user %>
+    <%- tdate = current_user.synchronization_date ? current_user.synchronization_date : current_user.created_at  %>
+    console.log('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
+    var sync_date =  new Date('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
+    console.log(sync_date);
+  <% end %>
   new Ext.data.JsonStore(
   {
     "storeId":"inbox_store",
