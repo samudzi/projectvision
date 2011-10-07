@@ -31,7 +31,7 @@ class MyUsersController < ApplicationController
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = User.find(params[:id])    
     if @user.update_attributes params[:user]
       render :json => { :success => true}
     else

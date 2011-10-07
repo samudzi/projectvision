@@ -17,9 +17,158 @@
 
   <%#*Application Specific%>
   <%= javascript_include_tag "VrTabPanel" %>
+  <script type="text/javascript" src="http://www.google.com/jsapi?key=ABQIAAAAVzcu66YGicZvSPDVjflWZRQkdwf30UEryoEcWYgVOc_USNqEkxQkdR_BWf8ImhnhR_oQp2C-OaTnJw"></script>
+    <script>
+  google.load("gdata", "2.x", {packages: ["calendar"]});
+
+  // Constants used as element IDs in the DOM
+  var DEFAULT_PANE = "default-pane";
+  var AUTHENTICATED_PANE = "authenticated-pane";
+  var AUTH_BUTTON = "auth-button"; 
+  var LOGOUT_BUTTON = "logout-button"; 
+  var SAVE_BUTTON = "save-button";
+  var EVENT_SELECT = "event-select";
+  var TITLE_FIELD = "title-field";
+  var DATE_FIELD = "date-field";
+  var LOCATION_FIELD = "location-field";
+  var ATTENDEES_FIELD = "attendees-field";
+  var NOTES_FIELD = "notes-field";
+  var STATUS_AREA = "status-area";
+
+  // Location of the event feed of the primary calendar for the authenticated user
+  var EVENT_FEED_URL = 
+      "https://www.google.com/calendar/feeds/default/private/full";
+
+  // A google.gdata.calendar.CalendarService object that can be used to access
+  // private feed using AuthSub.
+  var myService;
+
+  // The events feed is retrieved once, and accessed every time the event
+  // selected in the dropdown menu is changed. 
+  var myEventsFeed;
+
+  /**
+   * Sets the global calendar service to a new instance.  Also resets the form 
+   * fields to clear out any information that may have been cached.
+   */
+  function init() {
+    google.gdata.client.init(handleError);
+
+    var token = google.accounts.user.checkLogin(EVENT_FEED_URL);
+    // Write the token to the console for debug
+    //google.gdata.util.log("token: '" + token + "'");
+
+    myService = new google.gdata.calendar.CalendarService("Google-meetingNotes-0.9");
+
+    var authButton = document.getElementById(AUTH_BUTTON);
+    if (google.accounts.user.checkLogin(EVENT_FEED_URL)) {
+      //document.getElementById(DEFAULT_PANE).style.display = "none";
+     // document.getElementById(AUTHENTICATED_PANE).style.display = "inline";
+      //getEvents();
+    } else {
+     // document.getElementById(DEFAULT_PANE).style.display = "inline";
+      //document.getElementById(AUTHENTICATED_PANE).style.display = "none";
+    } 
+    //reset();
+  };
+
+  google.setOnLoadCallback(init);
+
+  /**
+   * Requests an AuthSub token for interaction with the Calendar service.
+   */
+  function login() {
+    var token = google.accounts.user.login(EVENT_FEED_URL);
+  };
+
+  /**
+   * Revokes the AuthSub token and resets the page.
+   */
+  function logout(){
+    google.accounts.user.logout();
+    init();
+  };
+
+  /**
+   * Submits a query for all events that occur today.
+   */
+
+
+/**
+ * Populates the dropdown menu with events returned in the query for
+ * today's events.
+ *
+ * @param {JSON} The JSON object returned by the Calendar service that
+ *   contains a collection of event entries.
+ */
+
+
+/**
+ * Populates the event information fields with data from the selected event
+ * entry. 
+ */
+
+
+/**
+ * Updates the event in Google Calendar with the data in the event information
+ * fields.
+ */
+
+
+/**
+ * Updates the appropriate entry in myEventsFeed and notifies the user that 
+ * the event was saved.
+ */
+
+
+/**
+ * Sets the status to the given string.  If none is given, then the status is
+ * cleared.
+ */
+
+/**
+ * Notifies the user that the event was not saved.
+ */
+function handleSaveError(e) {
+  setStatus("Error");
+  handleError(e);
+};
+
+/**
+ * Creates a popup alert to notify the user of a Google data related error.
+ * 
+ * @param {Object} An error that occurred while attempting to interact with
+ *   the Google Calendar service.  
+ */
+function handleError(e) {
+  if (e instanceof Error) {
+    // Alert with the error line number, file and message.
+    alert('Error at line ' + e.lineNumber +
+        ' in ' + e.fileName + '\n' +
+        'Message: ' + e.message);
+    // If available, output HTTP error code and status text
+    if (e.cause) {
+      var errorStatus = e.cause.status;
+      var statusText = e.cause.statusText;
+      alert('Root cause: HTTP error ' + errorStatus + ' with status text of: ' +
+          statusText);
+    }
+  } else {
+    alert(e.toString());
+  }
+};
+
+/**
+ * Resets the form back to the same state as when the page first loads. 
+ */
+
+</script>
 </head>
 <body>
-
+  <div style="display:none;">
+    <input id="auth-button" type="button" value="Login" onclick="login()" style="margin:5px 0px 5px 0px;"/>  
+    <img src="images/jqtouch.png"  style="absolute:-1000px;"/ >
+  </div>
   <p class="notice"><%= notice %></p>
   <p class="alert"><%= alert %></p>
 
@@ -27,6 +176,10 @@
 <script>
   var is_admin = <%= (current_user and current_user.is_admin) ? 'true' : 'false' %> ;
   var currentUser = <%= current_user ? current_user.id : 0 %>;
+  <%- tdate = (current_user and current_user.synchronization_date) ? current_user.synchronization_date : current_user.created_at %>
+  console.log('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
+  var sync_date =  new Date('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
+  console.log(sync_date);
   new Ext.data.JsonStore(
   {
     "storeId":"inbox_store",

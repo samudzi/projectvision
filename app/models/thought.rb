@@ -61,8 +61,7 @@ class Thought < ActiveRecord::Base
     self.attributes.each_pair do |name,value|
       thought_data[name] = value
     end
-    thought_data['team'] = self.team ? self.team.name : ''
-    
+    thought_data['team'] = self.team ? self.team.name : ''    
     thought_data['action_type_str'] = "Todo" if thought_data['action_type'].to_i == 1
     thought_data['action_type_str'] = "Reference" if thought_data['action_type'].to_i == 2
     thought_data['action_type_str'] = "Reminder" if thought_data['action_type'].to_i == 3
