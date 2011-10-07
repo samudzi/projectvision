@@ -504,7 +504,7 @@ function teamThoughtStoreCallbackFn(records){
           //start_date = start_date.replace("Z",".000");
           //due_date = due_date.replace("Z",".000");
           dueDate = new Date(due_date);
-          console.log(dueDate);
+          //console.log(dueDate);
           // Set the start and end time of the When object
           when.setStartTime(startDate);
           when.setEndTime(dueDate);
