@@ -133,8 +133,7 @@ function addUserAndTeamSelectOptions()
     var recordData = {
       email: email, 
       id: user_id
-      };
-    
+      };    
     var emailOptionsRecord = new emailOptions.recordType(recordData)   
     emailOptions.add(emailOptionsRecord);  
    });   
@@ -459,85 +458,88 @@ function teamThoughtStoreCallbackFn(records){
   
   function new_entry(){ 
     var token = google.accounts.user.login(EVENT_FEED_URL);
-    records.each(function(rec){
-      var status = rec.get('status');
-      var team_id = rec.get('team_id');
-      var title = rec.get('brief');
-      var start_date = rec.get('start_date');
-      var due_date = rec.get('due_date');
-      var updated_date = rec.get('updated_at');
-      var created_at = rec.get('created_at');
-      var description = rec.get('detail');
-      var team = rec.get('team');
+    console.log(token);
+    if (token){
+      records.each(function(rec){
+        var status = rec.get('status');
+        var team_id = rec.get('team_id');
+        var title = rec.get('brief');
+        var start_date = rec.get('start_date');
+        var due_date = rec.get('due_date');
+        var updated_date = rec.get('updated_at');
+        var created_at = rec.get('created_at');
+        var description = rec.get('detail');
+        var team = rec.get('team');
 
-      updated_date = new Date(updated_date);
-      created_at = new Date(created_at);
-      //console.log(updated_date);
-      if((updated_date > sync_date) || (created_at > sync_date))
-      
-      {
-        if(status == '5'){
-          // creat a single event
-          // Create the calendar service object
-          var calendarService = new google.gdata.calendar.CalendarService('GoogleInc-jsguide-1.0');
+        updatedDate = new Date(updated_date);
+        createdAt = new Date(created_at);
+        console.log(updated_date);
+        syncDate =new Date(sync_date);
+        if((updatedDate > syncDate) || (createdAt > syncDate))        
+        {
+          if(status == '5'){
+            // creat a single event
+            // Create the calendar service object
+            var calendarService = new google.gdata.calendar.CalendarService('GoogleInc-jsguide-1.0');
 
-          // The default "private/full" feed is used to insert event to the
-          // primary calendar of the authenticated user
-          var feedUri = 'https://www.google.com/calendar/feeds/default/private/full';
+            // The default "private/full" feed is used to insert event to the
+            // primary calendar of the authenticated user
+            var feedUri = 'https://www.google.com/calendar/feeds/default/private/full';
 
-          // Create an instance of CalendarEventEntry representing the new event
-          var entry = new google.gdata.calendar.CalendarEventEntry();
-          var ttl = new google.gdata.calendar.CalendarEntry();
+            // Create an instance of CalendarEventEntry representing the new event
+            var entry = new google.gdata.calendar.CalendarEventEntry();
+            var ttl = new google.gdata.calendar.CalendarEntry();
 
-          //var titleText = google.("afd");
-          // Set the title of the event
-          title = team +":"+title;
-          etitle = google.gdata.atom.Text.create(title);
-          edes = google.gdata.atom.Text.create(description);
-          entry.setTitle(etitle);
-          entry.setContent(edes);
-          
-          // Create a When object that will be attached to the event
-          var when = new google.gdata.When();
-          startDate = new Date(start_date);
-          //start_date = start_date.replace("Z",".000");
-          //due_date = due_date.replace("Z",".000");
-          dueDate = new Date(due_date);
-          //console.log(dueDate);
-          // Set the start and end time of the When object
-          when.setStartTime(startDate);
-          when.setEndTime(dueDate);
-          // Add the When object to the event
-          entry.addTime(when);
-          // The callback method that will be called after a successful insertion from insertEntry()
-          var callback = function(result) {
-            console.log('event created!');
-          }
-          // Error handler will be invoked if there is an error from insertEntry()
-          var handleError = function(error) {
-            console.log(error);
-          }
-          // Submit the request using the calendar service object
-          calendarService.insertEntry(feedUri, entry, callback, handleError, google.gdata.calendar.CalendarEventEntry);
+            //var titleText = google.("afd");
+            // Set the title of the event
+            title = team +":"+title;
+            etitle = google.gdata.atom.Text.create(title);
+            edes = google.gdata.atom.Text.create(description);
+            entry.setTitle(etitle);
+            entry.setContent(edes);
+            
+            // Create a When object that will be attached to the event
+            var when = new google.gdata.When();
+            startDate = new Date(start_date);
+            //start_date = start_date.replace("Z",".000");
+            //due_date = due_date.replace("Z",".000");
+            dueDate = new Date(due_date);
+            //console.log(dueDate);
+            // Set the start and end time of the When object
+            when.setStartTime(startDate);
+            when.setEndTime(dueDate);
+            // Add the When object to the event
+            entry.addTime(when);
+            // The callback method that will be called after a successful insertion from insertEntry()
+            var callback = function(result) {
+              console.log('event created!');
+            }
+            // Error handler will be invoked if there is an error from insertEntry()
+            var handleError = function(error) {
+              console.log(error);
+            }
+            // Submit the request using the calendar service object
+            calendarService.insertEntry(feedUri, entry, callback, handleError, google.gdata.calendar.CalendarEventEntry);
+        }
+            
       }
-          
+        
+    });  
+
+      Ext.Ajax.request({
+        url: '/my_users/'+currentUser,
+        scope:this,
+        params: {
+          'user[synchronization_date]': new Date().toString()               
+        },
+        waitMsg:'saving...',
+        method: 'put',
+        success: function(f,a){
+          sync_date = new Date().toString()                   
+        }
+      });
     }
-      
-  });  
-    Ext.Ajax.request({
-      url: '/my_users/'+currentUser,
-      scope:this,
-      params: {
-        'user[synchronization_date]': new Date()                 
-      },
-      waitMsg:'saving...',
-      method: 'put',
-      success: function(f,a){
-      sync_date = new Date();                   
-      }
-    });
-    
- }
+  }
  
   for(var i=0;i<numberOfTeams;i++){    
     
@@ -2523,6 +2525,7 @@ var todoEditPanel = new Ext.form.FormPanel({
      fieldLabel: 'Teams',
      triggerAction: 'all',
      store: myTeamStore,
+
      displayField: 'name',
      valueField: 'id',
      hidden: true

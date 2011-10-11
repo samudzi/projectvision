@@ -186,6 +186,7 @@
                 return (startsInRange || endsInRange || spansRange);
             },
 
+
             
             /**
              * Returns true if the specified date is a Saturday or Sunday, else false.
@@ -1924,7 +1925,7 @@ Ext.ensible.cal.EventMappings = {
     EventId:     {name: 'EventId', mapping:'id', type:'int'},
     CalendarId:  {name: 'CalendarId', mapping: 'null', type: 'int'},
     Title:       {name: 'Title', mapping: 'brief', type: 'string'},
-    StartDate:   {name: 'StartDate', mapping: 'due_date', type: 'date', dateFormat: 'c'},
+    StartDate:   {name: 'StartDate', mapping: 'start_date', type: 'date', dateFormat: 'c'},
     EndDate:     {name: 'EndDate', mapping: 'due_date', type: 'date', dateFormat: 'c'},
     RRule:       {name: 'RecurRule', mapping: 'recur_rule'}, // not currently used
     Location:    {name: 'Location', mapping: 'null', type: 'string'},
@@ -6721,6 +6722,7 @@ Ext.ensible.cal.MonthView = Ext.extend(Ext.ensible.cal.CalendarView, {
 	            '<tpl if="spanLeft">',
 	                '<i class="ext-cal-spl">&#160;</i>',
 	            '</tpl>',
+
 	            '<tpl if="spanRight">',
 	                '<i class="ext-cal-spr">&#160;</i>',
 	            '</tpl>'
