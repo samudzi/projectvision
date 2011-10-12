@@ -110,7 +110,7 @@ function newUserHandler(){
     width: 380,
     applyTo:'user-window',
     closeAction:'hide',
-    height: 230,
+    height: 280,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -162,7 +162,7 @@ var teams = new Ext.grid.GridPanel({
   columns: [
      {
        header     :'User',
-       dataIndex: 'user'
+       dataIndex: 'user_name'
      },{
         header: 'Tasks',
         dataIndex: 'tasks'
@@ -222,9 +222,9 @@ var users = new Ext.grid.GridPanel({
         dataIndex: 'id',
         hidden: true
       },{
-        header: 'Email',
+        header: 'Name',
         width    : 250,
-        dataIndex: 'email'
+        dataIndex: 'user_name'
       },{
 		    header : 'Last Sing In',
 		    width : 95,
@@ -243,7 +243,7 @@ var users = new Ext.grid.GridPanel({
             width: 380,
             applyTo:'user-window',
             closeAction:'hide',
-            height: 230,
+            height: 280,
             layout: 'fit',
             plain:true,
             bodyStyle:'padding:5px;',

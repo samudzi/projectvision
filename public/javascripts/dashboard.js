@@ -207,7 +207,7 @@ var dashboardPanel = new Ext.TabPanel({
       frame:true,
       width:500
     },
-    items: [quickThoughtPanel,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid,userStats]
+    items: [userStats,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid]
   },{
     title: 'Community'
   },{

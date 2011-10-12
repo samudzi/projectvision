@@ -187,6 +187,7 @@
             },
 
 
+
             
             /**
              * Returns true if the specified date is a Saturday or Sunday, else false.
@@ -3068,6 +3069,7 @@ Ext.ensible.cal.RecurrenceField = Ext.extend(Ext.form.Field, {
                         Ext.getCmp(this.id+'-endlabel').hide();
                     }
                 }, this);
+
                 return this;
             }
         });
@@ -5257,6 +5259,7 @@ viewConfig: {
         if(this.enableDD && this.readOnly !== true && this.initDD){
 			//this.initDD();
         }
+
         
         this.on('eventsrendered', this.forceSize);
         this.forceSize.defer(100, this);

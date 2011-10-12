@@ -20,7 +20,7 @@ var eventEditWindow;
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
 var newThoughtButton = new Ext.Button({
-  text    : 'New Task',
+  text    : 'New Thought',
   width : 125,
   height :25,
   style: "z-index:1000",

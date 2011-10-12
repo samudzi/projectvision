@@ -317,10 +317,10 @@ var referenceGrid = new Ext.grid.GridPanel({
   columns: [
   {
     id       : 'ref_detail',
-    header   : 'Detail',
+    header   : 'Brief',
     width    : 160,
     //    sortable : true,
-    dataIndex: 'detail'
+    dataIndex: 'brief'
   },
   {
     header   : 'Context',
@@ -423,10 +423,10 @@ var reminderGrid = new Ext.grid.GridPanel({
   columns: [
   {
     id       : 'remind_details',
-    header   : 'Detail',
+    header   : 'Brief',
     width    : 160,
     //    sortable : true,
-    dataIndex: 'detail'
+    dataIndex: 'brief'
   },
   {
     header   : 'Context',

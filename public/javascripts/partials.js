@@ -118,7 +118,7 @@ var eventStore = new Ext.ensible.sample.MemoryEventStore({
 });*/
 
 var emailOptions=new Ext.data.SimpleStore({
-      fields: ['email','id']
+      fields: ['user_name','id']
     });
 /*var teamOptions=new Ext.data.SimpleStore({
       fields: ['team','id'],
@@ -128,10 +128,10 @@ function addUserAndTeamSelectOptions()
 {
   emailOptions.removeAll(silent=false);
   userStore.each(function(record){
-    var email = record.get('email');
+    var user_name = record.get('user_name');
     var user_id = record.get('id');
     var recordData = {
-      email: email, 
+      user_name: user_name, 
       id: user_id
       };    
     var emailOptionsRecord = new emailOptions.recordType(recordData)   
@@ -530,7 +530,7 @@ function teamThoughtStoreCallbackFn(records){
         url: '/my_users/'+currentUser,
         scope:this,
         params: {
-          'user[synchronization_date]': new Date().toString()               
+          //'user[synchronization_date]': ''             
         },
         waitMsg:'saving...',
         method: 'put',
@@ -584,7 +584,7 @@ function teamThoughtStoreCallbackFn(records){
       
       teamUsersJsonStore.push(new Ext.data.JsonStore({
       root: 'users',
-      fields: [{name:'user_id', type:'int'},{name:'user', type:'string'},{name:'last_sign_in_at', type:'datetime'},]                          
+      fields: [{name:'user_id', type:'int'},{name:'user', type:'string'},{name:'last_sign_in_at', type:'datetime'},{name:'user_name', type:'string'},]                          
       }));                                                              
     }      
     teamThoughtsJsonStore[i].loadData(tempJsonTeamThoughts[i],false);
@@ -1028,10 +1028,12 @@ function teamThoughtStoreCallbackFn(records){
                 }
               });
 
-            eventEditWindow.show();                                                                 
+            eventEditWindow.show();                                                                                                             
           }                                                                                    
         }
       });
+      
+        
       var calandar = new Ext.Panel({
        // layout: 'absolute',
         width : 710,
@@ -1078,7 +1080,7 @@ function teamThoughtStoreCallbackFn(records){
             },{
               header: 'Email',
               width    : 250,
-              dataIndex: 'user'
+              dataIndex: 'user_name'
             },{
 	            header : 'Last Sing In',
 	            width : 125,
@@ -1143,6 +1145,31 @@ myTeamStore.load({callback : function(records,option,success){
   });
 }});
 
+ function eventDelete()
+{
+  selectedEventID = selectedId
+  console.log(selectedId);
+  Ext.Ajax.request({
+  url: '/thoughts/'+selectedId,
+  scope:this,
+  params: {
+    id: selectedId
+    },
+  waitMsg:'Deleting...',
+  method: 'delete',
+  success: function(f,a){
+    teamUserStore.reload();
+    myTeamStore.load();     
+    
+    teamThoughtStore.load({callback : function(records,option,success){
+      teamThoughtStoreCallbackFn(records);
+      }
+    });
+
+  }
+  });
+  eventEditWindow.hide();
+}
 //my local handlers
 function newextjsRenderer(value, id, r) {
   var id = Ext.id();
@@ -1769,6 +1796,7 @@ function eventSaveHandler()
             teamThoughtStoreCallbackFn(records);
           }
         });
+
         myTeamStore.load();
         newTask = false;
       }
@@ -2073,7 +2101,7 @@ var teamAsignPanel = new Ext.form.FormPanel({
     fieldLabel: 'Users',
     triggerAction: 'all',
     store: emailOptions,
-    displayField: 'email',
+    displayField: 'user_name',
     valueField: 'id',
     emptyText: 'Select User'
   },{
@@ -2115,6 +2143,11 @@ var userAddPanel = new Ext.form.FormPanel({
     fieldLabel:"Email",
     name:'email',
     ref:'email',
+    allowBlank:false
+  },{
+    fieldLabel:"Name",
+    name:'user_name',
+    ref:'user_name',
     allowBlank:false
   },{
     fieldLabel:"Password",
@@ -2355,10 +2388,13 @@ var eventEditPanel = new Ext.form.FormPanel({
     text: "Save",
     handler: eventSaveHandler
   },{
+    text: "Delete",
+    handler: eventDelete
+  },{
     text: 'Close',
     handler: function(){
       eventEditWindow.hide();
-    }
+    },
   }]
 });
 

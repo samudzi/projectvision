@@ -8,7 +8,7 @@ class TeamsController < ApplicationController
         users << {:id => team.id.to_s+'_0', :user_id => team.id, :user => "no users", :tasks => "", :team_id => team.id, :team => team.name} 
       end
       team.users.each do |user|
-        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :user => user.email, :tasks => user.assigned_thoughts.length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at} 
+        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :user => user.email, :tasks => user.assigned_thoughts.find(:all,:conditions=>["team_id=?",team.id]).length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at,:user_name => user.user_name} 
       end  
     end   
     render :json =>  {:data => users, :success => true, :totalRows => users.count }.to_json
@@ -70,7 +70,7 @@ class TeamsController < ApplicationController
   
   def add_user
     team = Team.find_by_name params[:name]
-    user = User.find_by_email params[:user]
+    user = User.find_by_user_name params[:user]
     team.users << user
     team.save
     render :json => {:success => true, :message => "user successfully added"}  
