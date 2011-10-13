@@ -29,10 +29,16 @@ class MyUsersController < ApplicationController
     @user = User.find(params[:id])
     render :json => {:data => @user.attributes, :success => true}
   end
-
+  def update_sync
+    @user = current_user 
+    @user.synchronization_date = Time.now
+    @user.save
+    render :text => {}
+  end
+  
   def update
     @user = User.find(params[:id])   
-    @user.synchronization_date = Time.now
+    
     if @user.update_attributes params[:user]
       render :json => { :success => true}
     else

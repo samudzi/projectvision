@@ -464,19 +464,23 @@ function teamThoughtStoreCallbackFn(records){
         var status = rec.get('status');
         var team_id = rec.get('team_id');
         var title = rec.get('brief');
-        var start_date = rec.get('start_date');
+         start_date = rec.get('start_date');
         var due_date = rec.get('due_date');
-        var updated_date = rec.get('updated_at');
-        var created_at = rec.get('created_at');
+        updated_date = rec.get('updated_at');
+        created_at = rec.get('created_at');
         var description = rec.get('detail');
         var team = rec.get('team');
 
-        updatedDate = new Date(updated_date);
-        createdAt = new Date(created_at);
-        console.log(updated_date);
-        syncDate =new Date(sync_date);
-        if((updatedDate > syncDate) || (createdAt > syncDate))        
+        //updatedDate = new Date(updated_date);
+        //createdAt = new Date(created_at);
+        //console.log(updated_date);
+        //syncDate =new Date(sync_date);
+        
+        if((updated_date > sync_date) || (created_at > sync_date))        
         {
+        console.log(updated_date);
+        console.log(created_at);
+        console.log(sync_date);
           if(status == '5'){
             // creat a single event
             // Create the calendar service object
@@ -497,7 +501,7 @@ function teamThoughtStoreCallbackFn(records){
             edes = google.gdata.atom.Text.create(description);
             entry.setTitle(etitle);
             entry.setContent(edes);
-            
+            alert("created");
             // Create a When object that will be attached to the event
             var when = new google.gdata.When();
             startDate = new Date(start_date);
@@ -527,15 +531,15 @@ function teamThoughtStoreCallbackFn(records){
     });  
 
       Ext.Ajax.request({
-        url: '/my_users/'+currentUser,
+        url: '/my_users/update_sync/',
         scope:this,
         params: {
           //'user[synchronization_date]': ''             
         },
         waitMsg:'saving...',
-        method: 'put',
+        method: 'post',
         success: function(f,a){
-          sync_date = new Date().toString()                   
+          sync_date = new Date()                   
         }
       });
     }

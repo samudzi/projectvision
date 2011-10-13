@@ -179,7 +179,15 @@ function handleError(e) {
   <%- if current_user %>
     <%- tdate = current_user.synchronization_date ? current_user.synchronization_date : current_user.created_at  %>
     console.log('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
-    var sync_date =  new Date('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
+    sync_date =  new Date('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
+    var hours = sync_date.getHours();
+    timezone = sync_date.getTimezoneOffset()/60;
+    hours = hours - timezone;
+    sync_date.setHours(hours);
+    console.log(hours);
+   console.log(timezone);
+    
+    
     console.log(sync_date);
   <% end %>
   new Ext.data.JsonStore(
