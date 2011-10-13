@@ -14,7 +14,12 @@ Pv::Application.routes.draw do
   end
   resources :home
   
-  resources :my_users
+  resources :my_users do
+    collection do
+      post 'update_sync'
+    end
+  end   
+  
   resources :teams do
     collection do
       post 'add_user'
