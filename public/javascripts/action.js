@@ -203,7 +203,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
           title: 'Edit To do',
           closeAction:'hide',
           width: 380,
-          height: 580,
+          height: 610,
           layout: 'fit',
           plain:true,
           bodyStyle:'padding:5px;',
@@ -221,8 +221,8 @@ var todoGrid = new Ext.grid.EditorGridPanel({
         todoEditPanel.team.setVisible(true);
        // todoEditPanel.action_type.setValue(1);  
         todoEditPanel.actionable.setValue('t');  
-        todoEditPanel.action_status.setValue('Active');
-        todoEditPanel.action_status.setVisible(false);  
+       // todoEditPanel.action_status.setValue('Active');
+        //todoEditPanel.action_status.setVisible(false);  
         todoEditPanel.getForm().load({
           url: '/thoughts/' + todoJsonStore.getAt(rowIndex).data.id + '.json',
           params: {

@@ -504,10 +504,10 @@ function teamThoughtStoreCallbackFn(records){
             alert("created");
             // Create a When object that will be attached to the event
             var when = new google.gdata.When();
-            startDate = new Date(start_date);
+            var startDate = new Date(start_date);
             //start_date = start_date.replace("Z",".000");
             //due_date = due_date.replace("Z",".000");
-            dueDate = new Date(due_date);
+            var dueDate = new Date(due_date);
             //console.log(dueDate);
             // Set the start and end time of the When object
             when.setStartTime(startDate);
@@ -779,7 +779,7 @@ function teamThoughtStoreCallbackFn(records){
                   title: 'Edit Thought',
                   closeAction:'hide',
                   width: 380,
-                  height: 580,
+                  height: 610,
                   layout: 'fit',
                   plain:true,
                   bodyStyle:'padding:5px;',
@@ -797,8 +797,8 @@ function teamThoughtStoreCallbackFn(records){
                 todoEditPanel.team.setVisible(true);
                 todoEditPanel.action_type.setVisible(true);  
                 todoEditPanel.actionable.setValue('t');  
-                todoEditPanel.action_status.setValue('Active');
-                todoEditPanel.action_status.setVisible(false);  
+                //todoEditPanel.action_status.setValue('Active');
+                //todoEditPanel.action_status.setVisible(false);  
                 todoEditPanel.getForm().load({
                   url: '/thoughts/' + grid.getStore().getAt(rowIndex).data.id + '.json',
                   params: {
@@ -1021,9 +1021,10 @@ function teamThoughtStoreCallbackFn(records){
                   /*start_utc_date = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(),  startDate.getUTCHours(), startDate.getUTCMinutes(), startDate.getUTCSeconds());
                   due_utc_date = new Date(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate(),  dueDate.getUTCHours(), dueDate.getUTCMinutes(), dueDate.getUTCSeconds()); */    
                   var start_date = eventEditPanel.start_date_date.setValue(startDate);
-                  start_date = eventEditPanel.start_date_date.setValue(startDate);   
+                  start_date = eventEditPanel.start_date_date.getValue();   
                   var due_date = eventEditPanel.due_date_date.setValue(dueDate); 
-                  due_date = eventEditPanel.due_date_date.getValue();                                                  
+                  due_date = eventEditPanel.due_date_date.getValue();
+                                                                    
                   eventEditPanel.start_date_time.setValue(startDate);                   
                   eventEditPanel.start_date.setValue(start_date);                    
                   eventEditPanel.due_date_time.setValue(dueDate);
@@ -1293,7 +1294,7 @@ function btnTodoTaskHandler()
     title: 'Add New To do',
     closeAction:'hide',
     width: 380,
-    height: 580,
+    height: 610,
     layout: 'fit',
 
     plain:true,
@@ -1314,8 +1315,8 @@ function btnTodoTaskHandler()
   todoEditPanel.action_type.setValue(1);
   todoEditPanel.action_type.setVisible(false);     
   todoEditPanel.actionable.setValue('t');  
-  todoEditPanel.action_status.setValue('Active');
-  todoEditPanel.action_status.setVisible(false);  
+  //todoEditPanel.action_status.setValue('Active');
+  //todoEditPanel.action_status.setVisible(false);  
   todoEditWindow.show();
 }
 
@@ -1425,7 +1426,7 @@ function todoTaskAsignHandler()
     title: 'Add New To do',
     closeAction:'hide',
     width: 380,
-    height: 580,
+    height: 610,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -1445,8 +1446,8 @@ function todoTaskAsignHandler()
   todoEditPanel.action_type.setValue(1);
   todoEditPanel.action_type.setVisible(false);     
   todoEditPanel.actionable.setValue('t');  
-  todoEditPanel.action_status.setValue('Active');
-  todoEditPanel.action_status.setVisible(false);  
+  //todoEditPanel.action_status.setValue('Active');
+  //todoEditPanel.action_status.setVisible(false);  
   todoEditWindow.show();
 }
 
@@ -1753,7 +1754,7 @@ function eventSaveHandler()
      
   if (am_pm == 'PM')
   {
-    hours = parseInt(hours) + 12;
+    hours = parseInt(hours)+12;
   }
    
   finalStartDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate());
@@ -2438,8 +2439,6 @@ var todoEditPanel = new Ext.form.FormPanel({
   },{
     fieldLabel:"Next Action",
     name:'next',
-
-
     ref:'next',
     allowBlank:false
   },{
