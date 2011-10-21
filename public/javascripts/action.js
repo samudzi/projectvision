@@ -141,7 +141,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     width    : 75,
     //    sortable : true,
     dataIndex: 'due_date',
-	renderer: function(date) { if(date) return date.format("Y-m-d"); }
+	renderer: function(date) { if(date) return date.format("d-m-y"); }
   },
   {
     header   : 'Context',
@@ -214,6 +214,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
         else
           todoEditWindow.setTitle("Edit To Do");
         selectedThoughtID = todoJsonStore.getAt(rowIndex).data.id;
+      
         todoEditPanel.getForm().reset();
         todoEditPanel.thoughtType.setValue('public').setVisible(false);
         todoEditPanel.status.setValue(2); 
@@ -243,7 +244,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
       tooltip: 'Delete Thought',
       handler: function(grid,rowIndex, colIndex)
       {
-		  
+		 
 		  selectedThoughtID = todoJsonStore.getAt(rowIndex).data.id;
         Ext.Ajax.request({
           url: '/thoughts/'+selectedThoughtID,
@@ -272,12 +273,15 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     //enableRowBody: true, // required to create a second, full-width row to show expanded Record data
     getRowClass: function(record, rowIndex, rp, store){ // rp = rowParams
 		var due_date = record.data.due_date;
-		due_date = due_date.format("Y-m-d");		
+		var completed = record.data.action_status;
+		
+		due_date = due_date.format("d-m-y");		
 		var now = new Date();
-		var today = now.format("Y-m-d");	
-		if(due_date < today)
+		var today = now.format("d-m-y");
+		console.log(completed);	
+		if(completed == 'Completed')
 		{			
-			//rowIndexArray.push(rowIndex);			
+			 return 'x-grid3-row-grey';			
 		}		
        if(due_date < today){          
           return 'x-grid3-row-red';

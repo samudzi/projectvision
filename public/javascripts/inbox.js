@@ -13,6 +13,7 @@ var newTask = false;
 var newUser = false;
 var selectedThoughtID = 0;
 var newButtonTask= true;
+var newCatagory = false;
 
 var myData = [
 ['Needs some food','McDonals?','General','public','0',null,null,null,null,null,null,null],
@@ -232,7 +233,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
     xtype: 'actioncolumn',
     width: 70,
     items: [{
-      icon : '../images/icons/bell.png',
+      icon : '../images/icons/bell_button.png',
       tooltip : 'Move to Organized',
       handler: function(grid,rowIndex, colIndex)
       {

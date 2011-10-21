@@ -490,16 +490,60 @@ function handleError(e) {
     "messageProperty":"message",
     "fields":[
       {"name":"id","allowBlank":false,"type":"int","defaultValue": 1},
+      {"name":"current_id","allowBlank":false,"type":"int","defaultValue": 1},
       {"name":"email","allowBlank":false,"type":"string","defaultValue":""},
       {"name":"user_name","allowBlank":false,"type":"string","defaultValue":""},
+      {"name":"current_user_name","allowBlank":false,"type":"string","defaultValue":""},
       {"name":"last_sign_in_at","allowBlank":false,"type":"datetime","defaultValue":2},
+      {"name":"alltask","allowBlank":false,"type":"string","defaultValue": ""},
+      {"name":"completedtodo","allowBlank":false,"type":"string","defaultValue": ""},     
+      {"name":"overdue","allowBlank":false,"type":"string","defaultValue": ""},     
+      {"name":"team_id","allowBlank":false,"type":"int","defaultValue": 1},
             ],
     "idProperty":"id",
     "url":"/my_users.json",
     "baseParams":{},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+     new Ext.data.JsonStore(
+  {
+    "storeId":"current_users_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      
+      {"name":"current_id","allowBlank":false,"type":"int","defaultValue": 1},
+      {"name":"email","allowBlank":false,"type":"string","defaultValue":""},
+      {"name":"user_name","allowBlank":false,"type":"string","defaultValue":""},
+      {"name":"current_user_name","allowBlank":false,"type":"string","defaultValue":""},      
+      {"name":"alltask","allowBlank":false,"type":"string","defaultValue": ""},
+      {"name":"completedtodo","allowBlank":false,"type":"string","defaultValue": ""},     
+      {"name":"overdue","allowBlank":false,"type":"string","defaultValue": ""},     
+      
+            ],
+    "idProperty":"id",
+    "url":"/my_users/currentUser.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
 
-  
+  new Ext.data.JsonStore(
+  {
+    "storeId":"fcontext_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":false,"type":"int","defaultValue": 1},
+      {"name":"context","allowBlank":false,"type":"string","defaultValue":""},
+      {"name":"category","allowBlank":false,"type":"string","defaultValue":""},
+            ],
+    "idProperty":"id",
+    "url":"/thoughts.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+    
   new Ext.data.JsonStore(
   {
     "storeId":"my_team_store",
@@ -515,6 +559,23 @@ function handleError(e) {
     "url":"/teams/list.json",
     "baseParams":{},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+  new Ext.data.JsonStore(
+  {
+    "storeId":"catagories",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":false,"type":"int","defaultValue": 10},
+      {"name":"name","allowBlank":false,"type":"string","defaultValue":""},
+      {"name":"ctype","allowBlank":false,"type":"string","defaultValue":""},
+            ],
+    "idProperty":"id",
+    "url":"/catagories.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+    
   
   var teamStoreReader = new Ext.data.JsonReader(
   {
@@ -527,7 +588,7 @@ function handleError(e) {
       {"name":"user_id","allowBlank":false,"type":"int","defaultValue": 1},
       {"name":"user","allowBlank":false,"type":"string","defaultValue": ""},
       {"name":"tasks","allowBlank":false,"type":"string","defaultValue": ""},
-      {"name":"team_id","allowBlank":false,"type":"int","defaultValue": 1},
+     
       {"name":"team","allowBlank":false,"type":"string","defaultValue":"goodlogics"},
       {"name":"email","allowBlank":false,"type":"string","defaultValue":""},
       {"name":"last_sign_in_at","allowBlank":false,"type":"datetime","defaultValue":2},

@@ -13,10 +13,12 @@ Pv::Application.routes.draw do
     end
   end
   resources :home
+  resource :catagories
   
   resources :my_users do
     collection do
       post 'update_sync'
+      get  'currentUser'
     end
   end   
   

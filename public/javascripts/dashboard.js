@@ -1,13 +1,41 @@
 
 //Javascript for Inbox Tab
 
-var userStats = new Ext.FormPanel({
-  frame: true,
-  title: 'User Stats',
-  //Width: 220,
+var userStats = new Ext.grid.GridPanel({
+  title: "User Stats",
+  store: currentUserStore,
   height: 300,
-  items: []
+  columns: [
+     {
+       header     :'User',
+       dataIndex: 'current_user_name'
+     },{
+        header: 'Evolved Thoughts',
+        dataIndex: 'alltask'
+     },{
+        header: 'Completed To do',
+        dataIndex: 'completedtodo'
+     },{
+        header: 'Over Due To do',
+       dataIndex: 'overdue'
+     },{
+        header: 'Experience Level',
+        value: 'General'
+       
+     }
+     ],
+
+
+   listeners: {
+    rowclick: {
+     // fn: gridRowClickHandler
+    }
+   },
+   
+  region:'center'
 });
+
+/*
 
 var userStatsItems = {
   xtype: 'fieldset',
@@ -18,7 +46,7 @@ var userStatsItems = {
 };
 
 userStats.add(userStatsItems);
-
+*/
 var miniTodoGrid = new Ext.grid.GridPanel({
   title: 'My Upcoming Tasks',
   store: upcomingJsonStore,
@@ -183,6 +211,24 @@ var teamspace = new Ext.grid.GridPanel({
      }]
 });
 
+var userdStats = new Ext.grid.GridPanel({
+  title: "User Stats",
+  //store: recentCompletedJsonStore,
+  height: 300,
+  columns: [
+     {
+       id       :'teamspace',
+       header   : 'Team Space',
+       width    : 340,
+
+       //    sortable : true,
+       dataIndex: 'team_space'
+     },
+     {
+       header: 'Created At',
+       dataIndex: 'created_at'
+     }]
+});
 
 
 var dashboardPanel = new Ext.TabPanel({

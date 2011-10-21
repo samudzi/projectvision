@@ -111,7 +111,7 @@ class ThoughtsController < ApplicationController
       render :json => { :success => false}
     end
   end
-
+  
   def destroy
     params
     id = params[:id]

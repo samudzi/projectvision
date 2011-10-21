@@ -1,12 +1,17 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
-var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store')
-var userStore = Ext.StoreMgr.get('users_store')
-var teamUserStore = Ext.StoreMgr.get('team_store')
-var myTeamStore = Ext.StoreMgr.get('my_team_store')
+var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store');
+var userStore = Ext.StoreMgr.get('users_store');
+//var contextStore = Ext.StoreMgr.get('context_store');
+var teamUserStore = Ext.StoreMgr.get('team_store');
+var myTeamStore = Ext.StoreMgr.get('my_team_store');
+var currentUserStore = Ext.StoreMgr.get('current_users_store');
+var catagoryStore = Ext.StoreMgr.get('catagories');
+catagoryStore.load();
 
 //teamThoughtStore.load();
 recentTeamStore.load();
+currentUserStore.load();
 userStore.load();
 //myTeamStore.load();
 teamUserStore.load();
@@ -139,6 +144,28 @@ function addUserAndTeamSelectOptions()
    });   
 }
 /*
+var contextOptions=new Ext.data.SimpleStore({
+      fields: ['context','id']
+    });
+    
+function addContextAndCategorySelectOptions()
+{
+  contextOptions.removeAll(silent=false);
+  contextStore.each(function(record){
+    var context = record.get('context');
+    var thought_id = record.get('id');
+    var recordData = {
+      user_name: context, 
+      id: thought_id
+      };    
+    var contextOptionsRecord = new contextOptions.recordType(recordData)   
+    contextOptions.add(contextOptionsRecord);  
+   });   
+}
+
+
+/
+/*
 function  editTeamThought(selectedThoughtID,selectedUserID)
 {
              
@@ -226,7 +253,7 @@ function globalThoughtStoreCallbackFn(records){
 				tempJsonReminder.push(tempArray);		
 		//	if(action_type== '5') // event store
 			//  tempJsonEvent.push(tempArray);	
-			if(status==2 && action_status=='Pending' && action_type=='1') // upcoming store
+			if(status==2 && action_status=='Active' && action_type=='1') // upcoming store
 				tempJsonUpcoming.push(tempArray);
 			if(status==2 && action_status=='Completed' && action_type=='1') // recentCompleted store
 				tempJsonRecentCompleted.push(tempArray);		
@@ -266,9 +293,6 @@ function globalThoughtStoreCallbackFn(records){
 		recentCompletedJsonStore.loadData(finalJsonRecentCompleted,false);
 					
 }  // globalThoughtStoreCallbackFn
-
-
-
 
 
 function replyThoughtDeleteHandler(selectedThoughtID, userId)
@@ -1739,6 +1763,91 @@ function teamSaveHandler()
  
 }
 
+function catagorySaveHandler()
+{
+  if(newCatagory)
+  {
+    catagoryAddPanel.getForm().submit({
+      url: '/catagories.json',
+      method: 'post',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    catagoryStore.reload();		    		    	      
+	    }
+	      
+	  });
+		
+  
+    newCatagory = false;  
+  }
+  else
+  {
+    catagoryAddPanel.getForm().submit({
+      url: '/catagories/'+selectedCatagoryID+'.json',
+      params: {
+        id: selectedCatagoryID
+      },
+      method: 'put',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    catagoryStore.reload();
+		    
+		    
+      }
+    });
+  }
+ 
+  if(newTeamWindow) newTeamWindow.hide();
+ 
+}
+
+
+
+
+
+
+/*
+function contextSaveHandler()
+{
+ // if()
+  //{
+    contextAddPanel.getForm().submit({
+      url: '/thoughts.json',
+      method: 'post',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    myTeamStore.reload();
+		    contextStore.reload();
+		    teamUserStore.reload();
+		    teamThoughtStore.load({callback : function(records,option,success){
+	        teamThoughtStoreCallbackFn(records);
+		      }
+	      });
+		  }
+    });
+    //newTeam = false;
+  //}
+  /*else
+  {
+    teamAddPanel.getForm().submit({
+      url: '/teams/'+selectedTeamID+'.json',
+      params: {
+        id: selectedTeamID
+      },
+      method: 'put',
+      waitMsg: 'Saving...',
+      success: function(f,a) {
+		    myTeamStore.reload();
+		    teamUserStore.reload();
+		    
+      }
+    });
+  }
+ 
+  if(newTeamWindow) newTeamWindow.hide();
+ 
+}
+*/
 
 function eventSaveHandler()
 {
@@ -2205,6 +2314,82 @@ var teamAddPanel = new Ext.form.FormPanel({
   }]
 });
 
+var catagoryAddPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'catagoryAddPanel',
+  defaults: {
+    width: 250
+  },
+  items:[{
+    fieldLabel:"Catagory Name",
+    name:'name',
+    ref:'name',
+    allowBlank:false
+  },{
+    xtype: 'combo',
+    ref:'category',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Type',
+    name: 'ctype',
+    triggerAction: 'all',
+    displayField: 'name',
+    valueField: 'value',
+    emptyText: 'Select Category',
+    store: new Ext.data.SimpleStore({
+      fields: ['name','value'],
+      data: [
+      ['Catagory','Catagory'],
+      ['Context','Context'],      
+      ]
+    }),
+    value: 'Catagory'
+  }],
+  buttons:[{
+    text: "Save",
+    handler: catagorySaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      newTeamWindow.hide();
+    }
+  }]
+});
+
+/*
+
+var contextAddPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'contextAddPanel',
+  defaults: {
+    width: 250
+  },
+  items:[{
+    fieldLabel:"Context Name",
+    name:'context',
+    ref:'context',
+    allowBlank:false
+  }],
+  buttons:[{
+    text: "Save",
+    handler: contextSaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      newTeamWindow.hide();
+    }
+  }]
+});
+
+
+*/
 var editTeamPanel = new Ext.form.FormPanel({
   labelWidth:80,
   labelAlign: 'top',

@@ -50,6 +50,31 @@ function newTeamHandler(){
    newTeamWindow.show();
 }
 
+
+function newCatagoryHandler(){
+    
+newCatagory = true;
+  if(!newTeamWindow) newTeamWindow = new Ext.Window({
+    title: 'Add New Catagory',
+    width: 380,
+    applyTo:'new-team-window',
+    closeAction:'hide',
+    height: 230,
+    layout: 'fit',
+    plain:true,
+    bodyStyle:'padding:5px;',
+    buttonAlign:'center',
+    //resizable:false,
+    items: catagoryAddPanel
+  });
+  else
+    newTeamWindow.setTitle('Add New Catagory');
+   
+   console.log("new");
+   catagoryAddPanel.getForm().reset();
+   newTeamWindow.show();
+}
+
 function editTeamHandler(){
    if(!editTeamWindow) editTeamWindow = new Ext.Window({
     title: 'Edit Team ',
@@ -310,6 +335,109 @@ var users = new Ext.grid.GridPanel({
 	
 });
 
+var catagory = new Ext.grid.GridPanel({
+  title: "Catagory and Context",
+  store: catagoryStore,
+  height: 300,
+  columns: [
+      {
+        id       : 'id',
+        header   : 'ID',
+        width    : 90,
+        //    sortable : true,
+        dataIndex: 'id'
+       // hidden: true
+      },{
+        header: 'Name',
+        width    : 250,
+        dataIndex: 'name'
+      },{
+        header: 'Type',
+        width    : 250,
+        dataIndex: 'ctype'
+      }
+      /*,{
+        header: 'Edit : Delete',
+        xtype: 'actioncolumn',
+        width: 90,
+        items: [{
+        icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
+        tooltip: 'Edit User',
+        
+        handler: function(grid, rowIndex, colIndex) {
+          if(!userWindow) userWindow = new Ext.Window({
+            title: 'Edit User',
+            width: 380,
+            applyTo:'user-window',
+            closeAction:'hide',
+            height: 280,
+            layout: 'fit',
+            plain:true,
+            bodyStyle:'padding:5px;',
+            buttonAlign:'center',
+              //resizable:false,
+            items: userAddPanel
+            });
+          else
+            userWindow.setTitle('Edit User');
+        
+          selectedCatagoryID = catagoryStore.getAt(rowIndex).data.id;
+          catagoryAddPanel.getForm().reset();
+          catagoryAddPanel.getForm().load({
+            url: '/catagories/' + selectedCatagoryID + '.json',
+            params: {
+              id: selectedCatagoryID
+            },
+            waitMsg: 'Loading...',
+            method: 'get',
+            success: function(f,a){
+            },
+            failure: function(form, action){
+              Ext.Msg.alert("Load failed", action.result.errorMessage);
+            }
+          });  
+          teamWindow.show();
+         
+        }
+    },{
+      icon   : '../images/icons/delete.gif',
+      tooltip: 'Delete User',
+      handler: function(grid,rowIndex, colIndex)
+      {
+        selectedCatagoryID = catagoryStore.getAt(rowIndex).data.id;
+        Ext.Ajax.request({
+          url: '/catagories/'+selectedCatagoryID,
+          
+          params: {
+            id: selectedCatagoryID
+          },
+          waitMsg:'Deleting...',
+          method: 'destroy',
+          success: function(f,a){
+            catagoryStore.load();
+    
+          }
+        });
+      //        myData.splice(rowIndex,1);
+      //        thoughtStore.loadData(myData);
+      }
+    }]
+  }*/
+	],
+	tbar: [
+  {
+    text: 'New Catagory',
+    iconCls: 'add-prop',
+    handler: newCatagoryHandler
+  }],
+  listeners: {
+  },
+  region:'center'
+ 	
+});
+
+
+
 var adminPanel = new Ext.TabPanel({
   title: 'Admin',
   xtype: 'tabpanel',
@@ -330,6 +458,12 @@ var adminPanel = new Ext.TabPanel({
     ref:'user',
     layout: 'border',
     items: [teams]
+},{
+    title: 'Catagory',
+    ref: 'catagory',
+    layout: 'border',
+    items:[catagory]
+   
 }],
   listeners: {
           activate: function(tab){
