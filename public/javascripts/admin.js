@@ -68,7 +68,7 @@ newCatagory = true;
     items: catagoryAddPanel
   });
   else
-    newTeamWindow.setTitle('Add New Catagory');
+    catagoryWindow.setTitle('Add New Catagory');
    
    console.log("new");
    catagoryAddPanel.getForm().reset();
