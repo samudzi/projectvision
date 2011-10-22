@@ -1,6 +1,6 @@
 class CatagoriesController < ApplicationController
 
-  def index
+  def index 
     @catagory = Catagory.find(:all, :order=>"created_at")           
     render :json => {:data =>@catagory, :success =>true, :totalRows => @catagory.count}.to_json
   end
@@ -25,15 +25,12 @@ class CatagoriesController < ApplicationController
   end
 
   def show
-    
-    @catagory = Catagory.find(:all)
+    @catagory = Catagory.find(params[:id])
     render :json => {:data => @catagory, :success => true}
   end
 
-  def update
-  debugger
-    @catagory = Catagory.find(params[:id])   
-    
+  def update  
+    @catagory = Catagory.find(params[:id])       
     if @catagory.update_attributes params[:catagory]
       render :json => { :success => true}
     else
@@ -41,10 +38,8 @@ class CatagoriesController < ApplicationController
     end
   end
 
-  def destroy
-  
-    @catagory = Catagory.find(params[:id])
-    
+  def destroy  
+    @catagory = Catagory.find(params[:id])    
     if @catagory.destroy
       render :json => { :success => true }
     else

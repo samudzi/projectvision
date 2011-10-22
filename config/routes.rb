@@ -5,7 +5,7 @@ Pv::Application.routes.draw do
   root :to => "home#index"
   get "home/index"
   
-
+  resources :catagories 
   resources :thoughts
   resources :action_logs do
     collection do
@@ -13,7 +13,7 @@ Pv::Application.routes.draw do
     end
   end
   resources :home
-  resource :catagories
+ 
   
   resources :my_users do
     collection do

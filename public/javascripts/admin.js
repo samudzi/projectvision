@@ -54,10 +54,10 @@ function newTeamHandler(){
 function newCatagoryHandler(){
     
 newCatagory = true;
-  if(!newTeamWindow) newTeamWindow = new Ext.Window({
+  if(!catagoryWindow) catagoryWindow = new Ext.Window({
     title: 'Add New Catagory',
     width: 380,
-    applyTo:'new-team-window',
+    applyTo:'new_catagory-window',
     closeAction:'hide',
     height: 230,
     layout: 'fit',
@@ -72,7 +72,7 @@ newCatagory = true;
    
    console.log("new");
    catagoryAddPanel.getForm().reset();
-   newTeamWindow.show();
+   catagoryWindow.show();
 }
 
 function editTeamHandler(){
@@ -356,19 +356,19 @@ var catagory = new Ext.grid.GridPanel({
         width    : 250,
         dataIndex: 'ctype'
       }
-      /*,{
+      ,{
         header: 'Edit : Delete',
         xtype: 'actioncolumn',
         width: 90,
         items: [{
         icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
-        tooltip: 'Edit User',
+        tooltip: 'Edit Catagory',
         
         handler: function(grid, rowIndex, colIndex) {
-          if(!userWindow) userWindow = new Ext.Window({
-            title: 'Edit User',
+          if(!catagoryWindow) catagoryWindow = new Ext.Window({
+            title: 'Edit Catagory',
             width: 380,
-            applyTo:'user-window',
+            applyTo:'catagory-window',
             closeAction:'hide',
             height: 280,
             layout: 'fit',
@@ -376,10 +376,10 @@ var catagory = new Ext.grid.GridPanel({
             bodyStyle:'padding:5px;',
             buttonAlign:'center',
               //resizable:false,
-            items: userAddPanel
+            items: catagoryAddPanel
             });
           else
-            userWindow.setTitle('Edit User');
+            catagoryWindow.setTitle('Edit Catagory');
         
           selectedCatagoryID = catagoryStore.getAt(rowIndex).data.id;
           catagoryAddPanel.getForm().reset();
@@ -396,7 +396,7 @@ var catagory = new Ext.grid.GridPanel({
               Ext.Msg.alert("Load failed", action.result.errorMessage);
             }
           });  
-          teamWindow.show();
+          catagoryWindow.show();
          
         }
     },{
@@ -412,7 +412,7 @@ var catagory = new Ext.grid.GridPanel({
             id: selectedCatagoryID
           },
           waitMsg:'Deleting...',
-          method: 'destroy',
+          method: 'delete',
           success: function(f,a){
             catagoryStore.load();
     
@@ -422,7 +422,7 @@ var catagory = new Ext.grid.GridPanel({
       //        thoughtStore.loadData(myData);
       }
     }]
-  }*/
+  }
 	],
 	tbar: [
   {

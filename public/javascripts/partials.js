@@ -7,7 +7,7 @@ var teamUserStore = Ext.StoreMgr.get('team_store');
 var myTeamStore = Ext.StoreMgr.get('my_team_store');
 var currentUserStore = Ext.StoreMgr.get('current_users_store');
 var catagoryStore = Ext.StoreMgr.get('catagories');
-catagoryStore.load();
+
 
 //teamThoughtStore.load();
 recentTeamStore.load();
@@ -15,7 +15,7 @@ currentUserStore.load();
 userStore.load();
 //myTeamStore.load();
 teamUserStore.load();
-
+catagoryStore.load();
 
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
 var fieldsArray = [ 
@@ -1797,7 +1797,7 @@ function catagorySaveHandler()
     });
   }
  
-  if(newTeamWindow) newTeamWindow.hide();
+  if(catagoryWindow) catagoryWindow.hide();
  
 }
 
@@ -2355,7 +2355,7 @@ var catagoryAddPanel = new Ext.form.FormPanel({
   },{
     text: 'Close',
     handler: function(){
-      newTeamWindow.hide();
+      catagoryWindow.hide();
     }
   }]
 });
@@ -2898,6 +2898,7 @@ var remindEditPanel = new Ext.form.FormPanel({
   baseCls: 'x-plan',
   defaultType:'textfield',
   ref:'remindEditPanel',
+
   defaults: {
     width: 350
   },

@@ -141,7 +141,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     width    : 75,
     //    sortable : true,
     dataIndex: 'due_date',
-	renderer: function(date) { if(date) return date.format("d-m-y"); }
+	renderer: function(date) { if(date) return date.format("d/m/y, h:M:s T"); }
   },
   {
     header   : 'Context',
@@ -275,9 +275,9 @@ var todoGrid = new Ext.grid.EditorGridPanel({
 		var due_date = record.data.due_date;
 		var completed = record.data.action_status;
 		
-		due_date = due_date.format("d-m-y");		
+		due_date = due_date.format("d/m/y, h:M:s T");		
 		var now = new Date();
-		var today = now.format("d-m-y");
+		var today = now.format("d/m/y, h:M:s T");
 		console.log(completed);	
 		if(completed == 'Completed')
 		{			

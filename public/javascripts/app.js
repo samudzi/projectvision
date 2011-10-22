@@ -4,6 +4,7 @@
 //inboxStore.load();
 //console.log(inboxStore);
 var newTeamWindow;
+var catagoryWindow;
 var deleteTeamWindow;
 var editTeamWindow;
 var addWindow;
@@ -16,6 +17,7 @@ var currentIndex;
 var currentOrganizeIndex;
 var userTaskWindow;
 var eventEditWindow;
+
 
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
