@@ -4,8 +4,6 @@ class CatagoriesController < ApplicationController
     @catagory = Catagory.find(:all, :order=>"created_at")           
     render :json => {:data =>@catagory, :success =>true, :totalRows => @catagory.count}.to_json
   end
-
-
   def create
     if params[:name]
       @catagory = Catagory.new params
@@ -29,9 +27,10 @@ class CatagoriesController < ApplicationController
     render :json => {:data => @catagory, :success => true}
   end
 
-  def update  
+  def update 
+   
     @catagory = Catagory.find(params[:id])       
-    if @catagory.update_attributes params[:catagory]
+    if @catagory.update_attributes params
       render :json => { :success => true}
     else
       render :json => { :success => false}

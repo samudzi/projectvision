@@ -53,9 +53,9 @@ function newTeamHandler(){
 
 function newCatagoryHandler(){
     
-newCatagory = true;
+  newCatagory = true;
   if(!catagoryWindow) catagoryWindow = new Ext.Window({
-    title: 'Add New Catagory',
+    title: 'Add New Catagory/Context',
     width: 380,
     applyTo:'new_catagory-window',
     closeAction:'hide',
@@ -68,10 +68,11 @@ newCatagory = true;
     items: catagoryAddPanel
   });
   else
-    catagoryWindow.setTitle('Add New Catagory');
+    catagoryWindow.setTitle('Add New Catagory/Context');
    
    console.log("new");
    catagoryAddPanel.getForm().reset();
+   
    catagoryWindow.show();
 }
 
@@ -228,8 +229,7 @@ var teams = new Ext.grid.GridPanel({
     rowclick: {
      // fn: gridRowClickHandler
     }
-   },
-   
+   },   
   region:'center'
 });
 
@@ -362,11 +362,11 @@ var catagory = new Ext.grid.GridPanel({
         width: 90,
         items: [{
         icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
-        tooltip: 'Edit Catagory',
+        tooltip: 'Edit Category/Context',
         
         handler: function(grid, rowIndex, colIndex) {
           if(!catagoryWindow) catagoryWindow = new Ext.Window({
-            title: 'Edit Catagory',
+            title: 'Edit Category/Context',
             width: 380,
             applyTo:'catagory-window',
             closeAction:'hide',
@@ -379,7 +379,7 @@ var catagory = new Ext.grid.GridPanel({
             items: catagoryAddPanel
             });
           else
-            catagoryWindow.setTitle('Edit Catagory');
+            catagoryWindow.setTitle('Edit Category/Context');
         
           selectedCatagoryID = catagoryStore.getAt(rowIndex).data.id;
           catagoryAddPanel.getForm().reset();
@@ -426,7 +426,7 @@ var catagory = new Ext.grid.GridPanel({
 	],
 	tbar: [
   {
-    text: 'New Catagory',
+    text: 'New Category/Context',
     iconCls: 'add-prop',
     handler: newCatagoryHandler
   }],
@@ -459,7 +459,7 @@ var adminPanel = new Ext.TabPanel({
     layout: 'border',
     items: [teams]
 },{
-    title: 'Catagory',
+    title: 'Personal Setting',
     ref: 'catagory',
     layout: 'border',
     items:[catagory]

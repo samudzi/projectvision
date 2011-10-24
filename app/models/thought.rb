@@ -2,15 +2,16 @@ class Thought < ActiveRecord::Base
   has_many :replies, :class_name => 'Thought', :foreign_key => "parent_id", :dependent => :destroy
   belongs_to :parent, :class_name => 'Thought'
   belongs_to :assigned_to, :class_name => 'User', :foreign_key => "assignee_id"
-
+  belongs_to :catagory
 #  include ExtJS::Model
 
-  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date,:start_date, :action_type, :scope, :parent_id, :assignee_id, :team_id
+  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date,:start_date, :action_type, :catagory_id, :scope, :parent_id, :assignee_id, :team_id
 
 #  extjs_fields :id, :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type
   belongs_to :user
   belongs_to :team
   has_many :action_logs, :as => :model
+
 
   def self.list(params=nil)
     row_count = 0;

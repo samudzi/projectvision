@@ -43,6 +43,7 @@ var fieldsArray = [
     {name: 'type', type: 'string'},
 		{name: 'replies', type: 'array'}, 
 		{name: 'action_type_str', type: 'string'},
+		{name: 'catagory_id', type: 'string'},
   
 ];
 
@@ -122,6 +123,40 @@ var eventStore = new Ext.ensible.sample.MemoryEventStore({
 	fields: ['value', 'action_status']
 });*/
 
+/*var teamOptions=new Ext.data.SimpleStore({
+      fields: ['team','id'],
+
+    });
+*/
+var catagoryOptions=new Ext.data.SimpleStore({
+      fields: ['catagory_name','id']
+    });
+var contextOptions=new Ext.data.SimpleStore({
+  fields: ['catagory_name','id']
+});
+function addCatagoryOptions()
+{
+  catagoryOptions.removeAll(silent=false);
+  catagoryStore.each(function(record){
+    var ctype = record.get('ctype');   
+    var catagory_name = record.get('name');
+    var catagory_id = record.get('id');
+    var recordData = {
+      catagory_name: catagory_name, 
+      id: catagory_id
+      };   
+    if (ctype == 'Catagory')
+    {
+      var catagoryOptionsRecord = new catagoryOptions.recordType(recordData)   
+      catagoryOptions.add(catagoryOptionsRecord); 
+    }
+    if(ctype == 'Context')
+    {    
+      var contextOptionsRecord = new contextOptions.recordType(recordData)   
+      contextOptions.add(contextOptionsRecord); 
+    }
+  });   
+}
 var emailOptions=new Ext.data.SimpleStore({
       fields: ['user_name','id']
     });
@@ -1340,7 +1375,9 @@ function btnTodoTaskHandler()
   todoEditPanel.action_type.setVisible(false);     
   todoEditPanel.actionable.setValue('t');  
   //todoEditPanel.action_status.setValue('Active');
-  //todoEditPanel.action_status.setVisible(false);  
+  //todoEditPanel.action_status.setVisible(false); 
+    addCatagoryOptions();
+   
   todoEditWindow.show();
 }
 
@@ -2324,7 +2361,7 @@ var catagoryAddPanel = new Ext.form.FormPanel({
     width: 250
   },
   items:[{
-    fieldLabel:"Catagory Name",
+    fieldLabel:"Name",
     name:'name',
     ref:'name',
     allowBlank:false
@@ -2663,24 +2700,26 @@ var todoEditPanel = new Ext.form.FormPanel({
       format: 'c',
       editable: false
   },{
-    xtype:'textarea',
-    ref:'detail',
-    fieldLabel:"Details",
-    name:'detail',
-    height: 80
-  },{
-    xtype: 'combo',
-    ref:'category',
-    mode: 'local',
-    typeAhead: true,
-    forceSelection: true,
-    fieldLabel: 'Category',
-    name: 'category',
-    triggerAction: 'all',
-    displayField: 'name',
-    valueField: 'value',
-    emptyText: 'Select Category',
-    store: new Ext.data.SimpleStore({
+      xtype:'textarea',
+      ref:'detail',
+      fieldLabel:"Details",
+      name:'detail',
+      height: 80
+  },{ 
+  /*
+      xtype: 'combo',
+      ref:'category',
+      id:'category',
+      mode: 'local',
+      typeAhead: true,
+      forceSelection: true,
+      fieldLabel: 'Category',
+      name: 'category',
+      triggerAction: 'all',
+      displayField: 'name',
+      valueField: 'value',
+      emptyText: 'Select Category',
+      store: new Ext.data.SimpleStore({
       fields: ['name','value'],
       data: [
       ['General','General'],
@@ -2689,8 +2728,38 @@ var todoEditPanel = new Ext.form.FormPanel({
       ]
     }),
     value: 'General'
-
+    
+*/
+      name: 'category',
+      ref: 'category',
+      id: 'category',
+      xtype: 'combo',
+      mode: 'local',
+      typeAhead: true,
+      forceSelection: true,
+      fieldLabel: 'Catagory',
+      triggerAction: 'all',
+      store: catagoryOptions,
+      displayField: 'catagory_name',
+      valueField: 'catagory_name',
+      emptyText: 'Select Catagory'
   },{
+  
+  
+  name: 'context',
+      ref: 'context',
+      id: 'context',
+      xtype: 'combo',
+      mode: 'local',
+      typeAhead: true,
+      forceSelection: true,
+      fieldLabel: 'context',
+      triggerAction: 'all',
+      store: contextOptions,
+      displayField: 'catagory_name',
+      valueField: 'catagory_name',
+      emptyText: 'Select context'
+      /*
       xtype: 'combo',
       ref:'context',
       mode: 'local',
@@ -2709,7 +2778,7 @@ var todoEditPanel = new Ext.form.FormPanel({
         ['Context2','Context2'],
         ['Context3','Context3']
         ]
-      })
+      })*/
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
@@ -2898,6 +2967,7 @@ var remindEditPanel = new Ext.form.FormPanel({
   baseCls: 'x-plan',
   defaultType:'textfield',
   ref:'remindEditPanel',
+
 
   defaults: {
     width: 350
