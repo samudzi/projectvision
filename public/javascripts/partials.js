@@ -2,13 +2,12 @@ var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store');
 var userStore = Ext.StoreMgr.get('users_store');
-//var contextStore = Ext.StoreMgr.get('context_store');
 var teamUserStore = Ext.StoreMgr.get('team_store');
 var myTeamStore = Ext.StoreMgr.get('my_team_store');
 var currentUserStore = Ext.StoreMgr.get('current_users_store');
 var catagoryStore = Ext.StoreMgr.get('catagories');
 
-
+setTimeout("Ext.select('.notice').remove()",5000)
 //teamThoughtStore.load();
 recentTeamStore.load();
 currentUserStore.load();
@@ -16,7 +15,7 @@ userStore.load();
 //myTeamStore.load();
 teamUserStore.load();
 catagoryStore.load();
-
+Ext.ns('Ext.ux.data');
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
 var fieldsArray = [ 
     {name: 'action_status', type: 'string'},
@@ -95,7 +94,6 @@ var thoughtGridJsonStore = new Ext.data.JsonStore({
 
 
 var outstandingTasksJsonStore = [];
-
 var teamThoughtsJsonStore = [];
 
 var teamUsersJsonStore = [];
@@ -179,24 +177,7 @@ function addUserAndTeamSelectOptions()
    });   
 }
 /*
-var contextOptions=new Ext.data.SimpleStore({
-      fields: ['context','id']
-    });
-    
-function addContextAndCategorySelectOptions()
-{
-  contextOptions.removeAll(silent=false);
-  contextStore.each(function(record){
-    var context = record.get('context');
-    var thought_id = record.get('id');
-    var recordData = {
-      user_name: context, 
-      id: thought_id
-      };    
-    var contextOptionsRecord = new contextOptions.recordType(recordData)   
-    contextOptions.add(contextOptionsRecord);  
-   });   
-}
+
 
 
 /
@@ -620,13 +601,14 @@ function teamThoughtStoreCallbackFn(records){
         tempJsonTeamUsers[i]["users"].push(tempArray);        
       }             
    }); 
-  }              
+  }              setTimeout("Ext.select('.notice').remove()",5000)
   for(var i=0;i<numberOfTeams;i++){
     var cond = i>=teamThoughtsJsonStore.length;
     if(cond){
-      teamThoughtsJsonStore.push(new Ext.data.JsonStore({
+      teamThoughtsJsonStore.push(new Ext.ux.data.PagingJsonStore({
           root: 'team_thoughts',
-          fields: fieldsArray
+          fields: fieldsArray,
+          lastOptions: {params: {start: 0, limit: 10}}
         }));
         
       teamEventsJsonStore.push(new Ext.ensible.sample.MemoryEventStore({
@@ -796,7 +778,8 @@ function teamThoughtStoreCallbackFn(records){
       		header : 'Due Date',
       		width : 100,
       		//    sortable : true,
-      	  dataIndex : 'due_date'
+      	  dataIndex : 'due_date',
+      	  renderer: function(date) { if(date) return date.format("d/m/y, h:m:s T"); }
       	},{
           header: 'Actions',
           xtype: 'actioncolumn',
@@ -984,8 +967,8 @@ function teamThoughtStoreCallbackFn(records){
             }
           }]
         }]
-      });
-      
+      });  
+      var myPageSize =10;
       var teamThoughtGrid = new Ext.grid.GridPanel({
         title : 'Shared Team Thoughts',
         store : teamThoughtsJsonStore[i],   // Store
@@ -999,6 +982,20 @@ function teamThoughtStoreCallbackFn(records){
             iconCls: 'add-prop',
             handler: myTeamThoughtHandler
           }],
+        bbar: new Ext.PagingToolbar({
+          store: teamThoughtsJsonStore[i],       // grid and PagingToolbar using same store
+          displayInfo: true,
+          pageSize: myPageSize,
+          prependButtons: true,
+          items: [
+              'text 1'
+          ],
+          refresh: function(){
+            delete this.store.lastParams;
+            this.doLoad(this.cursor);    
+          }
+         
+        }),
       });
      
       var outstandingTaskGrid = new Ext.grid.GridPanel({
@@ -1149,6 +1146,7 @@ function teamThoughtStoreCallbackFn(records){
 	            header : 'Last Sing In',
 	            width : 125,
 	            dataIndex :'last_sign_in_at'
+
             },{
               header : 'Remove User',
               width : 70,
@@ -1367,7 +1365,7 @@ function btnTodoTaskHandler()
   todoEditPanel.getForm().reset();
   todoEditPanel.thoughtType.setValue('public').setVisible(true);
   todoEditPanel.status.setValue(2); 
-  
+  		
   todoEditPanel.team.setVisible(true);
   //todoEditPanel.team.setValue(tabTeamId); 
   
@@ -1785,6 +1783,7 @@ function teamSaveHandler()
       url: '/teams/'+selectedTeamID+'.json',
       params: {
         id: selectedTeamID
+
       },
       method: 'put',
       waitMsg: 'Saving...',
@@ -2545,6 +2544,7 @@ var eventEditPanel = new Ext.form.FormPanel({
       
       fieldLabel: 'Due Date',
       ref:'due_date',
+
       name: 'due_date',
       format: 'c',
       hidden: true,

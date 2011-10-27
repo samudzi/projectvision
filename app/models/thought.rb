@@ -15,17 +15,18 @@ class Thought < ActiveRecord::Base
 
   def self.list(params=nil)
     row_count = 0;
+    start = params[:start] ?  params[:start].to_i : 0
     if(!params[:action_type])
-      thoughts = Thought.where(:status => params[:status], :user_id => params[:user_id]).limit(20)
+      thoughts = Thought.where(:status => params[:status], :user_id => params[:user_id]).limit(2).offset(start)
     else
       if(!params[:action_status])
-        thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type], :user_id => params[:user_id]).limit(20)
+        thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type], :user_id => params[:user_id]).limit(2).offset(start)
       else
-        thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type], :action_status => params[:action_status], :user_id => params[:user_id]).limit(20)
+        thoughts = Thought.where(:status => params[:status], :action_type => params[:action_type], :action_status => params[:action_status], :user_id => params[:user_id]).limit(2).offset(start)
       end
     end
     if(params[:ttype] == "all")
-      thoughts = Thought.where(:user_id => params[:user_id])
+      thoughts = Thought.where(:user_id => params[:user_id]).limit(2).offset(start)
     else
       if(params[:ttype] == "teamThought")
         thoughts = Thought.where(:scope => 'public');

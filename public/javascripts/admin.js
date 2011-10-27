@@ -181,6 +181,7 @@ function extjsRenderer(value, id, r) {
 }
 
 
+var myPageSize = 2;
 var teams = new Ext.grid.GridPanel({
   title: "Teams",
   store: teamUserStore,
@@ -225,6 +226,7 @@ var teams = new Ext.grid.GridPanel({
       iconCls: 'add-prop',
       handler: newAsignHandler
     }],
+    
    listeners: {
     rowclick: {
      // fn: gridRowClickHandler

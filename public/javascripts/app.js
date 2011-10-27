@@ -81,7 +81,7 @@ var tabs = new Ext.ux.VrTabPanel({
   x: 0,
   y: 0,
   width:"100%",
-  height:620,
+  height: 750,
   plain:true,
   tabMarginTop: 250,	/* Push the tab strip down 30px from top. If not set, defaults to 15.*/
   bodyStyle: 'padding: 10px',
@@ -122,11 +122,11 @@ var tabs = new Ext.ux.VrTabPanel({
 
 
 
-
 var mainPanel = new Ext.Panel({
   // title: 'Project Vision',
   layout: 'absolute',
-  height: 620,
+  height: 750,
+ 
   items: [newThoughtButton,newTodoButton,newReferenceButton,newReminderButton,tabs],
   tbar: new Ext.Toolbar({
     cls: 'x-panel-header',
