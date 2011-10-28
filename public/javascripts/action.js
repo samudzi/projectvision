@@ -160,7 +160,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
 	    transform:'action_status',
 	    lazyRender: true,
 	    listClass: 'x-combo-list-small'*/
-	    store: todoStatusComboStore,
+	  tore: todoStatusComboStore,
 		mode: 'local',
 		displayField:'action_status',
 		valueField: 'action_status',		

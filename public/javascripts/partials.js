@@ -135,6 +135,7 @@ var contextOptions=new Ext.data.SimpleStore({
 function addCatagoryOptions()
 {
   catagoryOptions.removeAll(silent=false);
+  contextOptions.removeAll(silent=false);
   catagoryStore.each(function(record){
     var ctype = record.get('ctype');   
     var catagory_name = record.get('name');
@@ -1507,6 +1508,7 @@ function todoTaskAsignHandler()
   todoEditPanel.actionable.setValue('t');  
   //todoEditPanel.action_status.setValue('Active');
   //todoEditPanel.action_status.setVisible(false);  
+  addCatagoryOptions();
   todoEditWindow.show();
 }
 

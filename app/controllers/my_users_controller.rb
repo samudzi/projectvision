@@ -7,8 +7,8 @@ class MyUsersController < ApplicationController
   end
   def currentUser
     users = []
-    current_user.thoughts
-    users << {:current_id => current_user.id, :current_user_name => current_user.user_name,:alltask => current_user.thoughts.find(:all, :conditions=>["action_type == 1"]).length.to_s, :completedtodo => current_user.thoughts.find(:all, :conditions=>["status== '2' AND action_status=='Completed' AND action_type== 1"]).length.to_s,:overdue => current_user.thoughts.find(:all, :conditions=>["due_date < ? AND action_type == 1 ",Time.now]).length.to_s} 
+   #current_user.thoughts
+    users << {:current_id => current_user.id, :current_user_name => current_user.user_name,:alltask => current_user.thoughts.find(:all, :conditions=>["action_type = 1"]).length.to_s, :completedtodo => current_user.thoughts.find(:all, :conditions=>["status = '2' AND action_status='Completed' AND action_type = 1"]).length.to_s,:overdue => current_user.thoughts.find(:all, :conditions=>["due_date < ? AND action_type = 1 ",Time.now]).length.to_s} 
     render :json =>  {:data => users, :success => true }.to_json
   end
   def create

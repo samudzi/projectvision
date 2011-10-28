@@ -126,6 +126,7 @@ var mainPanel = new Ext.Panel({
   // title: 'Project Vision',
   layout: 'absolute',
   height: 750,
+  autoScroll: true,
  
   items: [newThoughtButton,newTodoButton,newReferenceButton,newReminderButton,tabs],
   tbar: new Ext.Toolbar({
@@ -147,4 +148,6 @@ var mainPanel = new Ext.Panel({
 Ext.onReady( function() {
 	Ext.QuickTips.init(); 	
   mainPanel.render('mainDiv');
+  Ext.get('ext-gen72').setStyle('overflow', 'auto');
+
 });
