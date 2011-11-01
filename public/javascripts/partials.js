@@ -1446,6 +1446,7 @@ function btnReminderTaskHandler()
 function calendarEventHandler()
 {
   newTask= true;
+
   //newButtonTask = false;
   if(!eventEditWindow) eventEditWindow = new Ext.Window({
     title: 'Add New Event',
@@ -2304,14 +2305,12 @@ var userAddPanel = new Ext.form.FormPanel({
   },{
     fieldLabel:"Password",
     name:'password',
-    ref:'password',
-    allowBlank:false
+    ref:'password'
   
   },{
     fieldLabel:"Confirm Password",
     name:'password_confirmation',
-    ref:'password_confirmation',
-    allowBlank:false
+    ref:'password_confirmation'
   
   }],
   buttons:[{

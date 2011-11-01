@@ -81,7 +81,7 @@ var tabs = new Ext.ux.VrTabPanel({
   x: 0,
   y: 0,
   width:"100%",
-  height: 750,
+  height: 720,
   plain:true,
   tabMarginTop: 250,	/* Push the tab strip down 30px from top. If not set, defaults to 15.*/
   bodyStyle: 'padding: 10px',
@@ -125,8 +125,8 @@ var tabs = new Ext.ux.VrTabPanel({
 var mainPanel = new Ext.Panel({
   // title: 'Project Vision',
   layout: 'absolute',
-  height: 750,
-  autoScroll: true,
+  height: 720,
+//  autoScroll: true,
  
   items: [newThoughtButton,newTodoButton,newReferenceButton,newReminderButton,tabs],
   tbar: new Ext.Toolbar({
@@ -148,6 +148,6 @@ var mainPanel = new Ext.Panel({
 Ext.onReady( function() {
 	Ext.QuickTips.init(); 	
   mainPanel.render('mainDiv');
-  Ext.get('ext-gen72').setStyle('overflow', 'auto');
+  Ext.get('ext-gen72').setStyle('overflow-x', 'auto');
 
 });

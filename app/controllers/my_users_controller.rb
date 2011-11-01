@@ -8,7 +8,6 @@ class MyUsersController < ApplicationController
   def currentUser
     users = []
    #current_user.thoughts
-   debugger
     users << {:current_id => current_user.id, 
       :current_user_name => current_user.user_name,
       :alltask => current_user.thoughts.find(:all, :conditions=>["action_type = ?","1"]).length.to_s, 
@@ -49,11 +48,16 @@ class MyUsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])   
-    
-    if @user.update_attributes params[:user]
+    debugger
+    if params[:password]== "" and params[:password_confirmation]== ""
+      params.delete("password")
+      params.delete("password_confirmation")
+    end
+    if @user.update_attributes params
       render :json => { :success => true}
     else
       render :json => { :success => false}
+     
     end
   end
 

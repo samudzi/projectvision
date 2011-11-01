@@ -213,9 +213,14 @@ var thoughtGrid = new Ext.grid.GridPanel({
             method: 'delete',
             success: function(f,a){
               globalThoughtStore.reload({callback : function(records,option,success){
-					  globalThoughtStoreCallbackFn(records);		
-				  }
-			  });
+					      globalThoughtStoreCallbackFn(records);		
+				        }
+			        });
+			        teamThoughtStore.reload({
+        	      callback : function(records, option, success) {
+                teamThoughtStoreCallbackFn(records);
+                }
+              });
             }
           });
         //        myData.splice(rowIndex,1);
