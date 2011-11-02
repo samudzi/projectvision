@@ -27,8 +27,7 @@ function newAsignHandler(){
 }
 
 function newTeamHandler(){
-    newTeam = true;
-
+  newTeam = true;
   if(!newTeamWindow) newTeamWindow = new Ext.Window({
     title: 'Add New Team',
     width: 380,
@@ -51,8 +50,7 @@ function newTeamHandler(){
 }
 
 
-function newCatagoryHandler(){
-    
+function newCatagoryHandler(){    
   newCatagory = true;
   if(!catagoryWindow) catagoryWindow = new Ext.Window({
     title: 'Add New Catagory/Context',
