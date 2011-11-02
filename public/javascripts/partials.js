@@ -542,7 +542,7 @@ function teamThoughtStoreCallbackFn(records){
             edes = google.gdata.atom.Text.create(description);
             entry.setTitle(etitle);
             entry.setContent(edes);
-            alert("created");
+           //alert("created");
             // Create a When object that will be attached to the event
             var when = new google.gdata.When();
             var startDate = new Date(start_date);
@@ -1446,6 +1446,7 @@ function btnReminderTaskHandler()
 function calendarEventHandler()
 {
   newTask= true;
+
 
   //newButtonTask = false;
   if(!eventEditWindow) eventEditWindow = new Ext.Window({
