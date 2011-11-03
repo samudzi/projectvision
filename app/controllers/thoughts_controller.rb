@@ -61,6 +61,7 @@ class ThoughtsController < ApplicationController
   end
 
   def show
+  debugger
     thought = Thought.find(params[:id])
 
     render :json => {

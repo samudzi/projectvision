@@ -5,7 +5,7 @@ class Thought < ActiveRecord::Base
   belongs_to :catagory
 #  include ExtJS::Model
 
-  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date,:start_date, :action_type, :catagory_id, :scope, :parent_id, :assignee_id, :team_id
+  attr_accessible :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :updated_at, :due_date,:start_date, :action_type, :catagory_id, :scope, :parent_id, :assignee_id, :team_id
 
 #  extjs_fields :id, :brief, :detail, :category, :type, :status, :actionable, :context, :next, :outcome, :action_status, :due_date, :action_type
   belongs_to :user

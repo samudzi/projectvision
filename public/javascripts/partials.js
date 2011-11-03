@@ -1163,6 +1163,7 @@ function teamThoughtStoreCallbackFn(records){
             }
         ],
         tbar: [
+        
         {
           text: 'Asign User',
           iconCls: 'add-prop',
@@ -1172,7 +1173,7 @@ function teamThoughtStoreCallbackFn(records){
         },
         //region:'center' 	
       });                                
-      console.log("inboxbeforedo layout");                
+     // console.log("inboxbeforedo layout");                
       inboxPanel.add({
         title: teams[i]['team'],
         ref:'teamspace'+i,
@@ -1191,7 +1192,7 @@ function teamThoughtStoreCallbackFn(records){
         items: [teamThoughtGrid,teamUsersGrid,outstandingTaskGrid,calandar]
       });
     inboxPanel.doLayout();
-    console.log("inboxafterdo layout");
+   // console.log("inboxafterdo layout");
     }
   }
         
