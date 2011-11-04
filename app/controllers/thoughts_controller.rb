@@ -12,6 +12,7 @@ class ThoughtsController < ApplicationController
   end
 
   def create
+
     params[:actionable] = false;
     params[:action_type] = 1 if params[:action_type] == "To Do"
     params[:action_type] = 2 if params[:action_type] == "Reference"
@@ -61,7 +62,7 @@ class ThoughtsController < ApplicationController
   end
 
   def show
-  debugger
+  #debugger
     thought = Thought.find(params[:id])
 
     render :json => {

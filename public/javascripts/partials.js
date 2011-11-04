@@ -847,7 +847,8 @@ function teamThoughtStoreCallbackFn(records){
                 //todoEditPanel.team.setValue(tabTeamId); 
                 todoEditPanel.team.setVisible(true);
                 todoEditPanel.action_type.setVisible(true);  
-                todoEditPanel.actionable.setValue('t');  
+                todoEditPanel.actionable.setValue('t'); 
+                
                 //todoEditPanel.action_status.setValue('Active');
                 //todoEditPanel.action_status.setVisible(false);  
                 todoEditPanel.getForm().load({
@@ -1451,6 +1452,7 @@ function btnReminderTaskHandler()
 
 //ends of new button task handlers 
 // new calendar event handler
+
 
 function calendarEventHandler()
 {
