@@ -1919,8 +1919,9 @@ function eventSaveHandler()
    */
   finalStartDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate());  
   finalStartDate.setHours(hours,minutes);  
-  eventEditPanel.start_date.setValue(finalStartDate);
   
+  eventEditPanel.start_date.setValue(finalStartDate.toUTCString());
+  console.log(finalStartDate.toUTCString()+'start date');
   var dueDate = eventEditPanel.due_date_date.getValue();
   var dueDateTime = eventEditPanel.due_date_time.getValue();
   dueDateTime = dueDateTime.split(':');
@@ -1935,8 +1936,8 @@ function eventSaveHandler()
   }  */
   finalDueDate = new Date(dueDate.getYear(), dueDate.getMonth(), dueDate.getDate());
   finalDueDate.setHours(hours,minutes);
-  eventEditPanel.due_date.setValue(finalDueDate);
-
+  eventEditPanel.due_date.setValue(finalDueDate.toUTCString());
+  console.log(finalDueDate.toUTCString()+'due date');
 
  /* start_utc_date = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(),  startDate.getUTCHours(),    startDate.getUTCMinutes(), startDate.getUTCSeconds());
 
