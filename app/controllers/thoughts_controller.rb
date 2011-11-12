@@ -110,7 +110,7 @@ class ThoughtsController < ApplicationController
       end      
         @thought.team_id = nil if @thought.scope == 'private'
         @thought.attributes = params 
-        debugger
+        #debugger
         @thought.start_date = Time.zone.parse params[:start_date] if params[:start_date]
         @thought.due_date = Time.zone.parse params[:due_date] if params[:due_date]
         @success = @thought.save
