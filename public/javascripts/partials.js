@@ -788,7 +788,7 @@ function teamThoughtStoreCallbackFn(records){
       		width : 100,
       		//    sortable : true,
       	  dataIndex : 'due_date',
-      	  renderer: function(date) { if(date) return date.format("d/m/y, h:m:s T"); }
+      	  renderer: function(date) { if(date) return date.format("d-m-Y H:i:s"); }
       	},{
           header: 'Actions',
           xtype: 'actioncolumn',
@@ -859,6 +859,10 @@ function teamThoughtStoreCallbackFn(records){
                   waitMsg: 'Loading...',
                   method: 'get',
                   success: function(f,a){
+                  var resp = eval('('+a.response.responseText+')');
+                  var dat= new Date(resp.data.due_date);
+                  todoEditPanel.due_date.setValue(dat);
+                  //console.log(f);
 
                   }
                 });
@@ -1068,11 +1072,7 @@ function teamThoughtStoreCallbackFn(records){
               eventEditPanel.status.setVisible(false);
               eventEditPanel.status.setValue(5); 
               eventEditPanel.team.setValue(tabTeamId); 
-              eventEditPanel.team.setVisible(false);
-             // todoEditPanel.action_type.setValue(1);  
-              //todoEditPanel.actionable.setValue('t');  
-              //todoEditPanel.action_status.setValue('Active');
-              //todoEditPanel.action_status.setVisible(false);  
+              eventEditPanel.team.setVisible(false);             
               eventEditPanel.getForm().load({
                 url: '/thoughts/' + selectedId + '.json',
                 params: {
@@ -1140,6 +1140,7 @@ function teamThoughtStoreCallbackFn(records){
         title: "Users",
         store: teamUsersJsonStore[i],
         height: 320,
+
         columns: [
             {
               id       : 'user_id',
@@ -1309,13 +1310,14 @@ function myTeamThoughtHandler(){
   addPanel.getForm().reset();
   addPanel.brief.setValue('');
   addPanel.detail.setValue('');
-  addPanel.category.setValue('General');
+  //addPanel.category.setValue('General');
   addPanel.thoughtType.setValue('public').setVisible(false);
   addPanel.status.setValue(0); 
   addPanel.getForm().findField('team').setVisible(false);
   addPanel.team.setValue(tabTeamId);
   addWindow.show();
   //addUserAndTeamSelectOptions();
+  addCatagoryOptions();
   myTeamStore.load();
   //userStore.load();  
 }
@@ -1481,12 +1483,6 @@ function calendarEventHandler()
   eventEditPanel.thoughtType.setValue("public");
   eventEditPanel.team.setVisible(true);
   eventEditPanel.team.setValue(tabTeamId); 
-  
-  //eventEditPanel.action_type.setValue(5);
-  //eventEditPanel.action_type.setVisible(false);     
-  //todoEditPanel.actionable.setValue('t');  
-  //todoEditPanel.action_status.setValue('Active');
-  //todoEditPanel.action_status.setVisible(false);  
   eventEditWindow.show();
 }
 
@@ -1908,11 +1904,11 @@ function eventSaveHandler()
 {
   //console.log(todoEditPanel.action_type.getValue());
  
-  var startDate = eventEditPanel.start_date_date.getValue();  
+  var startDate = eventEditPanel.start_date_date.getValue();    
   var startDateTime = eventEditPanel.start_date_time.getValue().split(':');
   var hours = startDateTime[0]; 
-  var minutes = startDateTime[1];
-  var new_minutes = minutes.split(' ');
+  var minutes = startDateTime[1];    
+  /*var new_minutes = minutes.split(' ');
   minutes = new_minutes[0];
   var am_pm = new_minutes[1];
      
@@ -1920,22 +1916,23 @@ function eventSaveHandler()
   {
     hours = parseInt(hours)+12;
   }
-   
-  finalStartDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate());
-  finalStartDate.setHours(hours,minutes);
+   */
+  finalStartDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate());  
+  finalStartDate.setHours(hours,minutes);  
   eventEditPanel.start_date.setValue(finalStartDate);
+  
   var dueDate = eventEditPanel.due_date_date.getValue();
   var dueDateTime = eventEditPanel.due_date_time.getValue();
   dueDateTime = dueDateTime.split(':');
   hours = dueDateTime[0]; 
   minutes = dueDateTime[1];
-  new_minutes = minutes.split(' ');
+  /*new_minutes = minutes.split(' ');
   minutes = new_minutes[0];
   var am_pm = new_minutes[1];  
   if (am_pm == 'PM')
   {
     hours = parseInt(hours) + 12;
-  }  
+  }  */
   finalDueDate = new Date(dueDate.getYear(), dueDate.getMonth(), dueDate.getDate());
   finalDueDate.setHours(hours,minutes);
   eventEditPanel.due_date.setValue(finalDueDate);
@@ -2000,7 +1997,7 @@ function eventSaveHandler()
 function todoSaveHandler()
 {
 
-  console.log(todoEditPanel.action_type.getValue());
+ // console.log(todoEditPanel.action_type.getValue());
   if(newTask)
   {
     todoEditPanel.getForm().submit({
@@ -2162,26 +2159,19 @@ var addPanel = new Ext.form.FormPanel({
     ref:'brief',
     allowBlank:false
   },{
+    name: 'category',
+    ref: 'category',
+    id: 'category',
     xtype: 'combo',
-    ref:'category',
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
-    fieldLabel: 'Category',
-    name: 'category',
+    fieldLabel: 'Catagory',
     triggerAction: 'all',
-    displayField: 'name',
-    valueField: 'value',
-    emptyText: 'Select Category',
-    store: new Ext.data.SimpleStore({
-      fields: ['name','value'],
-      data: [
-      ['General','General'],
-      ['To Do','To Do'],
-      ['Reference','Reference']
-      ]
-    }),
-    value: 'General'
+    store: catagoryOptions,
+    displayField: 'catagory_name',
+    valueField: 'catagory_name',
+    emptyText: 'Select Catagory'
 
   },{
     xtype:'textarea',
@@ -2221,7 +2211,6 @@ var addPanel = new Ext.form.FormPanel({
       }
     }]
   },{
-
     
       xtype: 'combo',
       mode: 'local',
@@ -2548,14 +2537,14 @@ var eventEditPanel = new Ext.form.FormPanel({
       fieldLabel: 'Start Time',
       ref:'start_date_time',
       name: 'start_date_time',
-      //format: 'c',
+      format: 'H:i',
       editable: false
   },{
       xtype: 'timefield',
       fieldLabel: 'End Time',
       ref:'due_date_time',
       name: 'due_date_time',
-      //format: 'c',
+      format: 'H:i',
       editable: false
   },{
       
@@ -2714,7 +2703,8 @@ var todoEditPanel = new Ext.form.FormPanel({
       fieldLabel: 'Due Date',
       ref:'due_date',
       name: 'due_date',
-      format: 'c',
+      format: 'c', //'d-m-Y H:i:s',
+      //caltFormats: 'c',
       editable: false
   },{
       xtype:'textarea',
@@ -2746,30 +2736,28 @@ var todoEditPanel = new Ext.form.FormPanel({
     }),
     value: 'General'
     
-*/
-      name: 'category',
-      ref: 'category',
-      id: 'category',
-      xtype: 'combo',
+*/    
+      xtype: 'combo',  
       mode: 'local',
       typeAhead: true,
       forceSelection: true,
+      name: 'category',
+      ref: 'category',
+      //id: 'category',     
       fieldLabel: 'Catagory',
       triggerAction: 'all',
       store: catagoryOptions,
       displayField: 'catagory_name',
       valueField: 'catagory_name',
       emptyText: 'Select Catagory'
-  },{
-  
-  
-  name: 'context',
-      ref: 'context',
-      id: 'context',
+  },{    
       xtype: 'combo',
       mode: 'local',
       typeAhead: true,
       forceSelection: true,
+      name: 'context',
+      ref: 'context',
+            
       fieldLabel: 'context',
       triggerAction: 'all',
       store: contextOptions,

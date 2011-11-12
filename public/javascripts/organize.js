@@ -3,12 +3,14 @@ var currentOrganizeIndex = 0;
 //var organizeStore = Ext.StoreMgr.get('organize_store');
 var selectedOrganizeID = 0;
 //organizeStore.load();
-
+ 
 
 function organizeGridRowClickHandler(addrGrid,rowIndex,e) {
 	currentOrganizeIndex = rowIndex;
 	selectedOrganizeID = organizeJsonStore.getAt(rowIndex).data.id;
 	organizeDetailsPanel.getForm().reset();
+  addCatagoryOptions(); 
+  //Ext.get('ext-comp-1121').setStyle('height', 30);
 	/*organizeDetailsPanel.getForm().load({
 		url: '/thoughts/' + organizeJsonStore.getAt(rowIndex).data.id + '.json',
 		params: {
@@ -82,7 +84,7 @@ var organizeGrid = new Ext.grid.GridPanel({
   region:'center',
   stripeRows: true,
   autoExpandColumn: 'brief',
-  height: 350,
+  height: 300,
   width: 600,
   //  title: 'Array Grid',
   // config options for stateful behavior
@@ -97,7 +99,7 @@ var organizeDetailsPanel = new Ext.FormPanel({
   ref: 'organizeDetailsPanel',
   layout: 'border',
 //  collapsible: 'true',
-  height: 250,
+  height: 220,
   labelAlign: 'top',
   disabled: true,
   //  minSize: 75,
@@ -143,26 +145,19 @@ var organizeDetailsPanel = new Ext.FormPanel({
         checked: 'true'
       }]
     },{
-      xtype: 'combo',
-      ref:'../context',
+       xtype: 'combo',
       mode: 'local',
       typeAhead: true,
       forceSelection: true,
-      fieldLabel: 'Context',
-      name: 'thought[context]',
+      name:'context',
+      ref: 'context',
+      id:  'context',      
+      fieldLabel: 'context',
       triggerAction: 'all',
-      displayField: 'name',
-      valueField: 'value',
-      emptyText: 'Select Context',
-      store: new Ext.data.SimpleStore({
-        fields: ['name','value'],
-        data: [
-        ['Context1','Context1'],
-        ['Context2','Context2'],
-        ['Context3','Context3']
-        ]
-      }),
-      value: 'Context1'
+      store: contextOptions,
+      displayField: 'catagory_name',
+      valueField: 'catagory_name',
+      emptyText: 'Select context'
 
     },{
       xtype: 'datefield',

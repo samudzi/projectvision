@@ -78,7 +78,7 @@ function newHandler(){
   addPanel.getForm().reset();
   addPanel.brief.setValue('');
   addPanel.detail.setValue('');
-  addPanel.category.setValue('General');
+  //addPanel.category.setValue('General');
   addPanel.thoughtType.setValue('private').setVisible(true);
   addPanel.status.setValue(0);
   addPanel.getForm().findField('team').setVisible(false);
@@ -86,6 +86,7 @@ function newHandler(){
   //addUserAndTeamSelectOptions();
   myTeamStore.load();
   //userStore.load();
+  addCatagoryOptions();
 
   
 }

@@ -26,20 +26,22 @@ class ThoughtsController < ApplicationController
     # if this is event form
     #debugger
     if params[:start_date]
+      @thought.start_date = Time.zone.parse params[:start_date]
       #then merge fields to set data
      # sdate = params[:start_date].split('/')
       
       #stime = params[:start_date_time].split(':')
       #sstime = stime[1].split(' ')
-      @thought.start_date = params[:start_date]
-     
-     puts(@thought.start_date);              
+                
     end
+   # debugger
     if params[:due_date]
       #ddate = params[:due_date].split('/')
       #dtime = params[:due_date_time].split(':')
       #ddtime = dtime[1].split(' ')
-      @thought.due_date = params[:due_date] #Time.utc(ddate[2],ddate[0],ddate[1],dtime[0],ddtime[0])
+      
+      @thought.due_date = Time.zone.parse params[:due_date]
+      #Time.utc(ddate[2],ddate[0],ddate[1],dtime[0],ddtime[0])
     end
     
     #@thought.team_id = 1 if @thought.scope == 'public'
@@ -76,7 +78,7 @@ class ThoughtsController < ApplicationController
     params[:action_type] = 1 if params[:action_type] == "To Do"
     params[:action_type] = 2 if params[:action_type] == "Reference"
     params[:action_type] = 3 if params[:action_type] == "Reminder"
-        
+   
     if false and params[:start_date_time]     
         sdate = params[:start_date].split('/') 
         
@@ -97,14 +99,21 @@ class ThoughtsController < ApplicationController
     end
   
     if params[:thought]
-      @success = @thought.update_attributes(params[:thought])
+      @thought.attributes = params[:thought]
+      @thought.due_date = Time.zone.parse params[:thought][:due_date] if params[:thought][:due_date]
+      @thought.start_date = Time.zone.parse params[:thought][:start_date] if params[:thought][:start_date]
+      @success = @thought.save
     else
       if params[:team] and @thought.scope == 'public'
           team = Team.find_by_name params[:team]
           params[:team_id] = team.id       
       end      
         @thought.team_id = nil if @thought.scope == 'private'
-        @success = @thought.update_attributes(params)
+        @thought.attributes = params 
+        debugger
+        @thought.start_date = Time.zone.parse params[:start_date] if params[:start_date]
+        @thought.due_date = Time.zone.parse params[:due_date] if params[:due_date]
+        @success = @thought.save
     end
     
     if @success

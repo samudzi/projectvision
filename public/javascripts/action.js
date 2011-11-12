@@ -141,7 +141,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     width    : 75,
     //    sortable : true,
     dataIndex: 'due_date',
-	renderer: function(date) { if(date) return date.format("d/m/y, h:m:s T"); }
+	//renderer: function(date) { if(date) return date.format("d/m/y, h:m:s T"); }
   },
   {
     header   : 'Context',
@@ -232,7 +232,9 @@ var todoGrid = new Ext.grid.EditorGridPanel({
           waitMsg: 'Loading...',
           method: 'get',
           success: function(f,a){
-
+            var resp = eval('('+a.response.responseText+')');
+            var dat= new Date(resp.data.due_date);
+            todoEditPanel.due_date.setValue(dat);
           }
         });
 
@@ -272,22 +274,22 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     //showPreview: true, // custom property
     //enableRowBody: true, // required to create a second, full-width row to show expanded Record data
     getRowClass: function(record, rowIndex, rp, store){ // rp = rowParams
-		var due_date = record.data.due_date;
-		var completed = record.data.action_status;
-		
-		due_date = due_date.format("d/m/y, h:m:s T");		
-		var now = new Date();
-		var today = now.format("d/m/y, h:m:s T");
-		console.log(completed);	
-		if(completed == 'Completed')
-		{			
-			 return 'x-grid3-row-grey';			
-		}		
-       if(due_date < today){          
-          return 'x-grid3-row-red';
-       }
-       //return 'x-grid3-row-collapsed';		
-    }
+		  var due_date = record.data.due_date;
+		  var completed = record.data.action_status;
+		  if(due_date)
+		    due_date = due_date.format("d/m/y, h:m:s T");		
+		  var now = new Date();
+		  var today = now.format("d/m/y, h:m:s T");
+		  console.log(completed);	
+		  if(completed == 'Completed')
+		  {			
+			   return 'x-grid3-row-grey';			
+		  }		
+         if(due_date < today){          
+            return 'x-grid3-row-red';
+         }
+         //return 'x-grid3-row-collapsed';		
+      }
   },
   listeners: {
 		viewready : function(grid){				
@@ -483,6 +485,9 @@ var reminderGrid = new Ext.grid.GridPanel({
           waitMsg: 'Loading...',
           method: 'get',
           success: function(f,a){
+            var resp = eval('('+a.response.responseText+')');
+            var dat= new Date(resp.data.due_date);
+            remindEditPanel.due_date.setValue(dat);
 
           }
         });
@@ -584,6 +589,7 @@ var actionPanel = new Ext.TabPanel({
 				if(refEditWindow) refEditWindow.hide();
 				if(remindEditWindow) remindEditWindow.hide();	
 		  }
+
   }
 });
 

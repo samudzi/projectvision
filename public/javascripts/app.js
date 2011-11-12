@@ -19,6 +19,11 @@ var userTaskWindow;
 var eventEditWindow;
 
 
+Ext.util.JSON.encodeDate = function(o)
+{
+  return '"' + o.format("Y-m-d'T'H:i:s.uZ") + '"';
+}
+
 Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
 var newThoughtButton = new Ext.Button({
