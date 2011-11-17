@@ -313,7 +313,8 @@ var users = new Ext.grid.GridPanel({
           method: 'delete',
           success: function(f,a){
             userStore.load();
-    
+            myTeamStore.load();
+            teamUserStore.load();
           }
         });
       //        myData.splice(rowIndex,1);

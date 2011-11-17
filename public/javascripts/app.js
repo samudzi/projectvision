@@ -155,5 +155,6 @@ Ext.onReady( function() {
   mainPanel.render('mainDiv');
   Ext.get('ext-gen72').setStyle('overflow-x', 'auto');
    // Ext.get('ext-gen120').setStyle('overflow', 'auto');
+  
 
 });

@@ -3,14 +3,16 @@ var currentOrganizeIndex = 0;
 //var organizeStore = Ext.StoreMgr.get('organize_store');
 var selectedOrganizeID = 0;
 //organizeStore.load();
- 
 
 function organizeGridRowClickHandler(addrGrid,rowIndex,e) {
 	currentOrganizeIndex = rowIndex;
 	selectedOrganizeID = organizeJsonStore.getAt(rowIndex).data.id;
 	organizeDetailsPanel.getForm().reset();
   addCatagoryOptions(); 
-  //Ext.get('ext-comp-1121').setStyle('height', 30);
+   
+
+
+ Ext.get('ext-comp-1112').setStyle('top', '465px');
 	/*organizeDetailsPanel.getForm().load({
 		url: '/thoughts/' + organizeJsonStore.getAt(rowIndex).data.id + '.json',
 		params: {

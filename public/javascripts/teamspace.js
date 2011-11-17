@@ -29,7 +29,7 @@ function showResultText(btn, text) {
 
 function userTaskAsignHandler(asignThoughtID){
    if(!userTaskWindow) userTaskWindow = new Ext.Window({
-    title: 'Assing Task to User',
+    title: 'Assign Task to User',
     width: 380,
     applyTo:'team-task-window',
     closeAction:'hide',
@@ -42,7 +42,7 @@ function userTaskAsignHandler(asignThoughtID){
     items: userTaskAsignPanel
   });
   else
-    userTaskWindow.setTitle('Assing Task to User');        
+    userTaskWindow.setTitle('Assign Task to User');        
   userTaskAsignPanel.getForm().reset();
   addUserAndTeamSelectOptions(); 
   userTaskWindow.show();
@@ -66,12 +66,12 @@ var userTaskAsignPanel = new Ext.form.FormPanel({
     fieldLabel: 'Users',
     triggerAction: 'all',
     store: emailOptions,
-    displayField: 'email',
+    displayField: 'user_name',
     valueField: 'id',
     emptyText: 'Select User'
   }],
   buttons:[{
-    text: "Asign",
+    text: "Assign",
     handler: myTaskAsignHandler
   },{
     text: 'Close',
@@ -79,7 +79,7 @@ var userTaskAsignPanel = new Ext.form.FormPanel({
       userTaskWindow.hide();
     }
   }]
-})
+});
 
 function myTaskAsignHandler()
 {

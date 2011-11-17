@@ -27,8 +27,7 @@ class CatagoriesController < ApplicationController
     render :json => {:data => @catagory, :success => true}
   end
 
-  def update 
-   
+  def update    
     @catagory = Catagory.find(params[:id])       
     if @catagory.update_attributes params
       render :json => { :success => true}
@@ -45,7 +44,7 @@ class CatagoriesController < ApplicationController
       render :json => { :success => false }
     end
   end
-  
+    
 end
 
 

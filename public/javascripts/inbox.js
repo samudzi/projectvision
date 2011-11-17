@@ -116,6 +116,11 @@ var thoughtGrid = new Ext.grid.GridPanel({
     //    sortable : true,
     dataIndex: 'category'
   },{
+    header   : 'Team',
+    width    : 75,
+    //    sortable : true,
+    dataIndex: 'myteam'
+  },{
     header: 'Edit : Delete',
     xtype: 'actioncolumn',
     width: 70,

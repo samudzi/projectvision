@@ -12,7 +12,7 @@ class ThoughtsController < ApplicationController
   end
 
   def create
-
+    #debugger
     params[:actionable] = false;
     params[:action_type] = 1 if params[:action_type] == "To Do"
     params[:action_type] = 2 if params[:action_type] == "Reference"
@@ -99,16 +99,23 @@ class ThoughtsController < ApplicationController
     end
   
     if params[:thought]
+     debugger
       @thought.attributes = params[:thought]
       @thought.due_date = Time.zone.parse params[:thought][:due_date] if params[:thought][:due_date]
       @thought.start_date = Time.zone.parse params[:thought][:start_date] if params[:thought][:start_date]
       @success = @thought.save
     else
-      if params[:team] and @thought.scope == 'public'
+      @thought.attributes = params 
+      if params[:team] and @thought.scope == 'public'     
           team = Team.find_by_name params[:team]
-          params[:team_id] = team.id       
+          params[:team_id] = team.id
+          @success = @thought.save                 
       end      
-        @thought.team_id = nil if @thought.scope == 'private'
+      
+      if @thought.scope == 'private'
+         @thought.team_id = nil
+         @success = @thought.save
+      end
         @thought.attributes = params 
         #debugger
         @thought.start_date = Time.zone.parse params[:start_date] if params[:start_date]

@@ -327,14 +327,7 @@ var referenceGrid = new Ext.grid.GridPanel({
     width    : 160,
     //    sortable : true,
     dataIndex: 'brief'
-  },
-  {
-    header   : 'Context',
-    width    : 75,
-    //    sortable : true,
-    dataIndex: 'context'
-  },
-  {
+  },{
     header   : 'Scope',
     width    : 75,
     //    sortable : true,
@@ -373,6 +366,7 @@ var referenceGrid = new Ext.grid.GridPanel({
           waitMsg: 'Loading...',
           method: 'get',
           success: function(f,a){
+           
 
           }
         });
@@ -433,14 +427,7 @@ var reminderGrid = new Ext.grid.GridPanel({
     width    : 160,
     //    sortable : true,
     dataIndex: 'brief'
-  },
-  {
-    header   : 'Context',
-    width    : 75,
-    //    sortable : true,
-    dataIndex: 'context'
-  },
-  {
+  },{
     header   : 'Due Date',
     width    : 75,
     //    sortable : true,

@@ -43,7 +43,7 @@ var fieldsArray = [
 		{name: 'replies', type: 'array'}, 
 		{name: 'action_type_str', type: 'string'},
 		{name: 'catagory_id', type: 'string'},
-  
+    {name: 'myteam', type: 'string'},
 ];
 
 var replyFieldsArray = [{name:'reply', type:'text'},{name:'user', type:'string'},{name:'thought_id', type:'int'},{name:'user_id', type:'int'},];
@@ -249,9 +249,9 @@ function new_entry(){
       
       if((updated_date > sync_date) || (created_at > sync_date))        
       {
-      console.log(updated_date);
-      console.log(created_at);
-      console.log(sync_date);
+      //console.log(updated_date);
+      //console.log(created_at);
+      //console.log(sync_date);
         if(status == '5'){
           // creat a single event
           // Create the calendar service object
@@ -672,7 +672,7 @@ function teamThoughtStoreCallbackFn(records){
         			handler : function(grid, rowIndex, colIndex) {
         				selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
         			  var expander = grid.getColumnModel().getColumnAt(0);
-        			  console.log(expander);
+        			  //console.log(expander);
         			  //expander.collapse(rowIndex);
         				Ext.MessageBox.buttonText.ok = "Save";
         				Ext.MessageBox.show({
@@ -799,7 +799,7 @@ function teamThoughtStoreCallbackFn(records){
       			handler : function(grid, rowIndex, colIndex) {
       				selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
       			  var expander = grid.getColumnModel().getColumnAt(0);
-      			  console.log(expander);
+      			  //console.log(expander);
       			  //expander.collapse(rowIndex);
       				Ext.MessageBox.buttonText.ok = "Save";
       				Ext.MessageBox.show({
@@ -930,6 +930,9 @@ function teamThoughtStoreCallbackFn(records){
                     waitMsg: 'Loading...',
                     method: 'get',
                     success: function(f,a){
+                    var resp = eval('('+a.response.responseText+')');
+                    var dat= new Date(resp.data.due_date);
+                    remindEditPanel.due_date.setValue(dat);
 
                     }
                   });
@@ -1049,7 +1052,7 @@ function teamThoughtStoreCallbackFn(records){
     
         listeners: {
           eventclick: function(calendar, record, el){
-            console.log(record.id);
+            //console.log(record.id);
             selectedId = record.id;                                   
             newTask=false;
             if(!eventEditWindow) eventEditWindow = new Ext.Window({
@@ -1150,7 +1153,7 @@ function teamThoughtStoreCallbackFn(records){
               dataIndex: 'user_id',
               hidden: false
             },{
-              header: 'Email',
+              header: 'User Name',
               width    : 250,
               dataIndex: 'user_name'
             },{
@@ -1417,7 +1420,7 @@ function btnReferenceTaskHandler()
   refEditPanel.team.setVisible(true);
   refEditPanel.action_type.setVisible(false);   
   refEditPanel.action_type.setValue(2);
-  refEditPanel.context.setVisible(false);
+  //refEditPanel.context.setVisible(false);
         
   refEditWindow.show();
 }
@@ -1546,7 +1549,7 @@ function referenceTaskAsignHandler()
   refEditPanel.team.setVisible(true);
   refEditPanel.action_type.setVisible(false);   
   refEditPanel.action_type.setValue(2);
-  refEditPanel.context.setVisible(false);
+  //refEditPanel.context.setVisible(false);
     
   
   
@@ -1663,6 +1666,7 @@ function thoughtSaveHandler()
   }
   else
   {
+ 
     addPanel.getForm().submit({
       url: '/thoughts/'+selectedThoughtID+'.json',
       params: {
@@ -1921,7 +1925,7 @@ function eventSaveHandler()
   finalStartDate.setHours(hours,minutes);  
   
   eventEditPanel.start_date.setValue(finalStartDate.toUTCString());
-  console.log(finalStartDate.toUTCString()+'start date');
+  //console.log(finalStartDate.toUTCString()+'start date');
   var dueDate = eventEditPanel.due_date_date.getValue();
   var dueDateTime = eventEditPanel.due_date_time.getValue();
   dueDateTime = dueDateTime.split(':');
@@ -1937,7 +1941,7 @@ function eventSaveHandler()
   finalDueDate = new Date(dueDate.getYear(), dueDate.getMonth(), dueDate.getDate());
   finalDueDate.setHours(hours,minutes);
   eventEditPanel.due_date.setValue(finalDueDate.toUTCString());
-  console.log(finalDueDate.toUTCString()+'due date');
+  //console.log(finalDueDate.toUTCString()+'due date');
 
  /* start_utc_date = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(),  startDate.getUTCHours(),    startDate.getUTCMinutes(), startDate.getUTCSeconds());
 
@@ -2049,7 +2053,7 @@ function todoSaveHandler()
 
 function refSaveHandler()
 {
-  console.log(refEditPanel.action_type.getValue());
+  //console.log(refEditPanel.action_type.getValue());
   if(newTask)
   {
     refEditPanel.getForm().submit({
@@ -2188,12 +2192,14 @@ var addPanel = new Ext.form.FormPanel({
     items: [{
       boxLabel: 'Private',
       name: 'scope',
+           
       inputValue: 'private',
       listeners:{
         check:function(field,checked) {
             //console.log("Hit");
           if(checked) {
             addPanel.getForm().findField('team').setVisible(false);
+            //addPanel.getForm().findField('team').setValue('');
           }
         }
       
@@ -2808,7 +2814,7 @@ var todoEditPanel = new Ext.form.FormPanel({
       listeners:{
         check:function(field,checked) {
             //console.log("Hit");
-          if(checked && newThought) {
+          if(checked || newThought) {
             todoEditPanel.getForm().findField('team').setVisible(true);
           }
         }
@@ -2887,27 +2893,6 @@ var refEditPanel = new Ext.form.FormPanel({
     fieldLabel:"Details",
     name:'detail',
     height: 200
-  },{
-      xtype: 'combo',
-      ref:'context',
-      mode: 'local',
-      typeAhead: true,
-      forceSelection: true,
-      fieldLabel: 'Context',
-      name: 'context',
-      triggerAction: 'all',
-      displayField: 'name',
-      valueField: 'value',
-      emptyText: 'Select Context',
-      store: new Ext.data.SimpleStore({
-        fields: ['name','value'],
-        data: [
-        ['Context1','Context1'],
-        ['Context2','Context2'],
-        ['Context3','Context3']
-        ]
-      })
-
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
@@ -3008,7 +2993,7 @@ var remindEditPanel = new Ext.form.FormPanel({
   },{
       xtype: 'datefield',
       fieldLabel: 'Due Date',
-      ref:'../due_date',
+      ref:'due_date',
       name: 'due_date',
       format: 'c',
       editable: false
