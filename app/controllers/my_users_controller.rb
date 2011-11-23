@@ -63,7 +63,7 @@ class MyUsersController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
-    if @user.destroy
+    if @user.id != 1 and @user.destroy
       render :json => { :success => true }
     else
       render :json => { :success => false }

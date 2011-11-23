@@ -157,6 +157,30 @@
       Ext.get('category').setStyle('display','none');
     });  
     
+    function killEnter(e){
+    e = e? e : window.event;
+    var k = e.keyCode? e.keyCode : e.which? e.which : null;
+    if (k == 13){
+    if (e.preventDefault)
+    e.preventDefault();
+    return false;
+    };
+    return true;
+    };
+    if(typeof document.addEventListener!='undefined')
+    document.addEventListener('keydown', killEnter, false);
+    else if(typeof document.attachEvent!='undefined')
+    document.attachEvent('onkeydown', killEnter);
+    else{
+    if(document.onkeydown!=null){
+    var oldOnkeydown=document.onkeydown;
+    document.onkeydown=function(e){
+    oldOnkeydown(e);
+    killEnter(e);
+    };}
+    else
+    document.onkeydown=killEnter;
+    }
 
   });
 	
@@ -170,13 +194,13 @@
   <div id= "user", class="user" >  
 	  <div class="caption">Admin User Menu</div>	
 	  
-	  <div class="descriotion">You can set up a admin user for application, admin has all rights</div>
+	  <div class="descriotion">Please provide super admin user details for application, super admin has all rights and cannot be deleted</div>
     
     <%= f.hidden_field :is_admin, :value=>'true' %>		
 		
 		<div class="form_row">
       <div class="col_left">
-	    <%= f.label :name %>
+	    <%= f.label :user_name %>
 	    </div>
 	    <div class="col_right">
 	    <%= f.text_field :user_name %>
@@ -227,6 +251,7 @@
 	  <div class="caption">
         	Team Menu
         </div>
+        <div class="descriotion">Please provide your Organization Name and the number of users & teams you have</div>
         <div class="form_row">
         	<div class="col_left"><%= label :team, :organization %></div>
             <div class="col_right"><%= text_field :team, :name, :value=>"",:class=>"text_bar" %></div>
@@ -259,6 +284,7 @@
     <div class="caption">
         	User Menu
     </div>
+    <div class="descriotion">Please provide provide details for each user</div>
     <div class="form_row">
       <table class="user_table">
         <tr>
@@ -284,6 +310,7 @@
 
   <div id= "multiple_team", class="multiple_team" style="display:none">
     <div class="caption">Team Menu</div>
+    <div class="descriotion">Please provide super admin user details for each team</div>
     <div class="form_row">
         <table class="user_table" style="width:400px;">
 	        <tr>
@@ -306,14 +333,15 @@
 
   <div id= "category", class="category"  style="display:none"> 
 	    <div class="caption">Category and Context Menu</div>
+	    <div class="descriotion">Create category and context through this interface</div>
 	    <table class="user_table" style="width:500px;">
 	      <tbody id="category_fields">    	 
 	      </tbody>
       </table>   
       <div class="form_row" style="margin-left:40px;">
         <div class="col_right">
-          <div class="fl"><input type="button", value="New Context", id= "new_button", class="button"></div>	
-          <div class="fl"><input type="button", value="New Category", id= "new_category_button", class="button"></div>	
+          <div class="fl"><a id= "new_button", class="button"> New Context</a></div>	
+          <div class="fl"><a id= "new_category_button", class="button"> New category</a></div>	
           <div class="clr"></div>	               
 	      </div>
 	      <div class="clr"></div>
