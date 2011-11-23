@@ -48,7 +48,7 @@ class MyUsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])   
-    debugger
+    #debugger
     if params[:password]== "" and params[:password_confirmation]== ""
       params.delete("password")
       params.delete("password_confirmation")

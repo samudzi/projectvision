@@ -154,7 +154,7 @@ var todoGrid = new Ext.grid.EditorGridPanel({
     width    : 75,
     //    sortable : true,
     dataIndex: 'action_status',	
-	editor: new Ext.form.ComboBox({
+	  editor: new Ext.form.ComboBox({
 	   /*typeAhead: true,
 	    triggerAction: 'all',
 	    transform:'action_status',

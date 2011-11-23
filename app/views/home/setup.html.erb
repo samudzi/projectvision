@@ -1,0 +1,315 @@
+<html>
+<head>
+<title>setup page</title>
+  <%= stylesheet_link_tag :all %>  
+  <%= javascript_include_tag :defaults %>
+  <%= csrf_meta_tag %>
+
+  <%#*EXTJS%>
+  <%= javascript_include_tag "extjs/adapter/ext/ext-base","extjs/ext-all-debug","extjs/examples/ux/RowExpander"  %>
+  
+  <!-- Extensible includes -->
+  <%= javascript_include_tag "extensible-all-debug","MemoryEventStore","events" %>
+  <!-- Any Extensible overrides go here -->  
+
+  <%#*Application Specific%>
+
+  
+  
+  <script type="text/javascript">
+  Ext.onReady( function() {
+
+    Ext.get('user_next').on('click', function(){	
+    	Ext.get('team').setStyle('display','');
+    	Ext.get('user').setStyle('display','none');
+    	Ext.get('multiple_user').setStyle('display','none');
+    	Ext.get('multiple_team').setStyle('display','none');	
+     Ext.get('category').setStyle('display','none');
+    });
+    
+    Ext.get('team_back').on('click', function(){	
+    	Ext.get('team').setStyle('display','none');
+    	Ext.get('user').setStyle('display','');
+    	Ext.get('multiple_user').setStyle('display','none');
+    	Ext.get('multiple_team').setStyle('display','none');	
+     Ext.get('category').setStyle('display','none');
+    });
+
+    Ext.get('team_next').on('click',function(){
+      
+	    Ext.get('team').setStyle('display','none');
+	    Ext.get('user').setStyle('display','none');
+	    Ext.get('multiple_user').setStyle('display','');
+	    noOfUser = Ext.get('no_of_users').getValue();
+	    noOfTeam = Ext.get('no_of_teams').getValue();	
+	    Ext.get('user_fields').update('');
+	    //Ext.get('team_fields').update('');
+	    var str = '';
+	    for(var i=0;i<noOfUser;i++)
+	    {
+	      str+='<tr>'+
+            '<input type="hidden" value="false" name="users['+i+'][is_admin]" id="users_'+i+'_is_admin">'+						
+            '<td><input type="text" size="30" name="users['+i+'][user_name]" id="users_'+i+'_user_name" class="text_bar"></td>'+
+            '<td><input type="email" size="30" name="users['+i+'][email]" id="users_'+i+'_email" class="text_bar"></td>'+
+            '<td><input type="password" size="30" name="users['+i+'][password]" id="users_'+i+'_password" class="text_bar"></td>'+
+            '<td><input type="password" size="30" name="users['+i+'][password_confirmation]" id="users_'+i+'_password_confirmation" class="text_bar"></td>'+
+            '</tr>';
+	    }    
+	    Ext.get('user_fields').update(str);
+	    
+	    var str1 = '';
+	    for(var i=0;i<noOfTeam;i++)
+	    {
+	      str1+='<tr>'+
+	                  
+            '<td>Team '+(i+1)+'</td><td><input type="text" size="30" name="teams['+i+'][name]" id="teams_'+i+'_name" class="text_bar"></td>'+'</tr>';
+	    }  	    
+	    Ext.get('team_fields').update(str1);	    
+	    Ext.get('multiple_team').setStyle('display','none');	
+      Ext.get('category').setStyle('display','none');
+    });
+
+    j=1; 
+    var str3='<tr id=tr'+j+'>'+         						
+            '<td><input type="text" size="30" name="category['+j+'][name]" id="category_'+j+'_name" value= "Context1" class="categoryname"></td>'+
+            '<td><select name="category['+j+'][ctype]" id="category_'+j+'_ctype"><option value="Context">Context</option><option value="Catagory">Catagory</option></select></td>'+
+            '<td><input type="button" size="20" value="Delete" id="delete_button'+j+'" ></td>'+
+            '</tr>'; 
+    j=2; 
+    var str4='<tr id=tr'+j+'>'+         						
+            '<td><input type="text" size="30" name="category['+j+'][name]" id="category_'+j+'_name" value= "Category1" class="categoryname"></td>'+
+            '<td><select name="category['+j+'][ctype]" id="category_'+j+'_ctype"><option value="Context">Context</option><option value="Catagory" selected="selected">Catagory</option></select></td>'+
+            '<td><input type="button" size="20" value="Delete" id="delete_button'+j+'" ></td>'+
+            '</tr>';
+    var str5= str3+str4; 
+    Ext.get('category_fields').update(str5);	   
+    Ext.get('new_button').on('click',function(){ 
+      j++; 
+      var str2 = '';  
+      str2+='<tr id=tr'+j+'>'+         						
+            '<td><input type="text" size="30" name="category['+j+'][name]" id="category_'+j+'_name" class="categoryname"></td>'+
+            '<td><select name="category['+j+'][ctype]" id="category_'+j+'_ctype"><option value="Context">Context</option><option value="Catagory">Catagory</option></select></td>'+
+            '<td><input type="button" size="20" value="Delete" id="delete_button'+j+'" ></td>'+
+            '</tr>';  
+      Ext.DomHelper.append('category_fields', str2);
+      Ext.get("delete_button"+j+"").on('click',function(){
+        this.parent("tr").remove();     
+      }); 
+            
+    });
+    
+    Ext.get('multiple_user_next').on('click',function(){		
+	    Ext.get('team').setStyle('display','none');
+	    Ext.get('user').setStyle('display','none');
+	    Ext.get('multiple_user').setStyle('display','none');
+	    Ext.get('multiple_team').setStyle('display','');	
+      Ext.get('category').setStyle('display','none');
+    });
+    
+     Ext.get('multiple_team_next').on('click',function(){		
+	    Ext.get('team').setStyle('display','none');
+	    Ext.get('user').setStyle('display','none');
+	    Ext.get('multiple_user').setStyle('display','none');
+	    Ext.get('multiple_team').setStyle('display','none');	
+      Ext.get('category').setStyle('display','');
+    });	
+    Ext.get('multiple_team_back').on('click',function(){		
+	    Ext.get('team').setStyle('display','none');
+	    Ext.get('user').setStyle('display','none');
+	    Ext.get('multiple_user').setStyle('display','');
+	    Ext.get('multiple_team').setStyle('display','none');	
+      Ext.get('category').setStyle('display','none');
+    });		
+    	
+    Ext.get('multiple_user_back').on('click',function(){		
+	    Ext.get('team').setStyle('display','');
+	    Ext.get('user').setStyle('display','none');
+	    Ext.get('multiple_user').setStyle('display','none');
+	    Ext.get('multiple_team').setStyle('display','none');	
+      Ext.get('category').setStyle('display','none');
+    });	
+    
+    Ext.get('category_back').on('click',function(){			
+	    Ext.get('team').setStyle('display','none');
+	    Ext.get('user').setStyle('display','none');
+	    Ext.get('multiple_user').setStyle('display','none');
+	    Ext.get('multiple_team').setStyle('display','');	
+      Ext.get('category').setStyle('display','none');
+    });  
+    
+
+  });
+	
+</script>
+
+</head>
+<body>
+<div id="container">
+<%= form_for(@user, :url => "/setup") do |f| %>
+
+  <div id= "user", class="user" >  
+	  <div class="caption">Admin User Menu</div>	
+	  
+	  <div class="descriotion">You can set up a admin user for application, admin has all rights</div>
+    
+    <%= f.hidden_field :is_admin, :value=>'true' %>		
+		
+		<div class="form_row">
+      <div class="col_left">
+	    <%= f.label :name %>
+	    </div>
+	    <div class="col_right">
+	    <%= f.text_field :user_name %>
+      </div>
+      <div class="clr"></div>
+    </div>
+    
+    <div class="form_row">
+      <div class="col_left">
+	    <%= f.label :email %>
+	    </div>
+	    <div class="col_right">
+	    <%= f.email_field :email %>
+      </div>	
+      <div class="clr"></div>
+    </div>
+    
+    <div class="form_row">
+      <div class="col_left">
+	    <%= f.label :password %>
+	    </div>
+	    <div class="col_right">
+	    <%= f.password_field :password %>
+      </div>
+      <div class="clr"></div>
+    </div>
+    
+    <div class="form_row">
+      <div class="col_left">
+	    <%= f.label :password_confirmation %>
+	    </div>
+	    <div class="col_right">
+	    <%= f.password_field :password_confirmation %>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <div class="form_row">
+      <div class="col_left">
+        &nbsp;
+      </div>
+      <div class="col_right">
+        <a href="#" id="user_next" class="button"> Next </a>		
+      </div>
+    </div>
+  </div>	
+	
+  <div id= "team", class="team" style="display:none">
+	  <div class="caption">
+        	Team Menu
+        </div>
+        <div class="form_row">
+        	<div class="col_left"><%= label :team, :organization %></div>
+            <div class="col_right"><%= text_field :team, :name, :value=>"",:class=>"text_bar" %></div>
+            <%= hidden_field :team, :status, :value =>'Active' %> 
+            <div class="clr"></div>
+        </div>
+        <div class="form_row">
+        	<div class="col_left"><%= label_tag :no_of_users %></div>
+            <div class="col_right"><%= text_field_tag :no_of_users, "2",:class=>"text_bar" %></div>
+            	<div class="clr"></div>
+        </div>
+        <div class="form_row">
+        	<div class="col_left"><%= label_tag :no_of_iteams %></div>
+            <div class="col_right"> <%= text_field_tag :no_of_teams, "2",:class=>"text_bar" %></div>
+            	<div class="clr"></div>
+        </div>
+        <div class="form_row">
+        	<div class="col_left">&nbsp;</div>
+            <div class="col_right">
+            	<div class="fl"><a href="#" id="team_back" class="button"> Back </a> </div>
+            	<div class="fl"><a href="#" id="team_next" class="button"> Next </a></div>
+           			<div class="clr"></div>
+           </div>
+            	<div class="clr"></div>
+        </div>
+
+  </div>
+  			
+  <div id= "multiple_user", class="multiple_user"  style="display:none">
+    <div class="caption">
+        	User Menu
+    </div>
+    <div class="form_row">
+      <table class="user_table">
+        <tr>
+    		  <th>User Name</th>
+        	<th>Email</th>
+        	<th>Password</th>
+        	<th>Confirm Password</th>
+        </tr>
+       	<tbody id="user_fields">
+        </tbody>
+      </table>
+      <div class="clr"></div>
+    </div>
+     <div class="form_row" style="margin-left:44px;">
+            <div class="col_right">
+            	<div class="fl"><a href="#" id="multiple_user_back" class="button"> Back </a> </div>
+            	<div class="fl"><a href="#" id="multiple_user_next" class="button"> Next </a></div>
+           			<div class="clr"></div>
+           </div>
+            	<div class="clr"></div>
+        </div>
+  </div>
+
+  <div id= "multiple_team", class="multiple_team" style="display:none">
+    <div class="caption">Team Menu</div>
+    <div class="form_row">
+        <table class="user_table" style="width:400px;">
+	        <tr>
+	          <th>Team #</th>
+	          <th>Name</th>
+	        </tr>
+	        <tbody id="team_fields">    	 
+          </tbody>
+        </table>
+    </div>
+    <div class="form_row" style="margin-left:50px;">
+           <div class="col_right">
+            	<div class="fl"><a href="#" id="multiple_team_back" class="button"> Back </a> </div>
+            	<div class="fl"><a href="#" id="multiple_team_next" class="button"> Next </a></div>
+           			<div class="clr"></div>
+           </div>
+           <div class="clr"></div>
+    </div>
+  </div>
+
+  <div id= "category", class="category"  style="display:none"> 
+	    <div class="caption">Category and Context Menu</div>
+	    <table class="user_table" style="width:500px;">
+	      <tbody id="category_fields">    	 
+	      </tbody>
+      </table>   
+      <div class="form_row" style="margin-left:40px;">
+        <div class="col_right">
+          <div class="fl"><input type="button", value="New", id= "new_button", class="button"></div>	
+          <div class="fl" style="margin-top:13px; margin-left:81px"><a href="#" id="category_back" class="button"> Back <a>
+          </div>	     	            
+          <div class="clr"></div>	               
+	      </div>
+	      <div class="clr"></div>
+	    </div>
+	    
+	    <div class="form_row" style="margin-top:30px; margin-left:40px;">
+	      <div class="col_right">
+	        <%= f.submit "Sign up", :class=>"button"%>
+        </div>
+      </div>
+  </div>
+
+<% end %>
+</div>
+</body>
+</html>
+
+

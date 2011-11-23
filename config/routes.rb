@@ -1,20 +1,19 @@
 Pv::Application.routes.draw do
 
   devise_for :users, :controllers => { :sessions => "users/sessions"}
-
+  match '/setup' => 'home#setup'
   root :to => "home#index"
   get "home/index"
   
-  resources :catagories 
+  resources :catagories  
   resources :thoughts
   resources :action_logs do
     collection do
       get 'recent_team_logs'
     end
   end
-  resources :home
- 
-  
+  resources :home 
+      
   resources :my_users do
     collection do
       post 'update_sync'
