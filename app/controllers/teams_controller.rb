@@ -5,7 +5,7 @@ class TeamsController < ApplicationController
     users = []
     @teams.each do |team|
       if team.users.length == 0
-        users << {:id => team.id.to_s+'_0', :user_id => team.id, :user => "no users", :tasks => "", :team_id => team.id, :team => team.name} 
+        users << {:id => team.id.to_s+'_0', :user_id => "", :user => "no users", :tasks => "", :team_id => team.id, :team => team.name} 
       end
       team.users.each do |user|
         users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :user => user.email, :tasks => user.assigned_thoughts.find(:all,:conditions=>["team_id=?",team.id]).length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at,:user_name => user.user_name} 

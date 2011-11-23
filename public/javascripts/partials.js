@@ -605,7 +605,7 @@ function teamThoughtStoreCallbackFn(records){
       { 
         tempArray[key] =  record.get(key);        
       });        
-      if(teams[i]['id'] == team_id){
+      if(teams[i]['id'] == team_id && user_id != 0){
         tempJsonTeamUsers[i]["users"].push(tempArray);        
       }             
    }); 

@@ -30,13 +30,13 @@ class HomeController < ApplicationController
     if request.get?
       #debugger   
       if(User.find(:all).count > 0)     
-        render :action => 'login'
+        redirect_to '/'
       else 
         @user = User.new 
         render :layout => nil
       end
     elsif request.post?
-     debugger
+     #debugger
       if params[:team] 
         @team = Team.new params[:team]
         @team.status = "Active"
@@ -70,7 +70,7 @@ class HomeController < ApplicationController
         #@teams.save
         #@category.save
       end
-     
+      redirect_to '/'
      #logger.info("rashid");
     end  
   end

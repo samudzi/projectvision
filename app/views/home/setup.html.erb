@@ -82,10 +82,11 @@
             '<td><input type="button" size="20" value="Delete" id="delete_button'+j+'" ></td>'+
             '</tr>';
     var str5= str3+str4; 
-    Ext.get('category_fields').update(str5);	   
+    Ext.get('category_fields').update(str5);
+    	   
     Ext.get('new_button').on('click',function(){ 
       j++; 
-      var str2 = '';  
+      str2 = '';  
       str2+='<tr id=tr'+j+'>'+         						
             '<td><input type="text" size="30" name="category['+j+'][name]" id="category_'+j+'_name" class="categoryname"></td>'+
             '<td><select name="category['+j+'][ctype]" id="category_'+j+'_ctype"><option value="Context">Context</option><option value="Catagory">Catagory</option></select></td>'+
@@ -97,6 +98,25 @@
       }); 
             
     });
+    
+     	   
+    Ext.get('new_category_button').on('click',function(){ 
+      j++; 
+      str2 = '';  
+      str2+='<tr id=tr'+j+'>'+         						
+            '<td><input type="text" size="30" name="category['+j+'][name]" id="category_'+j+'_name" class="categoryname"></td>'+
+            '<td><select name="category['+j+'][ctype]" id="category_'+j+'_ctype"><option value="Context">Context</option><option value="Catagory" selected="selected">Catagory</option></select></td>'+
+            '<td><input type="button" size="20" value="Delete" id="delete_button'+j+'" ></td>'+
+            '</tr>';  
+      Ext.DomHelper.append('category_fields', str2);
+      Ext.get("delete_button"+j+"").on('click',function(){
+        this.parent("tr").remove();     
+      }); 
+            
+    });
+    
+    
+    
     
     Ext.get('multiple_user_next').on('click',function(){		
 	    Ext.get('team').setStyle('display','none');
@@ -292,18 +312,22 @@
       </table>   
       <div class="form_row" style="margin-left:40px;">
         <div class="col_right">
-          <div class="fl"><input type="button", value="New", id= "new_button", class="button"></div>	
-          <div class="fl" style="margin-top:13px; margin-left:81px"><a href="#" id="category_back" class="button"> Back <a>
-          </div>	     	            
+          <div class="fl"><input type="button", value="New Context", id= "new_button", class="button"></div>	
+          <div class="fl"><input type="button", value="New Category", id= "new_category_button", class="button"></div>	
           <div class="clr"></div>	               
 	      </div>
 	      <div class="clr"></div>
 	    </div>
+	 
 	    
-	    <div class="form_row" style="margin-top:30px; margin-left:40px;">
+	    <div class="form_row" style="margin-top:26px; margin-left:40px;">
 	      <div class="col_right">
-	        <%= f.submit "Sign up", :class=>"button"%>
+	        <div class="fl" style="margin-top:13px;"><a href="#" id="category_back" class="button"> Back <a>
+          </div>
+	        <div class="fl" style="margin-left:60px;"><%= f.submit "Sign up", :class=>"button"%></div>
+	        
         </div>
+        
       </div>
   </div>
 
