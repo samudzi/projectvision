@@ -192,7 +192,7 @@
 <%= form_for(@user, :url => "/setup") do |f| %>
 
   <div id= "user", class="user" >  
-	  <div class="caption">Admin User Menu</div>	
+	  <div class="caption">Step 1/5: Admin User setup</div>	
 	  
 	  <div class="descriotion">Please provide super admin user details for application, super admin has all rights and cannot be deleted</div>
     
@@ -249,7 +249,7 @@
 	
   <div id= "team", class="team" style="display:none">
 	  <div class="caption">
-        	Team Menu
+        	Step 2/5: Organization Info
         </div>
         <div class="descriotion">Please provide your Organization Name and the number of users & teams you have</div>
         <div class="form_row">
@@ -282,7 +282,7 @@
   			
   <div id= "multiple_user", class="multiple_user"  style="display:none">
     <div class="caption">
-        	User Menu
+        	Step 3/5: Company User Accounts
     </div>
     <div class="descriotion">Please provide provide details for each user</div>
     <div class="form_row">
@@ -309,7 +309,7 @@
   </div>
 
   <div id= "multiple_team", class="multiple_team" style="display:none">
-    <div class="caption">Team Menu</div>
+    <div class="caption">Step 4/5: Company Teams</div>
     <div class="descriotion">Please provide super admin user details for each team</div>
     <div class="form_row">
         <table class="user_table" style="width:400px;">
@@ -332,7 +332,7 @@
   </div>
 
   <div id= "category", class="category"  style="display:none"> 
-	    <div class="caption">Category and Context Menu</div>
+	    <div class="caption">Step 5/5: Category and Context setup</div>
 	    <div class="descriotion">Create category and context through this interface</div>
 	    <table class="user_table" style="width:500px;">
 	      <tbody id="category_fields">    	 
@@ -353,9 +353,7 @@
 	        <div class="fl" style="margin-top:13px;"><a href="#" id="category_back" class="button"> Back <a>
           </div>
 	        <div class="fl" style="margin-left:60px;"><%= f.submit "Sign up", :class=>"button"%></div>
-	        
         </div>
-        
       </div>
   </div>
 
