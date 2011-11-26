@@ -1,5 +1,7 @@
 class MyUsersController < ApplicationController
  before_filter :is_admin?
+
+
   def index
     @users = User.all   
      
@@ -22,7 +24,7 @@ class MyUsersController < ApplicationController
     else
       @user = User.new params
     end
-    team = Team.find(1)
+    team = Team.first
     @user.teams << team if team
     if @user.save
       render :json => {
@@ -34,7 +36,7 @@ class MyUsersController < ApplicationController
       render :json => { :success => false }
     end
   end
-
+ 
   def show
     @user = User.find(params[:id])
     render :json => {:data => @user.attributes, :success => true}

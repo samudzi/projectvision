@@ -2,7 +2,13 @@ class HomeController < ApplicationController
 
 #  include ExtJS::Controller
 #  helper ExtJS::Helpers::Store
-#  helper ExtJS::Helpers::Component  
+#  helper ExtJS::Helpers::Component
+ 
+   def initial_thoughts
+      @thought = Thought.new
+      @thought.detail ="best one"
+      @thought.save
+  end
   def index  
     if(User.find(:all).count == 0)
       @user = User.new
@@ -25,8 +31,7 @@ class HomeController < ApplicationController
 
   end
   
-  def setup
-   
+  def setup   
     if request.get?
       #debugger   
       if(User.find(:all).count > 0)     
@@ -41,6 +46,9 @@ class HomeController < ApplicationController
         @team = Team.new params[:team]
         @team.status = "Active"
         @team.save
+        params[:category].values.each do |cate|
+        Catagory.create cate
+        end
       end
       if params[:user]       
         @user = User.new params[:user]
@@ -56,9 +64,7 @@ class HomeController < ApplicationController
         params[:teams].values.each do |t|
           Team.create t
         end
-        params[:category].values.each do |cate|
-        Catagory.create cate
-        end
+       
         #@category = Catagory.new params[:category]
         #@category.save
         #@team = Team.new params[:team]

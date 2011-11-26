@@ -228,6 +228,7 @@ function new_entry(){
   var token = google.accounts.user.login(EVENT_FEED_URL);
   console.log(token);
   if (token){
+  count = 0;
    // records.each(function(rec){
     for(i=0;i<globalThoughtStore.getCount();i++)
     { 
@@ -253,6 +254,7 @@ function new_entry(){
       //console.log(created_at);
       //console.log(sync_date);
         if(status == '5'){
+          count++;
           // creat a single event
           // Create the calendar service object
           var calendarService = new google.gdata.calendar.CalendarService('GoogleInc-jsguide-1.0');
@@ -287,7 +289,7 @@ function new_entry(){
           entry.addTime(when);
           // The callback method that will be called after a successful insertion from insertEntry()
           var callback = function(result) {
-            console.log('event created!');
+            console.log('event created!');           
           }
           // Error handler will be invoked if there is an error from insertEntry()
           var handleError = function(error) {
@@ -298,9 +300,10 @@ function new_entry(){
       }
           
     }
+  
       
   }
-  //);
+ 
 
     Ext.Ajax.request({
       url: '/my_users/update_sync/',
@@ -314,6 +317,14 @@ function new_entry(){
         sync_date = new Date()                   
       }
     });
+    
+     if(count>0)
+  {
+      Ext.Msg.alert(count +' '+'Events has created ');
+  }
+  else
+      Ext.Msg.alert('No event created!');
+    
   }
 }
 
