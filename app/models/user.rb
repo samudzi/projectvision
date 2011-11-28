@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
       @thoughts.scope = "private"
       @thoughts.actionable = false
       @thoughts.status = 0
-      @thoughts.category = "Category 1"
+      @thoughts.category = "Welcome"
       @thoughts.brief = "Welcome to the Thought Engine!"
       @thoughts.detail ="The ThoughtEngine is an interactive tool that your group can leverage to collaboratively evolve your
   ideas into actionable plans, manage team tasks and activities, and share documentation in order to more
@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
       @thoughts.scope = "private"
       @thoughts.actionable = false
       @thoughts.status = 0
-      @thoughts.category = "Category 2"
+      @thoughts.category = "Welcome"
       @thoughts.brief = "Getting Started"
       @thoughts.detail ="Congratulations! You have taken the first step in transforming your thoughts and ideas into reality!
   Here is a brief guide to help you start navigating and using the ThoughtEngine:
