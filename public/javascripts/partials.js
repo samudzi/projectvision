@@ -241,7 +241,7 @@ function new_entry(){
       updated_date = rec.get('updated_at');
       created_at = rec.get('created_at');
       var description = rec.get('detail');
-      var team = rec.get('team');
+      var team = rec.get('myteam');
 
       //updatedDate = new Date(updated_date);
       //createdAt = new Date(created_at);
@@ -320,10 +320,10 @@ function new_entry(){
     
      if(count>0)
   {
-      Ext.Msg.alert(count +' '+'Events has created ');
+      Ext.Msg.alert('Google Calendar Sync',count +' '+'Events have been synchronized to Google Calendar ');
   }
   else
-      Ext.Msg.alert('No event created!');
+      Ext.Msg.alert('Google Calendar Sync','No events to synchronize to Google calendar!');
     
   }
 }
