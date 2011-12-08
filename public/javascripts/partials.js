@@ -1201,7 +1201,7 @@ function teamThoughtStoreCallbackFn(records){
         },
         defaults: {
           frame:true,
-          width:600,
+          width:580,
           height:500,
           bodyStyle:'vertical-align:top'
         },
