@@ -2265,7 +2265,7 @@ var addPanel = new Ext.form.FormPanel({
     displayField: 'catagory_name',
     valueField: 'catagory_name',
     emptyText: 'Select Catagory',
-    forceSelection: true,
+    allowBlank: false
     // valueNotFoundText: 'Value Not Found',
     // listeners: {
     //     afterrender: function(combo) {
@@ -2362,7 +2362,8 @@ var teamAsignPanel = new Ext.form.FormPanel({
     store: emailOptions,
     displayField: 'user_name',
     valueField: 'id',
-    emptyText: 'Select User'
+    emptyText: 'Select User',
+    allowBlank: false
   },{
     name: 'name',
     xtype: 'combo',
@@ -2375,7 +2376,8 @@ var teamAsignPanel = new Ext.form.FormPanel({
     store: myTeamStore,
     displayField: 'name',
     valueField: 'id',
-    emptyText: 'Select Team'
+    emptyText: 'Select Team',
+    allowBlank: false
   }],
   buttons:[{
     text: "Asign",
@@ -2483,6 +2485,7 @@ var catagoryAddPanel = new Ext.form.FormPanel({
     displayField: 'name',
     valueField: 'value',
     emptyText: 'Select Category',
+    allowBlank: false,
     store: new Ext.data.SimpleStore({
       fields: ['name','value'],
       data: [
@@ -2553,7 +2556,8 @@ var editTeamPanel = new Ext.form.FormPanel({
     store: myTeamStore,
     displayField: 'name',
     valueField: 'id',
-    emptyText: 'Select Team'
+    emptyText: 'Select Team',
+    allowBlank: false
 
   }],
   buttons:[{
@@ -2588,7 +2592,8 @@ var deleteTeamPanel = new Ext.form.FormPanel({
     store: myTeamStore,
     displayField: 'name',
     valueField: 'id',
-    emptyText: 'Select Team'
+    emptyText: 'Select Team',
+    allowBlank: false
 
   }],
   buttons:[{
@@ -2749,6 +2754,7 @@ var todoEditPanel = new Ext.form.FormPanel({
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
+    allowBlank: false,
     fieldLabel: 'Action Type',
     name: 'action_type',
     triggerAction: 'all',
@@ -2781,6 +2787,7 @@ var todoEditPanel = new Ext.form.FormPanel({
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
+    allowBlank: false,
     fieldLabel: 'Action Status',
     name: 'action_status',
     triggerAction: 'all',
@@ -2842,6 +2849,7 @@ var todoEditPanel = new Ext.form.FormPanel({
       mode: 'local',
       typeAhead: true,
       forceSelection: true,
+      allowBlank: false,
       name: 'category',
       ref: 'category',
       //id: 'category',     
@@ -2856,6 +2864,7 @@ var todoEditPanel = new Ext.form.FormPanel({
       mode: 'local',
       typeAhead: true,
       forceSelection: true,
+      allowBlank: false,
       name: 'context',
       ref: 'context',
             
@@ -2965,6 +2974,7 @@ var refEditPanel = new Ext.form.FormPanel({
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
+    allowBlank: false,
     fieldLabel: 'Action Type',
     name: 'action_type',
     triggerAction: 'all',
@@ -3063,6 +3073,7 @@ var remindEditPanel = new Ext.form.FormPanel({
     mode: 'local',
     typeAhead: true,
     forceSelection: true,
+    allowBlank: false,
     fieldLabel: 'Action Type',
     name: 'action_type',
     triggerAction: 'all',
