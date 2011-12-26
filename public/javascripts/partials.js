@@ -1739,8 +1739,8 @@ function teamEditHandler()
   else
     newTeamWindow.setTitle('Edit Team');
    
-  teamAddPanel.getForm().reset();
-  teamAddPanel.getForm().load({
+    teamAddPanel.getForm().reset();
+    teamAddPanel.getForm().load({
           url: '/teams/' + selectedTeamID + '.json',
           params: {
 
@@ -1774,11 +1774,22 @@ function userSaveHandler()
       method: 'post',
       waitMsg: 'Saving...',
       success: function(f,a) {
+        userWindow.hide();
 		    userStore.reload();
 		    teamUserStore.reload();
-		  }
+        newUser = false;
+		  },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
+      }
     });
-    newUser = false;
   }
   else
   {
@@ -1788,13 +1799,24 @@ function userSaveHandler()
         id: selectedUserID
       },
       method: 'put',
-      waitMsg: 'Saving...',
+      waitMsg: 'Updating...',
       success: function(f,a) {
+        userWindow.hide();
 		    userStore.reload();
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
-  if(userWindow) userWindow.hide();
+  // if(userWindow) userWindow.hide();
 }
 
 function teamSaveHandler()
@@ -2390,6 +2412,15 @@ var teamAsignPanel = new Ext.form.FormPanel({
   }]
 });
 
+Ext.apply(Ext.form.VTypes, {
+                 // This function validates input text
+        passwordPV:  function(v) {
+            return /^.{6,31}$/.test(v);
+        },
+                // This is the tooltip message displayed when invalid input occurs
+        passwordPVText: 'Must be at least 6 charactors'
+    });
+
 var userAddPanel = new Ext.form.FormPanel({
   labelWidth:80,
   labelAlign: 'top',
@@ -2413,7 +2444,9 @@ var userAddPanel = new Ext.form.FormPanel({
   },{
     fieldLabel:"Password",
     name:'password',
-    ref:'password'
+    ref:'password',
+    vtype: 'passwordPV',
+    allowBlank: false
   
   },{
     fieldLabel:"Confirm Password",
