@@ -1661,18 +1661,30 @@ function thoughtSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
         //inboxStore.reload();
-		globalThoughtStore.reload({callback : function(records,option,success){
-				globalThoughtStoreCallbackFn(records);		
-			}
-		});
-		teamThoughtStore.reload({
+        addWindow.hide();
+		    globalThoughtStore.reload({callback : function(records,option,success){
+				    globalThoughtStoreCallbackFn(records);		
+			     }
+		    });
+		    teamThoughtStore.reload({
         	callback : function(records, option, success) {
             teamThoughtStoreCallbackFn(records);
           }
         });
-      myTeamStore.load();
+        myTeamStore.load();
         newThought = false;
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
+
     });
   }
   else
@@ -1682,16 +1694,17 @@ function thoughtSaveHandler()
       url: '/thoughts/'+selectedThoughtID+'.json',
       params: {
         id: selectedThoughtID
-      },
+      },//here
       method: 'put',
       waitMsg: 'Saving...',
       success: function(f,a) {
         //inboxStore.reload();
-		globalThoughtStore.reload({callback : function(records,option,success){
-				globalThoughtStoreCallbackFn(records);		
-			}
-		});
-		teamThoughtStore.reload({
+        addWindow.hide();
+		    globalThoughtStore.reload({callback : function(records,option,success){
+				  globalThoughtStoreCallbackFn(records);		
+			     }
+		    });
+		    teamThoughtStore.reload({
         	callback : function(records, option, success) {
             teamThoughtStoreCallbackFn(records);
           }
@@ -1700,7 +1713,7 @@ function thoughtSaveHandler()
     });
   }
 //  addWindow.hide();
-  if(addWindow) addWindow.hide();
+  // if(addWindow) addWindow.hide();
 }
 
 
@@ -2021,18 +2034,29 @@ function todoSaveHandler()
       method: 'post',
       waitMsg: 'Saving...',
       success: function(f,a) {
+        todoEditWindow.hide();
         //inboxStore.reload();
-	  globalThoughtStore.reload({callback : function(records,option,success){
-			  globalThoughtStoreCallbackFn(records);		
-		  }
-	  });
-	  teamThoughtStore.reload({
+    	  globalThoughtStore.reload({callback : function(records,option,success){
+    			  globalThoughtStoreCallbackFn(records);		
+    		  }
+    	  });
+    	  teamThoughtStore.reload({
         	callback : function(records, option, success) {
             teamThoughtStoreCallbackFn(records);
           }
         });
-      myTeamStore.load();
+        myTeamStore.load();
         newTask = false;
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
@@ -2047,19 +2071,29 @@ function todoSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
         //todoStore.reload();
-      globalThoughtStore.reload({callback : function(records,option,success){
-			    globalThoughtStoreCallbackFn(records);		
-		    }
-	    });
-	    teamThoughtStore.reload({
+        todoEditWindow.hide();
+        globalThoughtStore.reload({callback : function(records,option,success){
+  			    globalThoughtStoreCallbackFn(records);		
+  		    }
+  	    });
+  	    teamThoughtStore.reload({
         	callback : function(records, option, success) {
             teamThoughtStoreCallbackFn(records);
           }
         });
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
-  todoEditWindow.hide();
 }
 
 function refSaveHandler()
@@ -2072,18 +2106,29 @@ function refSaveHandler()
       method: 'post',
       waitMsg: 'Saving...',
       success: function(f,a) {
+          refEditWindow.hide();
         //inboxStore.reload();
-	  globalThoughtStore.reload({callback : function(records,option,success){
-			  globalThoughtStoreCallbackFn(records);		
-		  }
-	  });
-	  teamThoughtStore.reload({
+      	  globalThoughtStore.reload({callback : function(records,option,success){
+      			  globalThoughtStoreCallbackFn(records);		
+      		  }
+      	  });
+      	  teamThoughtStore.reload({
         	callback : function(records, option, success) {
             teamThoughtStoreCallbackFn(records);
           }
         });
-      myTeamStore.load();
+        myTeamStore.load();
         newTask = false;
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
@@ -2097,15 +2142,25 @@ function refSaveHandler()
       method: 'put',
       waitMsg: 'Saving...',
       success: function(f,a) {
+        refEditWindow.hide();
         //referenceStore.reload();
-	    globalThoughtStore.reload({callback : function(records,option,success){
-				  globalThoughtStoreCallbackFn(records);		
-			  }
-		  });
+  	    globalThoughtStore.reload({callback : function(records,option,success){
+  				  globalThoughtStoreCallbackFn(records);		
+  			  }
+  		  });
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
-  refEditWindow.hide();
 }
 
 function remindSaveHandler()
@@ -2118,6 +2173,7 @@ function remindSaveHandler()
       method: 'post',
       waitMsg: 'Saving...',
       success: function(f,a) {
+        remindEditWindow.hide();
         //inboxStore.reload();
 	      globalThoughtStore.reload({callback : function(records,option,success){
 			    globalThoughtStoreCallbackFn(records);		
@@ -2130,6 +2186,16 @@ function remindSaveHandler()
         });
         myTeamStore.load();
         newTask = false;
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
@@ -2144,6 +2210,7 @@ function remindSaveHandler()
       method: 'put',
       waitMsg: 'Saving...',
       success: function(f,a) {
+        remindEditWindow.hide();
         //reminderStore.reload();
 	      globalThoughtStore.reload({callback : function(records,option,success){
 				    globalThoughtStoreCallbackFn(records);		
@@ -2154,10 +2221,20 @@ function remindSaveHandler()
               teamThoughtStoreCallbackFn(records);
             }
         });		  
+      },
+      failure: function (f,a)
+      {
+        Ext.Msg.show({
+             title:'Error'
+            ,msg:'Values are incorrect'
+            ,modal:true
+            ,icon:Ext.Msg.ERROR
+            ,buttons:Ext.Msg.OK
+        });
       }
     });
   }
-  remindEditWindow.hide();
+  
 }
 
 var addPanel = new Ext.form.FormPanel({
@@ -2187,8 +2264,14 @@ var addPanel = new Ext.form.FormPanel({
     store: catagoryOptions,
     displayField: 'catagory_name',
     valueField: 'catagory_name',
-    emptyText: 'Select Catagory'
-
+    emptyText: 'Select Catagory',
+    forceSelection: true,
+    // valueNotFoundText: 'Value Not Found',
+    // listeners: {
+    //     afterrender: function(combo) {
+    //       combo.setValue('General');
+    //     }
+    // }
   },{
     xtype:'textarea',
     ref:'detail',
@@ -2255,7 +2338,7 @@ var addPanel = new Ext.form.FormPanel({
     handler: function(){
       addWindow.hide();
     }
-  }]
+    }]
 });
 
 

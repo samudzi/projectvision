@@ -1,3 +1,4 @@
+# encoding: utf-8
 class User < ActiveRecord::Base
   has_many :assigned_thoughts, :class_name=>'Thought', :foreign_key=>'assignee_id'
   # Include default devise modules. Others available are:

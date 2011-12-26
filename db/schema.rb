@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110907060449) do
+ActiveRecord::Schema.define(:version => 20111021125611) do
 
   create_table "action_logs", :force => true do |t|
     t.integer  "user_id"
@@ -22,6 +22,14 @@ ActiveRecord::Schema.define(:version => 20110907060449) do
     t.datetime "updated_at"
   end
 
+  create_table "catagories", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "type"
+    t.string   "ctype"
+  end
+
   create_table "teams", :force => true do |t|
     t.string   "name"
     t.string   "status"
@@ -30,8 +38,8 @@ ActiveRecord::Schema.define(:version => 20110907060449) do
   end
 
   create_table "teams_users", :id => false, :force => true do |t|
-    t.string "user_id"
-    t.string "team_id"
+    t.integer "user_id"
+    t.integer "team_id"
   end
 
   create_table "thoughts", :force => true do |t|
@@ -53,6 +61,8 @@ ActiveRecord::Schema.define(:version => 20110907060449) do
     t.integer  "parent_id"
     t.integer  "assignee_id"
     t.integer  "team_id"
+    t.datetime "start_date"
+    t.integer  "catagory_id"
   end
 
   create_table "users", :force => true do |t|
@@ -68,6 +78,8 @@ ActiveRecord::Schema.define(:version => 20110907060449) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_admin",                            :default => false
+    t.datetime "synchronization_date"
+    t.string   "user_name"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

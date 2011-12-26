@@ -1,5 +1,5 @@
 class ThoughtsController < ApplicationController
- after_filter :log_thought, :only =>[:create, :update, :destroy]
+ after_filter :log_thought, :only =>[:create, :update]
   
   def index
     params[:user_id] = current_user.id
@@ -135,6 +135,7 @@ class ThoughtsController < ApplicationController
     id = params[:id]
     @thought= Thought.find(params[:id])
     @success = Thought.destroy(id)
+    @thought.id = params[:id]
     render :json => { :success => true }
   end
 
