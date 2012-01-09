@@ -699,10 +699,12 @@ function teamThoughtStoreCallbackFn(records){
         			}
         		},{
               icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
-              tooltip: 'Edit Thought',
+              tooltip: 'Edit Thought', 
               handler: function(grid, rowIndex, colIndex) {
                 selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
-                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;   
+                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;  
+                console.log(grid.getStore().getAt(rowIndex).data.id);
+                // selectedThoughtID = grid.getStore().getAt(rowIndex).data.getAt(rowIndex).id;   
               //editTeamThought(selectedThoughtID,selectedUserID);
           
                 if(is_admin == true || currentUser == selectedUserID){                                    
@@ -720,14 +722,12 @@ function teamThoughtStoreCallbackFn(records){
                     items: addPanel
                   });
                   else
-                    addWindow.setTitle('Edit Thought');                  
-
-                  console.log("selcted id");      
+                    addWindow.setTitle('Edit Thought');                     
                   addPanel.getForm().reset();         
                   addPanel.getForm().load({
-                    url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
+                    url: '/thoughts/' + selectedThoughtID + '.json',
                     params: {
-                      id: inboxJsonStore.getAt(rowIndex).data.id
+                      id: selectedThoughtID
                     },
                     waitMsg: 'Loading...',
                     method: 'get',
