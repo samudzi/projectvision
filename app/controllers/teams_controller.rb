@@ -49,6 +49,7 @@ class TeamsController < ApplicationController
       @team = Team.new params[:name]
     end
     if @team.save
+      TeamRole.create :user_id => current_user.id, :team_id => @team.id, :role => 1
       render :json => {
           :notice => 'Saved',
           :success => true,
