@@ -27,7 +27,7 @@ function showResultText(btn, text) {
 	}
 };
 
-function userTaskAsignHandler(asignThoughtID){
+function userTaskAsignHandler(assignThoughtID){
    if(!userTaskWindow) userTaskWindow = new Ext.Window({
     title: 'Assign Task to User',
     width: 380,
@@ -86,7 +86,7 @@ function myTaskAsignHandler()
 
   var user_id = userTaskAsignPanel.getForm().findField('user').getValue();
   Ext.Ajax.request({
-    url: '/thoughts/'+asignThoughtID,
+    url: '/thoughts/'+assignThoughtID,
     params: {
     assignee_id: user_id
     },
@@ -108,7 +108,12 @@ function myTaskAsignHandler()
 }
 
 function extjsAssignRenderer(value, id, r) {
-	var id = Ext.id();
+	var team_permission= getPermissions(currentUser, tabTeamId);
+    {if (team_permission == 3)
+
+    return "ReadOnly"
+    }
+    var id = Ext.id();
 	var user_id = r.get('user_id');
 	var assignee_id = r.get('assignee_id');
 	var assigned_to = r.get('assigned_to');
@@ -120,15 +125,15 @@ function extjsAssignRenderer(value, id, r) {
 		  renderTo: id,
 		  text: 'Assign Task',
 		  handler: function(btn, e) {
-		    asignThoughtID = r.get('id');
+		    assignThoughtID = r.get('id');
 		    
 		    if(is_admin == true){		    
-		      userTaskAsignHandler(asignThoughtID);
+		      userTaskAsignHandler(assignThoughtID);
 		    }
 		    else
 		    {
 		      Ext.Ajax.request({
-		        url: '/thoughts/'+asignThoughtID,
+		        url: '/thoughts/'+assignThoughtID,
 		        params: {
 		        assignee_id: currentUser
 		        },

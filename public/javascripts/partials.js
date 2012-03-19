@@ -3,6 +3,7 @@ var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store');
 var userStore = Ext.StoreMgr.get('users_store');
 var teamUserStore = Ext.StoreMgr.get('team_store');
+var myTeamUserStore = Ext.StoreMgr.get('myteam_store');
 var myTeamStore = Ext.StoreMgr.get('my_team_store');
 var currentUserStore = Ext.StoreMgr.get('current_users_store');
 var catagoryStore = Ext.StoreMgr.get('catagories');
@@ -13,7 +14,10 @@ recentTeamStore.load();
 currentUserStore.load();
 userStore.load();
 //myTeamStore.load();
-teamUserStore.load();
+teamUserStore.load({callback : function(records,option,success){
+          teamUserStoreCallbackFn(records);
+          }
+        });
 catagoryStore.load();
 Ext.ns('Ext.ux.data');
 /*var fieldsArray = ['id', 'brief', 'detail', 'category', 'type', 'status', 'actionable', 'context', 'next', 'outcome', 'action_status', 'due_date', 'action_type', 'scope'];*/
@@ -132,6 +136,7 @@ var catagoryOptions=new Ext.data.SimpleStore({
 var contextOptions=new Ext.data.SimpleStore({
   fields: ['catagory_name','id']
 });
+
 function addCatagoryOptions()
 {
   catagoryOptions.removeAll(silent=false);
@@ -192,7 +197,6 @@ function  deleteTeamThought(selected_thoughtID,selected_userID)
 {
  var user_id= selected_userID;
  var thought_id = selected_thoughtID;
-
   if(is_admin == true || currentUser == user_id)
   {
     Ext.Ajax.request({
@@ -330,6 +334,32 @@ function new_entry(){
 
 var finalJsonEventData = new Array();
 
+function teamUserStoreCallbackFn(records)
+{
+     myTeamIds = new Array();
+     myAdminTeamRecords = new Array();
+    records.each(function(rec){
+        if(rec.get('team_role') == 1 && currentUser == rec.get('user_id'))
+        {
+            myTeamIds.push(rec.get('team_id'));
+            console.log("inside of if" );
+        }
+
+    });
+
+    records.each(function(t)
+    {
+        if(myTeamIds.indexOf(t.get('team_id')) != -1)
+        {
+            myAdminTeamRecords.push(t);
+            console.log("inside second if");
+        }
+
+    });
+    myTeamUserStore.removeAll();
+    myTeamUserStore.add(myAdminTeamRecords);
+
+}
 function globalThoughtStoreCallbackFn(records){
 		var tempJsonInbox = new Array();
 		var finalJsonInbox = new Array();	
@@ -519,6 +549,22 @@ function getExpander(){
     fields:fieldsArray
   });
 
+    function getPermissions(user_id, team_id){
+    console.log(user_id);
+    console.log(team_id);
+    var role = 3;
+    teamUserStore.each(function(record)
+        {
+            if(record.get('user_id') == user_id && record.get('team_id') == team_id)
+            {
+                role = record.get('team_role');
+                return false;
+            }
+        });
+    console.log(role);
+    return role;
+}
+
 function teamThoughtStoreCallbackFn(records){
   var tempJsonTeamTasks = new Array();
   var tempJsonTeamThoughts = new Array();
@@ -648,7 +694,7 @@ function teamThoughtStoreCallbackFn(records){
       
       teamUsersJsonStore.push(new Ext.data.JsonStore({
       root: 'users',
-      fields: [{name:'user_id', type:'int'},{name:'user', type:'string'},{name:'last_sign_in_at', type:'datetime'},{name:'user_name', type:'string'},]                          
+      fields: [{name:'user_id', type:'int'},{name:'user', type:'string'},{name:'last_sign_in_at', type:'datetime'},{name:'user_name', type:'string'},{name:'team_role_name', type:'string'}]
       }));                                                              
     }      
     teamThoughtsJsonStore[i].loadData(tempJsonTeamThoughts[i],false);
@@ -660,24 +706,13 @@ function teamThoughtStoreCallbackFn(records){
     
    // console.log(cond);  
     if(cond){
-      var expander = getExpander();
-      var teamThoughtColModel = new Ext.grid.ColumnModel({
-        columns : [expander, {
-      		id : 'brief',
-      		header : 'Thought',
-      		width : 389,
-      		//    sortable : true,
-      		dataIndex : 'brief'
-      	}, {
-      		header : 'Category',
-      		width : 75,
-      		//    sortable : true,
-      		dataIndex : 'category'
-      	},{
-            header: 'Actions',
-            xtype: 'actioncolumn',
-            width: 70,
-            items: [{
+       var outstanding_action_column = [];
+       var action_items=[];
+       var team_id= teams[i]['id'];
+       var team_permission= getPermissions(currentUser, team_id);
+
+      if(is_admin == true || team_permission!=3)
+          action_items = [{
         			icon : '../images/icons/arrow_undo.gif',
         			tooltip : 'Reply Thought',
         			handler : function(grid, rowIndex, colIndex) {
@@ -699,15 +734,14 @@ function teamThoughtStoreCallbackFn(records){
         			}
         		},{
               icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
-              tooltip: 'Edit Thought', 
+              tooltip: 'Edit Thought',
               handler: function(grid, rowIndex, colIndex) {
                 selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
-                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;  
+                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
                 console.log(grid.getStore().getAt(rowIndex).data.id);
-                // selectedThoughtID = grid.getStore().getAt(rowIndex).data.getAt(rowIndex).id;   
+                // selectedThoughtID = grid.getStore().getAt(rowIndex).data.getAt(rowIndex).id;
               //editTeamThought(selectedThoughtID,selectedUserID);
-          
-                if(is_admin == true || currentUser == selectedUserID){                                    
+                if(is_admin == true || currentUser == selectedUserID){
                   if(!addWindow) addWindow = new Ext.Window({
                     title: 'Edit Thought',
                     width: 380,
@@ -722,8 +756,8 @@ function teamThoughtStoreCallbackFn(records){
                     items: addPanel
                   });
                   else
-                    addWindow.setTitle('Edit Thought');                     
-                  addPanel.getForm().reset();         
+                    addWindow.setTitle('Edit Thought');
+                  addPanel.getForm().reset();
                   addPanel.getForm().load({
                     url: '/thoughts/' + selectedThoughtID + '.json',
                     params: {
@@ -736,18 +770,18 @@ function teamThoughtStoreCallbackFn(records){
                     failure: function(form, action){
                       Ext.Msg.alert("Load failed", action.result.errorMessage);
                     }
-                  
+
                   });
                   //addUserAndTeamSelectOptions();
                   myTeamStore.load();
                   addWindow.show();
                   addPanel.brief.focus();
-                
+
                 }
                 else{
                   Ext.Msg.alert("Access violation","You don't have access to edit ");
-                }                                                                                                                
-              }                
+                }
+              }
             },
             {
               icon   : '../images/icons/delete.gif',
@@ -755,56 +789,35 @@ function teamThoughtStoreCallbackFn(records){
               handler: function(grid,rowIndex, colIndex)
               {
                 selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
-                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;                  
-                deleteTeamThought(selectedThoughtID,selectedUserID);                                   
+                selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
+                deleteTeamThought(selectedThoughtID,selectedUserID);
               }
-            }]
+            }];
+      var expander = getExpander();
+      var teamThoughtColModel = new Ext.grid.ColumnModel({
+        columns : [expander, {
+      		id : 'brief',
+      		header : 'Thought',
+      		width : 389,
+      		//    sortable : true,
+      		dataIndex : 'brief'
+      	}, {
+      		header : 'Category',
+      		width : 75,
+      		//    sortable : true,
+      		dataIndex : 'category'
+      	},{
+            header: 'Actions',
+            xtype: 'actioncolumn',
+            width: 70,
+            items: action_items
           }                	
       	]
       });
         
       var expander1 = getExpander();
-      
-      var outstandingTaskColModel = new Ext.grid.ColumnModel({
-      	columns : [expander1, {
-      		id : 'brief',
-      		header : 'Task',
-      		width : 280,
-      		//sortable : true,
-      		dataIndex : 'brief'
-      	},{
-      		header : 'Type',
-      		width : 70,
-      		dataIndex : 'action_type_str'
-      		//hidden: true
-      	},{
-      		header : 'Assigned',
-      		width : 75,
-      		//xtype: 'button',
-      		//width: 50,
-      		//items: [assigned_button
-      		/*{
-      		icon   : '../images/icons/blue1.png',
-      		tooltip: 'Assigned',
-      		handler: function(grid,rowIndex, colIndex)
-      		{
-      		selectedThoughtID = thoughtGridJsonStore.getAt(rowIndex).data.id;
-      		alert(colIndex);
-      		}
-      		}*///]
-      		//renderer: function(value, id, r){ return assigned_button; }
-      		renderer : extjsAssignRenderer
-      	},{
-      		header : 'Due Date',
-      		width : 100,
-      		//    sortable : true,
-      	  dataIndex : 'due_date',
-      	  renderer: function(date) { if(date) return date.format("d-m-Y H:i:s"); }
-      	},{
-          header: 'Actions',
-          xtype: 'actioncolumn',
-          width: 70,
-          items: [{
+      if(is_admin == true || team_permission!=3)
+        outstanding_action_column = [{
       			icon : '../images/icons/arrow_undo.gif',
       			tooltip : 'Reply Thought',
       			handler : function(grid, rowIndex, colIndex) {
@@ -854,14 +867,14 @@ function teamThoughtStoreCallbackFn(records){
                 selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
                 todoEditPanel.getForm().reset();
                 todoEditPanel.thoughtType.setValue('public').setVisible(false);
-                todoEditPanel.status.setValue(2); 
-                //todoEditPanel.team.setValue(tabTeamId); 
+                todoEditPanel.status.setValue(2);
+                //todoEditPanel.team.setValue(tabTeamId);
                 todoEditPanel.team.setVisible(true);
-                todoEditPanel.action_type.setVisible(true);  
-                todoEditPanel.actionable.setValue('t'); 
-                
+                todoEditPanel.action_type.setVisible(true);
+                todoEditPanel.actionable.setValue('t');
+
                 //todoEditPanel.action_status.setValue('Active');
-                //todoEditPanel.action_status.setVisible(false);  
+                //todoEditPanel.action_status.setVisible(false);
                 todoEditPanel.getForm().load({
                   url: '/thoughts/' + grid.getStore().getAt(rowIndex).data.id + '.json',
                   params: {
@@ -912,11 +925,11 @@ function teamThoughtStoreCallbackFn(records){
                     }
                   });
 
-                  refEditWindow.show();                                                                                          
+                  refEditWindow.show();
                 }
                 if(taskType == 3)
                 {
-                
+
                   if(!remindEditWindow) remindEditWindow = new Ext.Window({
                     title: 'Edit Thought',
                     closeAction:'hide',
@@ -962,7 +975,7 @@ function teamThoughtStoreCallbackFn(records){
             icon   : '../images/icons/delete.gif',
             tooltip: 'Delete Thought',
             handler: function(grid,rowIndex, colIndex)
-            {		  
+            {
       		    selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
       		    selectedUserID = grid.getStore().getAt(rowIndex).data.user_id;
               if(is_admin==true || currentUser == selectedUserID)
@@ -978,7 +991,7 @@ function teamThoughtStoreCallbackFn(records){
                   success: function(f,a){
                     //todoStore.reload();
       		          globalThoughtStore.reload({callback : function(records,option,success){
-      				        globalThoughtStoreCallbackFn(records);		
+      				        globalThoughtStoreCallbackFn(records);
       			          }
       		          });
       		          teamThoughtStore.reload({callback: function(records, option, success){
@@ -994,9 +1007,97 @@ function teamThoughtStoreCallbackFn(records){
               }
             }
           }]
+      var outstandingTaskColModel = new Ext.grid.ColumnModel({
+      	columns : [expander1, {
+      		id : 'brief',
+      		header : 'Task',
+      		width : 280,
+      		//sortable : true,
+      		dataIndex : 'brief'
+      	},{
+      		header : 'Type',
+      		width : 70,
+      		dataIndex : 'action_type_str'
+      		//hidden: true
+      	},{
+      		header : 'Assigned',
+      		width : 75,
+      		//xtype: 'button',
+      		//width: 50,
+      		//items: [assigned_button
+      		/*{
+      		icon   : '../images/icons/blue1.png',
+      		tooltip: 'Assigned',
+      		handler: function(grid,rowIndex, colIndex)
+      		{
+      		selectedThoughtID = thoughtGridJsonStore.getAt(rowIndex).data.id;
+      		alert(colIndex);
+      		}
+      		}*///]
+      		//renderer: function(value, id, r){ return assigned_button; }
+      		renderer : extjsAssignRenderer
+      	},{
+      		header : 'Due Date',
+      		width : 100,
+      		//    sortable : true,
+      	  dataIndex : 'due_date',
+      	  renderer: function(date) { if(date) return date.format("d-m-Y H:i:s"); }
+      	},{
+          header: 'Actions',
+          xtype: 'actioncolumn',
+          width: 70,
+          items: outstanding_action_column
         }]
       });  
       var myPageSize =10;
+      var team_id= teams[i]['id'];
+      var team_permission= getPermissions(currentUser, team_id);
+      var action_buttons;
+        //if skuper admin or has permissions
+        if(is_admin == true || team_permission!= 3)
+        {
+          new_thought_action =  {
+            text: 'New Thought',
+            iconCls: 'add-prop',
+            handler: myTeamThoughtHandler
+          },
+          outstading_task_actions = [{
+            text: 'New To Do',
+            iconCls: 'add-prop',
+            handler: todoTaskAsignHandler
+            },{
+            text: 'New Reference',
+            iconCls: 'add-prop',
+            handler: referenceTaskAsignHandler
+            },{
+            text: 'New Reminder',
+            iconCls: 'add-prop',
+            handler: reminderTaskAsignHandler
+          }],
+          calendar_action_buttons = [{
+          text: 'New Event',
+          iconCls: 'add-prop',
+          handler: calendarEventHandler
+          },{
+          text: 'Synchronize',
+          //iconCls: 'add-prop',
+          handler: new_entry
+          }],
+          assign_user_action_buttons =  {
+          text: 'Assign User',
+          iconCls: 'add-prop',
+          handler: function(){
+              userAsignHandler();
+          }
+          }
+        }
+        else
+        {
+          new_thought_action= "";
+          outstading_task_actions="";
+          calendar_action_buttons="";
+          assign_user_action_buttons="";
+        }
       var teamThoughtGrid = new Ext.grid.GridPanel({
         title : 'Shared Team Thoughts',
         store : teamThoughtsJsonStore[i],   // Store
@@ -1004,12 +1105,7 @@ function teamThoughtStoreCallbackFn(records){
         bodyStyle : 'margin-right:20px',
         plugins : expander,
         colModel: teamThoughtColModel,
-        tbar: [
-          {
-            text: 'New Thought',
-            iconCls: 'add-prop',
-            handler: myTeamThoughtHandler
-          }],
+        tbar: [new_thought_action],
         bbar: new Ext.PagingToolbar({
           store: teamThoughtsJsonStore[i],       // grid and PagingToolbar using same store
           displayInfo: true,
@@ -1023,7 +1119,7 @@ function teamThoughtStoreCallbackFn(records){
             this.doLoad(this.cursor);    
           }
          
-        }),
+        })
       });
      
       var outstandingTaskGrid = new Ext.grid.GridPanel({
@@ -1037,20 +1133,7 @@ function teamThoughtStoreCallbackFn(records){
           forceFit:true,
           groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
         }),
-        tbar: [
-          {
-            text: 'New To Do',
-            iconCls: 'add-prop',
-            handler: todoTaskAsignHandler
-        },{
-            text: 'New Reference',
-            iconCls: 'add-prop',
-            handler: referenceTaskAsignHandler
-        },{
-            text: 'New Reminder',
-            iconCls: 'add-prop',
-            handler: reminderTaskAsignHandler
-        }],
+        tbar: [outstading_task_actions]
       });
       
         
@@ -1124,15 +1207,7 @@ function teamThoughtStoreCallbackFn(records){
         width : 710,
         height : 510,            
         title:'Shared Calendar',
-        tbar:[{
-          text: 'New Event',
-          iconCls: 'add-prop',
-          handler: calendarEventHandler
-        },{
-          text: 'Synchronize',
-          //iconCls: 'add-prop',
-          handler: new_entry
-        }],
+        tbar:[calendar_action_buttons],
           items:[calendar]        
       });
         
@@ -1165,8 +1240,12 @@ function teamThoughtStoreCallbackFn(records){
               hidden: false
             },{
               header: 'User Name',
-              width    : 250,
+              width    : 150,
               dataIndex: 'user_name'
+            },{
+              header: 'Team Role',
+              width    : 125,
+              dataIndex: 'team_role_name'
             },{
 	            header : 'Last Sing In',
 	            width : 125,
@@ -1178,13 +1257,7 @@ function teamThoughtStoreCallbackFn(records){
               renderer : newextjsRenderer
             }
         ],
-        tbar: [
-        
-        {
-          text: 'Asign User',
-          iconCls: 'add-prop',
-          handler: userAsignHandler
-        }],
+        tbar: [assign_user_action_buttons],
         listeners: {
         },
         //region:'center' 	
@@ -1267,7 +1340,9 @@ function newextjsRenderer(value, id, r) {
       renderTo: id,
       text: 'Remove',
       handler: function(btn, e){
-       if(is_admin == true)
+       var team_permission= getPermissions(currentUser, tabTeamId);
+
+       if(is_admin == true || team_permission == 1)
        {
         var teamID = tabTeamId;
         Ext.Ajax.request({
@@ -1292,7 +1367,7 @@ function newextjsRenderer(value, id, r) {
         }
       else
       {
-      Ext.Msg.alert("Access violation","Only admin have access ");
+      Ext.Msg.alert("Access violation","Only admin have access to perform this operation.");
       }
         
       }
@@ -1337,23 +1412,25 @@ function myTeamThoughtHandler(){
 }
 
 function userAsignHandler(){
-  if(is_admin == true)
+
+ var team_permission= getPermissions(currentUser, tabTeamId);
+    if(is_admin == true || team_permission == 1)
   {
     if(!teamWindow) teamWindow = new Ext.Window({
-    title: 'Assing Team to User',
-    width: 380,
-    applyTo:'team-window',
-    closeAction:'hide',
-    height: 230,
-    layout: 'fit',
-    plain:true,
-    bodyStyle:'padding:5px;',
-    buttonAlign:'center',
-    //resizable:false,
-    items: teamAsignPanel
-  });
-  else
-    teamWindow.setTitle('Assing Team to User');
+        title: 'Assign Team to User',
+        width: 380,
+        applyTo:'team-window',
+        closeAction:'hide',
+        height: 230,
+        layout: 'fit',
+        plain:true,
+        bodyStyle:'padding:5px;',
+        buttonAlign:'center',
+        //resizable:false,
+        items: teamAsignPanel
+    });
+    else
+        teamWindow.setTitle('Assign Team to User');
         
   //teamAsignPanel.thoughtType.setValue('private');
   teamAsignPanel.getForm().reset();
@@ -1653,6 +1730,14 @@ function teamDeleteHandler()
 
 function thoughtSaveHandler()
 {
+  var team_id = addPanel.getForm().findField('team').getValue();
+  var user_id = currentUser;
+  var team_permission= getPermissions(user_id, team_id)
+  if (team_permission==3)
+  {
+    Ext.Msg.alert('You have read only', 'access for this team.');
+    return false;
+  }
   if(newThought)
   {
     addPanel.getForm().submit({
@@ -1994,6 +2079,15 @@ function eventSaveHandler()
   due_utc_date = new Date(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate(),  dueDate.getUTCHours(), dueDate.getUTCMinutes(), dueDate.getUTCSeconds());
 
   */
+    var team_id = eventEditPanel.getForm().findField('team').getValue();
+    var user_id = currentUser;
+    var team_permission= getPermissions(user_id, team_id)
+    if (team_permission==3)
+    {
+      Ext.Msg.alert('You have read only', 'access for this team.');
+      return false;
+    }
+
    
   if(newTask)
   {                                       
@@ -2047,6 +2141,14 @@ function eventSaveHandler()
 
 function todoSaveHandler()
 {
+    var team_id = todoEditPanel.getForm().findField('team').getValue();
+    var user_id = currentUser;
+    var team_permission= getPermissions(user_id, team_id)
+    if (team_permission==3)
+    {
+      Ext.Msg.alert('You have read only', 'access for this team.');
+      return false;
+    }
 
  // console.log(todoEditPanel.action_type.getValue());
   if(newTask)
@@ -2121,7 +2223,16 @@ function todoSaveHandler()
 function refSaveHandler()
 {
   //console.log(refEditPanel.action_type.getValue());
-  if(newTask)
+    var team_id = refEditPanel.getForm().findField('team').getValue();
+    var user_id = currentUser;
+    var team_permission= getPermissions(user_id, team_id)
+    if (team_permission==3)
+    {
+      Ext.Msg.alert('You have read only', 'access for this team.');
+      return false;
+    }
+
+    if(newTask)
   {
     refEditPanel.getForm().submit({
       url: '/thoughts.json',
@@ -2187,6 +2298,14 @@ function refSaveHandler()
 
 function remindSaveHandler()
 {
+    var team_id = remindEditPanel.getForm().findField('team').getValue();
+    var user_id = currentUser;
+    var team_permission= getPermissions(user_id, team_id)
+    if (team_permission==3)
+    {
+      Ext.Msg.alert('You have read only', 'access for this team.');
+      return false;
+    }
 
   if(newTask)
   {
@@ -2400,6 +2519,26 @@ var teamAsignPanel = new Ext.form.FormPanel({
     valueField: 'id',
     emptyText: 'Select Team',
     allowBlank: false
+  },{
+    name:'team_role',
+    xtype:'combo',
+    mode: 'local',
+    typeAhead: true,
+    forceSelection: true,
+    fieldLabel: 'Team Role',
+    triggerAction: 'all',
+    displayField: 'name',
+    valueField: 'value',
+    emptyText: 'Select Role',
+    allowBlank: false,
+    store: new Ext.data.SimpleStore({
+      fields: ['name','value'],
+      data: [
+      ['Admin',1],
+      ['Read/Write',2],
+      ['ReadOnly',3]
+      ]
+    })
   }],
   buttons:[{
     text: "Asign",

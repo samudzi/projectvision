@@ -75,9 +75,9 @@ var newReminderButton = new Ext.Button({
 var mainPanel;
 
 if (is_admin == true)
-  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,adminPanel];
+  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,myteamsPanel,adminPanel];
 else
-  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel];
+  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,myteamsPanel];
 
 var tabs = new Ext.ux.VrTabPanel({
   title: 'Project Vision',
