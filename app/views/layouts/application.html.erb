@@ -589,17 +589,30 @@ function handleError(e) {
       {"name":"user_id","allowBlank":false,"type":"int","defaultValue": 1},
       {"name":"user","allowBlank":false,"type":"string","defaultValue": ""},
       {"name":"tasks","allowBlank":false,"type":"string","defaultValue": ""},
-     
+      {"name":"team_id","allowBlank":false,"type":"int","defaultValue": ""},
       {"name":"team","allowBlank":false,"type":"string","defaultValue":"goodlogics"},
       {"name":"email","allowBlank":false,"type":"string","defaultValue":""},
       {"name":"last_sign_in_at","allowBlank":false,"type":"datetime","defaultValue":""},
       {"name":"user_name","allowBlank":false,"type":"string","defaultValue":""},
+      {"name":"team_role_name","allowBlank":false,"type":"string","defaultValue":"ReadOnly"},
+      {"name":"team_role","allowBlank":false,"type":"int","defaultValue":3},
             ]
   });
-  
+
   new Ext.data.GroupingStore(
   {
     "storeId":"team_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "reader":teamStoreReader,
+    "url":"/teams.json",
+    "groupField": 'team',
+    "baseParams":{},
+    "format":"json",
+    "writer":new Ext.data.JsonWriter({"encode":false})});
+
+  new Ext.data.GroupingStore(
+  {
+    "storeId":"myteam_store",
     "autoLoad":false,"autoSave":true,"restful":true,
     "reader":teamStoreReader,
     "url":"/teams.json",
