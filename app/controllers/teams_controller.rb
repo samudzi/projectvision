@@ -80,7 +80,6 @@ class TeamsController < ApplicationController
   end
   
   def add_user
-    debugger
     team = Team.find_by_name params[:name]
     user = User.find_by_user_name params[:user]
     team_role= params[:team_role]
