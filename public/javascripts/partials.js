@@ -1325,7 +1325,11 @@ myTeamStore.load({callback : function(records,option,success){
   waitMsg:'Deleting...',
   method: 'delete',
   success: function(f,a){
-    teamUserStore.reload();
+     teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================')
+          teamUserStoreCallbackFn(records);
+          }
+        });
     myTeamStore.reload();     
     
     teamThoughtStore.load({callback : function(records,option,success){
@@ -1359,7 +1363,11 @@ function newextjsRenderer(value, id, r) {
           method: 'post',
           waitMsg: 'Saving...',
           success: function(f,a) {
-            teamUserStore.reload();
+             teamUserStore.reload({callback : function(records,option,success){
+                console.log('===================== in here ===================')
+                teamUserStoreCallbackFn(records);
+                }
+            });
             globalThoughtStore.load({callback : function(records,option,success){
 		        globalThoughtStoreCallbackFn(records);		
 	            }
@@ -1877,7 +1885,11 @@ function userSaveHandler()
       success: function(f,a) {
         userWindow.hide();
 		    userStore.reload();
-		    teamUserStore.reload();
+		     teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================')
+          teamUserStoreCallbackFn(records);
+          }
+        });
         newUser = false;
 		  },
       failure: function (f,a)

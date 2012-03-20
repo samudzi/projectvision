@@ -21,7 +21,11 @@ function newAsignHandler(){
  
   addUserAndTeamSelectOptions();
   myTeamStore.reload();
-  teamUserStore.reload();
+  teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================');
+          teamUserStoreCallbackFn(records);
+          }
+        });
   teamWindow.show();
 
 }
@@ -94,8 +98,12 @@ function editTeamHandler(){
   editTeamPanel.getForm().reset();
   //addUserAndTeamSelectOptions();
   myTeamStore.load();
-  teamUserStore.reload();
-  editTeamWindow.show();
+ teamUserStore.reload({callback : function(records,option,success){
+      console.log('===================== in here ===================');
+      teamUserStoreCallbackFn(records);
+      }
+    });
+editTeamWindow.show();
 
 }
 
@@ -169,7 +177,11 @@ function extjsRenderer(value, id, r) {
           method: 'post',
           waitMsg: 'Saving...',
           success: function(f,a) {
-            teamUserStore.reload();
+            teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================')
+          teamUserStoreCallbackFn(records);
+          }
+        });
           }
         });
       }
@@ -317,7 +329,11 @@ var users = new Ext.grid.GridPanel({
           success: function(f,a){
             userStore.load();
             myTeamStore.load();
-            teamUserStore.reload();
+             teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================')
+          teamUserStoreCallbackFn(records);
+          }
+        });
           }
         });
       //        myData.splice(rowIndex,1);
