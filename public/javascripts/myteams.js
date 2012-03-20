@@ -8,7 +8,7 @@
 
 function newAsignHandler(){
    if(!teamWindow) teamWindow = new Ext.Window({
-    title: 'Assing Team to User',
+    title: 'Assign Team to User',
     width: 380,
     applyTo:'team-window',
     closeAction:'hide',
@@ -21,7 +21,7 @@ function newAsignHandler(){
     items: teamAsignPanel
   });
   else
-    teamWindow.setTitle('Assing Team to User');
+    teamWindow.setTitle('Assign Team to User');
 
   teamAsignPanel.getForm().reset();
   teamAsignPanel.getForm().findField('name').setVisible(true);
@@ -76,7 +76,11 @@ function editTeamHandler(){
   editTeamPanel.getForm().reset();
   //addUserAndTeamSelectOptions();
   myTeamStore.load();
-  teamUserStore.reload();
+  teamUserStore.load({callback : function(records,option,success){
+              teamUserStoreCallbackFn(records);
+              }
+            });
+
   editTeamWindow.show();
 
 }
@@ -126,7 +130,11 @@ function extjsRenderer(value, id, r) {
           method: 'post',
           waitMsg: 'Saving...',
           success: function(f,a) {
-            teamUserStore.reload();
+            teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================')
+          teamUserStoreCallbackFn(records);
+          }
+        });
           }
         });
       }

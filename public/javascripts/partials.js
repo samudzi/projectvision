@@ -357,7 +357,7 @@ function teamUserStoreCallbackFn(records)
         }
 
     });
-    myTeamUserStore.removeAll();
+    myTeamUserStore.removeAll(true);
     myTeamUserStore.add(myAdminTeamRecords);
 
 }
@@ -1690,16 +1690,22 @@ function teamAsignHandler()
     method: 'post',
     waitmsg: 'Saving...',
     success: function(f,a) {
-      teamUserStore.reload();
-      addUserAndTeamSelectOptions();
-      myTeamStore.reload();
-      globalThoughtStore.reload({callback : function(records,option,success){
+        teamUserStore.reload({callback : function(records,option,success){
+          console.log('===================== in here ===================')
+          teamUserStoreCallbackFn(records);
+          }
+        }
+        );
+        addUserAndTeamSelectOptions();
+        myTeamStore.reload();
+
+        globalThoughtStore.reload({callback : function(records,option,success){
 				globalThoughtStoreCallbackFn(records);		
 			  }
 		  });
-		  teamThoughtStore.reload({
-        callback : function(records, option, success) {
-          teamThoughtStoreCallbackFn(records);
+		teamThoughtStore.reload({
+            callback : function(records, option, success) {
+                teamThoughtStoreCallbackFn(records);
         }
       });
     }
@@ -1722,7 +1728,11 @@ function teamDeleteHandler()
     method: 'delete',
     success: function(f,a){
        myTeamStore.reload();
-		   teamUserStore.reload();	
+        teamUserStore.load({callback : function(records,option,success){
+            teamUserStoreCallbackFn(records);
+            }
+          });
+
 		   teamThoughtStore.load({callback : function(records,option,success){
 	        teamThoughtStoreCallbackFn(records);
 		      }
@@ -1920,7 +1930,11 @@ function teamSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
 		    myTeamStore.reload();
-		    teamUserStore.reload();
+           teamUserStore.load({callback : function(records,option,success){
+               teamUserStoreCallbackFn(records);
+               }
+           });
+
 		    teamThoughtStore.load({callback : function(records,option,success){
 	        teamThoughtStoreCallbackFn(records);
 		      }
@@ -1941,7 +1955,11 @@ function teamSaveHandler()
       waitMsg: 'Saving...',
       success: function(f,a) {
 		    myTeamStore.reload();
-		    teamUserStore.reload();
+            teamUserStore.load({callback : function(records,option,success){
+               teamUserStoreCallbackFn(records);
+               }
+             });
+
 		    teamThoughtStore.load({callback : function(records,option,success){
 	        teamThoughtStoreCallbackFn(records);
 		      }
