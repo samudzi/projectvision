@@ -15,6 +15,7 @@ currentUserStore.load();
 userStore.load();
 //myTeamStore.load();
 teamUserStore.load({callback : function(records,option,success){
+          console.log('===================== in here ===================')
           teamUserStoreCallbackFn(records);
           }
         });
@@ -773,7 +774,7 @@ function teamThoughtStoreCallbackFn(records){
 
                   });
                   //addUserAndTeamSelectOptions();
-                  myTeamStore.load();
+                  myTeamStore.reload();
                   addWindow.show();
                   addPanel.brief.focus();
 
@@ -1056,11 +1057,13 @@ function teamThoughtStoreCallbackFn(records){
         //if skuper admin or has permissions
         if(is_admin == true || team_permission!= 3)
         {
+          
           new_thought_action =  {
             text: 'New Thought',
             iconCls: 'add-prop',
             handler: myTeamThoughtHandler
-          },
+          };
+          
           outstading_task_actions = [{
             text: 'New To Do',
             iconCls: 'add-prop',
@@ -1073,22 +1076,24 @@ function teamThoughtStoreCallbackFn(records){
             text: 'New Reminder',
             iconCls: 'add-prop',
             handler: reminderTaskAsignHandler
-          }],
+          }];
+          
           calendar_action_buttons = [{
-          text: 'New Event',
-          iconCls: 'add-prop',
-          handler: calendarEventHandler
-          },{
-          text: 'Synchronize',
-          //iconCls: 'add-prop',
-          handler: new_entry
-          }],
+            text: 'New Event',
+            iconCls: 'add-prop',
+            handler: calendarEventHandler
+            },{
+            text: 'Synchronize',
+            //iconCls: 'add-prop',
+            handler: new_entry
+          }];
+          
           assign_user_action_buttons =  {
-          text: 'Assign User',
-          iconCls: 'add-prop',
-          handler: function(){
+            text: 'Assign User',
+            iconCls: 'add-prop',
+            handler: function(){
               userAsignHandler();
-          }
+            }          
           }
         }
         else
@@ -1098,6 +1103,7 @@ function teamThoughtStoreCallbackFn(records){
           calendar_action_buttons="";
           assign_user_action_buttons="";
         }
+      
       var teamThoughtGrid = new Ext.grid.GridPanel({
         title : 'Shared Team Thoughts',
         store : teamThoughtsJsonStore[i],   // Store
@@ -1302,8 +1308,8 @@ myTeamStore.load({callback : function(records,option,success){
   //// grid.getView().refresh();
   teamThoughtStore.load({callback : function(records,option,success){
       teamThoughtStoreCallbackFn(records);
-    }
-  });
+  }
+});
 }});
 
  function eventDelete()
@@ -1320,7 +1326,7 @@ myTeamStore.load({callback : function(records,option,success){
   method: 'delete',
   success: function(f,a){
     teamUserStore.reload();
-    myTeamStore.load();     
+    myTeamStore.reload();     
     
     teamThoughtStore.load({callback : function(records,option,success){
       teamThoughtStoreCallbackFn(records);
@@ -1407,7 +1413,7 @@ function myTeamThoughtHandler(){
   addWindow.show();
   //addUserAndTeamSelectOptions();
   addCatagoryOptions();
-  myTeamStore.load();
+  myTeamStore.reload();
   //userStore.load();  
 }
 
@@ -1437,7 +1443,7 @@ function userAsignHandler(){
   teamAsignPanel.getForm().findField('name').setVisible(false); 
   teamAsignPanel.team.setValue(tabTeamId);   
   addUserAndTeamSelectOptions();
-  myTeamStore.load();
+  myTeamStore.reload();
   teamWindow.show();
   }
   else{
@@ -1686,7 +1692,7 @@ function teamAsignHandler()
     success: function(f,a) {
       teamUserStore.reload();
       addUserAndTeamSelectOptions();
-      myTeamStore.load();
+      myTeamStore.reload();
       globalThoughtStore.reload({callback : function(records,option,success){
 				globalThoughtStoreCallbackFn(records);		
 			  }
@@ -1756,7 +1762,7 @@ function thoughtSaveHandler()
             teamThoughtStoreCallbackFn(records);
           }
         });
-        myTeamStore.load();
+        myTeamStore.reload();
         newThought = false;
       },
       failure: function (f,a)
@@ -2108,7 +2114,7 @@ function eventSaveHandler()
           }
         });
 
-        myTeamStore.load();
+        myTeamStore.reload();
         newTask = false;
       }
     });
@@ -2169,7 +2175,7 @@ function todoSaveHandler()
             teamThoughtStoreCallbackFn(records);
           }
         });
-        myTeamStore.load();
+        myTeamStore.reload();
         newTask = false;
       },
       failure: function (f,a)
@@ -2250,7 +2256,7 @@ function refSaveHandler()
             teamThoughtStoreCallbackFn(records);
           }
         });
-        myTeamStore.load();
+        myTeamStore.reload();
         newTask = false;
       },
       failure: function (f,a)
@@ -2325,7 +2331,7 @@ function remindSaveHandler()
             teamThoughtStoreCallbackFn(records);
           }
         });
-        myTeamStore.load();
+        myTeamStore.reload();
         newTask = false;
       },
       failure: function (f,a)

@@ -20,8 +20,8 @@ function newAsignHandler(){
   teamAsignPanel.getForm().findField('name').setVisible(true); 
  
   addUserAndTeamSelectOptions();
-  myTeamStore.load();
-
+  myTeamStore.reload();
+  teamUserStore.reload();
   teamWindow.show();
 
 }
@@ -94,7 +94,7 @@ function editTeamHandler(){
   editTeamPanel.getForm().reset();
   //addUserAndTeamSelectOptions();
   myTeamStore.load();
-  teamUserStore.load();
+  teamUserStore.reload();
   editTeamWindow.show();
 
 }
@@ -186,21 +186,24 @@ var teams = new Ext.grid.GridPanel({
   height: 300,
   columns: [
      {
-       header     :'User',
-       dataIndex: 'user_name'
-     },{
-        header: 'Tasks',
-        dataIndex: 'tasks'
-     },{
-        hidden : true,
-        header: 'Teams',
-        dataIndex: 'team'
-       
-     },{
-        header : 'Remove User',
-		    width : 50,
-		    renderer : extjsRenderer
-       }
+        header     :'User',
+        dataIndex: 'user_name'
+      },{
+         header: 'Tasks',
+         dataIndex: 'tasks'
+      },{
+         header: 'Team Role',
+         dataIndex: 'team_role_name'
+      },{
+         hidden : true,
+         header: 'Teams',
+         dataIndex: 'team'
+
+      },{
+         header : 'Remove User',
+ 		    width : 50,
+ 		    renderer : extjsRenderer
+        }
      ],
   view: new Ext.grid.GroupingView({
             forceFit:true
@@ -314,7 +317,7 @@ var users = new Ext.grid.GridPanel({
           success: function(f,a){
             userStore.load();
             myTeamStore.load();
-            teamUserStore.load();
+            teamUserStore.reload();
           }
         });
       //        myData.splice(rowIndex,1);
