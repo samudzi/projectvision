@@ -25,8 +25,14 @@ class MyUsersController < ApplicationController
       @user = User.new params
     end
     team = Team.first
-    @user.teams << team if team
     if @user.save
+      if team
+        @user_team_role  = TeamRole.new
+        @user_team_role.team_id = team.id
+        @user_team_role.user_id = @user.id
+        @user_team_role.role = 2
+        @user_team_role.save
+      end
       render :json => {
           :notice => 'Saved',
           :success => true,

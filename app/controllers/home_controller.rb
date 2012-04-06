@@ -54,12 +54,23 @@ class HomeController < ApplicationController
         @user = User.new params[:user]
         team = Team.find(:all)
         team = team[0]
-        @user.teams << team
         @user.save
+        #@user.teams << team
+        @user_team_role = TeamRole.new
+        @user_team_role.team_id = team.id
+        @user_team_role.user_id = @user.id
+        @user_team_role.role = 2
+        @user_team_role.save
+
         params[:users].values.each do |u|         
           user = User.new u
-          user.teams << team
+          #user.teams << team
           user.save
+          @user_team_role = TeamRole.new
+          @user_team_role.team_id = team.id
+          @user_team_role.user_id = user.id
+          @user_team_role.role = 2
+          @user_team_role.save
         end
         params[:teams].values.each do |t|
           Team.create t

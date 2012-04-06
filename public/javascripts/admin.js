@@ -235,7 +235,7 @@ var teams = new Ext.grid.GridPanel({
       iconCls: 'add-prop',
       handler: deleteTeamHandler
     },{
-      text: 'Assign User',
+      text: 'Add/Edit User',
       iconCls: 'add-prop',
       handler: newAsignHandler
     }],

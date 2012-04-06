@@ -28,6 +28,7 @@ Pv::Application.routes.draw do
     end
     collection do
       get 'list'
+      get 'admin_teams'
       end
   end
   

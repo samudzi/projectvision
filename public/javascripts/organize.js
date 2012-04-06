@@ -8,11 +8,11 @@ function organizeGridRowClickHandler(addrGrid,rowIndex,e) {
 	currentOrganizeIndex = rowIndex;
 	selectedOrganizeID = organizeJsonStore.getAt(rowIndex).data.id;
 	organizeDetailsPanel.getForm().reset();
-  addCatagoryOptions(); 
+    addCatagoryOptions();
    
 
 
- Ext.get('ext-comp-1112').setStyle('top', '465px');
+    Ext.get('ext-comp-1128').setStyle('top', '465px');
 	/*organizeDetailsPanel.getForm().load({
 		url: '/thoughts/' + organizeJsonStore.getAt(rowIndex).data.id + '.json',
 		params: {

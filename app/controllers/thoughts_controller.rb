@@ -99,7 +99,7 @@ class ThoughtsController < ApplicationController
     end
   
     if params[:thought]
-     debugger
+
       @thought.attributes = params[:thought]
       @thought.due_date = Time.zone.parse params[:thought][:due_date] if params[:thought][:due_date]
       @thought.start_date = Time.zone.parse params[:thought][:start_date] if params[:thought][:start_date]

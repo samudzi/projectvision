@@ -560,6 +560,25 @@ function handleError(e) {
     "url":"/teams/list.json",
     "baseParams":{},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+  new Ext.data.JsonStore(
+  {
+    "storeId":"my_admin_teams",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"id","allowBlank":false,"type":"int","defaultValue": 10},
+      {"name":"name","allowBlank":false,"type":"string","defaultValue":""},
+            ],
+    "idProperty":"id",
+    "url":"/teams/admin_teams.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+
+
   new Ext.data.JsonStore(
   {
     "storeId":"catagories",

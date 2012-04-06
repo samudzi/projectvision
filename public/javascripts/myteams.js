@@ -6,11 +6,11 @@
  * To change this template use File | Settings | File Templates.
  */
 
-function newAsignHandler(){
-   if(!teamWindow) teamWindow = new Ext.Window({
+function newAssignHandler(){
+   if(!teamAdminWindow) teamAdminWindow = new Ext.Window({
     title: 'Assign Team to User',
     width: 380,
-    applyTo:'team-window',
+    applyTo:'admin-team-window',
     closeAction:'hide',
     height: 230,
     layout: 'fit',
@@ -18,27 +18,27 @@ function newAsignHandler(){
     bodyStyle:'padding:5px;',
     buttonAlign:'center',
     //resizable:false,
-    items: teamAsignPanel
+    items: teamAdminAsignPanel
   });
   else
-    teamWindow.setTitle('Assign Team to User');
+    teamAdminWindow.setTitle('Assign Team to User');
 
   teamAsignPanel.getForm().reset();
   teamAsignPanel.getForm().findField('name').setVisible(true);
 
   addUserAndTeamSelectOptions();
-  myTeamStore.reload();
+  myAdminTeamStore.reload();
 
-  teamWindow.show();
+  teamAdminWindow.show();
 
 }
 
 function newTeamHandler(){
   newTeam = true;
-  if(!newTeamWindow) newTeamWindow = new Ext.Window({
-    title: 'Add New Team',
+  if(!newAdminTeamWindow) newAdminTeamWindow = new Ext.Window({
+    title: 'Add New Admin Team',
     width: 380,
-    applyTo:'new-team-window',
+    applyTo:'admin-new-team-window',
     closeAction:'hide',
     height: 230,
     layout: 'fit',
@@ -49,18 +49,17 @@ function newTeamHandler(){
     items: teamAddPanel
   });
   else
-    newTeamWindow.setTitle('Add New Team');
-
+    newAdminTeamWindow.setTitle('Add New Admin Team');
    console.log("new");
    teamAddPanel.getForm().reset();
-   newTeamWindow.show();
+   newAdminTeamWindow.show();
 }
 
-function editTeamHandler(){
-   if(!editTeamWindow) editTeamWindow = new Ext.Window({
-    title: 'Edit Team ',
+function editAdminTeamHandler(){
+   if(!editAdminTeamWindow) editAdminTeamWindow = new Ext.Window({
+    title: 'Edit Admin Team ',
     width: 380,
-    applyTo:'edit-team-window',
+    applyTo:'admin-edit-team-window',
     closeAction:'hide',
     height: 230,
     layout: 'fit',
@@ -68,30 +67,28 @@ function editTeamHandler(){
     bodyStyle:'padding:5px;',
     buttonAlign:'center',
     //resizable:false,
-    items: editTeamPanel
+    items: editAdminTeamPanel
   });
   else
-    editTeamWindow.setTitle('Edit Team');
+    editAdminTeamWindow.setTitle('Edit Admin Team');
 
-  editTeamPanel.getForm().reset();
+  editAdminTeamPanel.getForm().reset();
   //addUserAndTeamSelectOptions();
-  myTeamStore.load();
+  myAdminTeamStore.reload();
   teamUserStore.load({callback : function(records,option,success){
               teamUserStoreCallbackFn(records);
               }
             });
 
-  editTeamWindow.show();
+  editAdminTeamWindow.show();
 
 }
 
-
-
-function deleteTeamHandler(){
-   if(!deleteTeamWindow) deleteTeamWindow = new Ext.Window({
+function deleteAdminTeamHandler(){
+   if(!deleteAdminTeamWindow) deleteAdminTeamWindow = new Ext.Window({
     title: 'Delete Team ',
     width: 380,
-    applyTo:'delete-team-window',
+    applyTo:'admin-delete-team-window',
     closeAction:'hide',
     height: 230,
     layout: 'fit',
@@ -99,15 +96,15 @@ function deleteTeamHandler(){
     bodyStyle:'padding:5px;',
     buttonAlign:'center',
     //resizable:false,
-    items: deleteTeamPanel
+    items: deleteAdminTeamPanel
   });
   else
-    deleteTeamWindow.setTitle('Delete Team');
+    deleteAdminTeamWindow.setTitle('Delete Team window');
 
-  deleteTeamPanel.getForm().reset();
+  deleteAdminTeamPanel.getForm().reset();
   //addUserAndTeamSelectOptions();
-  myTeamStore.load();
-  deleteTeamWindow.show();
+  myAdminTeamStore.load();
+  deleteAdminTeamWindow.show();
 
 }
 
@@ -180,17 +177,17 @@ var teams = new Ext.grid.GridPanel({
       iconCls: 'add-prop',
       handler: newTeamHandler
     },{
-      text: 'Edit Team',
+      text: 'Edit Team Name',
       iconCls: 'add-prop',
-      handler: editTeamHandler
+      handler: editAdminTeamHandler
     },{
       text: 'Delete Team',
       iconCls: 'add-prop',
-      handler: deleteTeamHandler
+      handler: deleteAdminTeamHandler
     },{
-      text: 'Assign User',
+      text: 'Add/Edit User',
       iconCls: 'add-prop',
-      handler: newAsignHandler
+      handler: newAssignHandler
     }],
 
    listeners: {

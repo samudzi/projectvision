@@ -6,7 +6,7 @@ class TeamsController < ApplicationController
     team_role_name ='Admin'
     @teams.each do |team|
       if team.users.length == 0
-        users << {:id => team.id.to_s+'_0', :user_id => "", :user => "no users", :tasks => "", :team_id => team.id, :team => team.name} 
+        users << {:id => team.id.to_s+'_0', :user_id => "", :user => "no users", :tasks => "", :team_id => team.id, :team => team.name}
       end
       team.team_roles.each do |team_role|
         user = team_role.user
@@ -18,7 +18,7 @@ class TeamsController < ApplicationController
         else
           team_role_name = "ReadOnly"
         end
-        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :team_role=>team_role.role, :user => user.email, :tasks => user.assigned_thoughts.find(:all,:conditions=>["team_id=?",team.id]).length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at,:user_name => user.user_name, :team_role_name => team_role_name}
+        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :team_role => team_role.role, :user => user.email, :tasks => user.assigned_thoughts.find(:all,:conditions=>["team_id=?",team.id]).length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at,:user_name => user.user_name, :team_role_name => team_role_name}
       end  
     end   
     render :json =>  {:data => users, :success => true, :totalRows => users.count }.to_json
@@ -26,13 +26,25 @@ class TeamsController < ApplicationController
   
   def list
     if(current_user.is_admin)
-      @teams =  Team.find(:all, :order=>"created_at")       
+      @teams =  Team.find(:all, :order=>"created_at")
     else
       @teams =   current_user.teams#Team.find(:all,:order=>"created_at")
     end
     render :json => {:data =>@teams, :success =>true, :totalRows => @teams.count}.to_json
   end
-  
+
+  def admin_teams
+    if(current_user)
+      teams =[]
+      @admin_roles = current_user.team_roles.where("role=1")
+      @admin_roles.each do |team_role|
+        teams << team_role.team
+      end
+      @teams = teams
+    end
+      render :json => {:data =>@teams, :success =>true, :totalRows => @teams.count}.to_json
+  end
+
   def show
     @team = Team.find params[:id]
     render :json => {

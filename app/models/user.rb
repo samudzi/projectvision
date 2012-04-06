@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   
   has_many :thoughts
   has_many :teams , :through => :team_roles
-  has_many :team_roles
+  has_many :team_roles, :dependent => :destroy
   has_many :action_logs
  
   after_create :initial_thoughts

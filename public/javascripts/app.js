@@ -4,11 +4,15 @@
 //inboxStore.load();
 //console.log(inboxStore);
 var newTeamWindow;
+var newAdminTeamWindow;
+var deleteAdminTeamWindow;
 var catagoryWindow;
 var deleteTeamWindow;
 var editTeamWindow;
+var editAdminTeamWindow;
 var addWindow;
 var teamWindow;
+var teamAdminWindow;
 var userWindow;
 var todoEditWindow;
 var refEditWindow;
