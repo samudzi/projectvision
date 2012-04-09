@@ -227,7 +227,7 @@ var teams = new Ext.grid.GridPanel({
       iconCls: 'add-prop',
       handler: newTeamHandler
     },{
-      text: 'Edit Team',
+      text: 'Edit Team Name',
       iconCls: 'add-prop',
       handler: editTeamHandler
     },{

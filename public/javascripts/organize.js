@@ -12,7 +12,7 @@ function organizeGridRowClickHandler(addrGrid,rowIndex,e) {
    
 
 
-    Ext.get('ext-comp-1128').setStyle('top', '465px');
+   // Ext.get('ext-comp-1128').setStyle('top', '465px');
 	/*organizeDetailsPanel.getForm().load({
 		url: '/thoughts/' + organizeJsonStore.getAt(rowIndex).data.id + '.json',
 		params: {
@@ -216,7 +216,10 @@ var organizeDetailsPanel = new Ext.FormPanel({
     }]
   }
   ],
-    bbar: [
+    bbar: [  {
+        height:38
+    },
+
     //      {
     //        text: 'Process Thought',
     //        handler: function(){
@@ -322,6 +325,7 @@ var organizeDetailsPanel = new Ext.FormPanel({
         });
       }
     }]
+
 //  cmargins: '5 0 0 0',
 //  html: '<p>Select a Thought</p>'
 });

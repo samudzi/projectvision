@@ -1774,7 +1774,7 @@ function thoughtSaveHandler()
   var team_id = addPanel.getForm().findField('team').getValue();
     console.log(scope.inputValue);
     console.log(team_id);
-    if(scope.inputValue == "public"){
+    if((scope.inputValue == "public")&&(is_admin == false)){
     var team_id = addPanel.getForm().findField('team').getValue();
     var user_id = currentUser;
     var team_permission= getPermissions(user_id, team_id)
