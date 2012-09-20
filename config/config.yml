@@ -1,0 +1,10 @@
+development: &local
+  app_url: "http://localhost:3000"
+
+test:
+  <<: *local
+
+production:
+  app_url: "http://projectvision.heroku.com/"
+
+
