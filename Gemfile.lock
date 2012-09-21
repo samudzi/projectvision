@@ -121,6 +121,7 @@ GEM
       rake (>= 0.8.7)
       thor (~> 0.14.4)
     rake (0.8.7)
+    redis (3.0.1)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
@@ -178,6 +179,7 @@ DEPENDENCIES
   pry-rails
   rails (= 3.0.3)
   rake (= 0.8.7)
+  redis
   rspec-rails
   shoulda-matchers
   simplecov

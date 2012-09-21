@@ -10,6 +10,13 @@ module Pv
       configatron.send(method, *args, &block)
     end
 
+    def redis_connection_option
+      {
+        host: ENV['REDIS_HOST'] || "localhost",
+        port: ENV['REDIS_PORT'] || 6379
+      }
+    end
+
     private
     def configure_configatron
       yaml_data = YAML.load_file("#{Rails.root}/config/config.yml")[Rails.env]
