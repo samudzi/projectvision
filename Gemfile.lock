@@ -69,6 +69,7 @@ GEM
       rspec (~> 2.0)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    eventmachine (0.12.10)
     factory_girl (3.6.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (3.6.0)
@@ -172,6 +173,7 @@ DEPENDENCIES
   database_cleaner
   devise
   email_spec
+  eventmachine
   factory_girl_rails
   headless
   launchy

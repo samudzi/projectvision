@@ -21,6 +21,8 @@ gem 'devise'
 gem 'mysql2', '< 0.3'
 gem "configatron"
 gem "redis"
+gem "eventmachine"
+
 # gem 'aws-s3', :require => 'aws/s3'
 
 # Bundle gems for the local environment. Make sure to
