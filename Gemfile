@@ -22,6 +22,7 @@ gem 'mysql2', '< 0.3'
 gem "configatron"
 gem "redis"
 gem "eventmachine"
+gem "em-imap"
 
 # gem 'aws-s3', :require => 'aws/s3'
 
