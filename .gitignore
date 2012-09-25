@@ -6,4 +6,5 @@ tmp/**/*
 creategitbranch
 projectvision
 vendor/bundle/
-
+/nbproject
+/config/database.yml
