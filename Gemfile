@@ -23,6 +23,7 @@ gem "configatron"
 gem "redis"
 gem "eventmachine"
 gem "em-imap"
+gem "strongbox"
 
 # gem 'aws-s3', :require => 'aws/s3'
 

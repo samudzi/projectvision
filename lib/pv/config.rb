@@ -24,6 +24,11 @@ module Pv
     end
   end
 
+  def self.imap_poller
+    return @@imap_poller if defined?(@@imap_poller)
+    @@imap_poller = Pv::WorkerClient.new()
+  end
+
   def self.load_config
     @@pv_config = Pv::Config.instance
   end
