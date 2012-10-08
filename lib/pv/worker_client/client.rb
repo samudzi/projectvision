@@ -7,6 +7,12 @@ module Pv
         true
       end
 
+      def trigger_poll(imap_address)
+        imap_message = Pv::WorkerClient::PollInbox.new(imap_address)
+        redis_connection.rpush Pv.config.redis_list_name, imap_message.to_json
+        true
+      end
+
       def redis_connection
         Redis.new(Pv.config.redis_connection_option)
       end

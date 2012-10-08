@@ -21,7 +21,13 @@ module Pv
     end
 
     class PollInbox < Message
-
+      def initialize(imap_request)
+        @request_type = 'poll_inbox'
+        @options = {
+          email: imap_request.email
+        }
+      end
     end
+
   end
 end

@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+require File.dirname(__FILE__) + "../config/environment"
+
+require "processor"
+
+class ImapProcessor
+  def start
+    Raad::Logger.debug("Imap Processor started in #{Raad.env} env")
+  end
+
+  def stop
+    Raad::Logger.debug("Imap Processor stopped")
+  end
+
+  def run_processor
+    EM.run {
+      puts "Whoa"
+    }
+  end
+end
+
+
