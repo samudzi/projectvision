@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(:version => 20121008101958) do
     t.boolean  "ssl"
     t.string   "email"
     t.binary   "password"
-    t.binary   "secret_key"
-    t.binary   "secret_iv"
+    t.binary   "password_key"
+    t.binary   "password_iv"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

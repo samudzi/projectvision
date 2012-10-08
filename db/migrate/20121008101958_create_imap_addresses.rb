@@ -6,8 +6,8 @@ class CreateImapAddresses < ActiveRecord::Migration
       t.boolean :ssl
       t.string :email
       t.binary :password
-      t.binary :secret_key
-      t.binary :secret_iv
+      t.binary :password_key
+      t.binary :password_iv
       t.timestamps
     end
   end

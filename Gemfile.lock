@@ -162,6 +162,7 @@ GEM
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     tzinfo (0.3.23)
+    validates_email_format_of (1.5.3)
     warden (1.0.3)
       rack (>= 1.0.0)
     xpath (0.1.4)
@@ -195,3 +196,4 @@ DEPENDENCIES
   simplecov
   simplecov-rcov
   strongbox
+  validates_email_format_of

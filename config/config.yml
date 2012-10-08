@@ -1,10 +1,12 @@
 development: &local
   app_url: "http://localhost:3000"
+  public_key_passphrase: "projectvision"
 
 test:
   <<: *local
 
 production:
   app_url: "http://projectvision.heroku.com/"
+  public_key_passphrase: "projectvision"
 
 
