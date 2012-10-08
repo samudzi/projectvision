@@ -44,4 +44,6 @@ module Pv
 end
 
 require "pv/config"
+require "pv/worker_client"
+
 Pv.load_config()

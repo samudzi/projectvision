@@ -5,5 +5,8 @@ FactoryGirl.define do
     port 993
     sequence(:email) {|i| "user#{i}@example.com" }
     ssl true
+    after(:build) {|i|
+      i.user ||= FactoryGirl.create(:user)
+    }
   end
 end

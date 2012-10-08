@@ -1,6 +1,7 @@
 development: &local
   app_url: "http://localhost:3000"
   public_key_passphrase: "projectvision"
+  redis_list_name: "imap_messages"
 
 test:
   <<: *local
