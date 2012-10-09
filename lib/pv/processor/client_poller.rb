@@ -66,9 +66,19 @@ module Pv
 
       def process_incoming_emails(emails)
         emails.each { |email| Pv::Processor::EmailParser.new(email,imap_address).save }
+        max_uid = emails.map {|email| email.attr["UID"]}.max
+        update_imap_address(max_uid)
+        imap_address.log_status("Successfully created #{emails.size} thoughts", "ok")
+      end
+
+      def update_imap_address(max_uid)
+        imap_address.last_uid = max_uid
+        imap_address.save!
+      end
+
+      def close_current_connection
         client.logout()
         @logout_block && @logout_block.call()
-        imap_address.log_status("Successfully created #{emails.size} thoughts", "ok")
       end
 
     end
