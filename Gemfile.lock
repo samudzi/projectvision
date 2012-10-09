@@ -189,6 +189,7 @@ DEPENDENCIES
   factory_girl_rails
   headless
   launchy
+  mail
   mysql2 (< 0.3)
   pry-rails
   raad

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121008101958) do
+ActiveRecord::Schema.define(:version => 20121009073300) do
 
   create_table "action_logs", :force => true do |t|
     t.integer  "user_id"
@@ -40,6 +40,10 @@ ActiveRecord::Schema.define(:version => 20121008101958) do
     t.binary   "password_iv"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "last_uid"
+    t.text     "status_message"
+    t.string   "status"
   end
 
   create_table "teams", :force => true do |t|

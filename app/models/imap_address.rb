@@ -9,5 +9,12 @@ class ImapAddress < ActiveRecord::Base
   def plain_password
     password.decrypt(Pv.config.public_key_passphrase)
   end
+
+  def log_status(message,status)
+    self.status_message = message
+    self.status = status
+    self.save
+    self
+  end
 end
 

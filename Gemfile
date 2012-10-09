@@ -25,7 +25,8 @@ gem "eventmachine"
 gem "em-imap"
 gem "strongbox"
 gem "validates_email_format_of"
-gem "raad"
+gem "raad", :require => false
+gem "mail"
 
 # gem 'aws-s3', :require => 'aws/s3'
 
