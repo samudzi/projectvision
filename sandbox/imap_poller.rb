@@ -19,6 +19,16 @@ class ImapPoller
     end
   end
 
+  def fetch_by_date
+    yesterday = 1.day.ago
+    client.uid_search("SINCE",yesterday.strftime("%-d-%b-%Y")).bind! do |results|
+      puts "results is of size #{results.size}"
+      client.uid_fetch(results,"RFC822")
+    end.callback do |emails|
+      binding.pry
+    end
+  end
+
   def run
     EM::run do
       @client = EM::IMAP.new('imap.gmail.com', 993, true)
@@ -35,8 +45,6 @@ class ImapPoller
         fetch_new_email
       end.errback do |error|
         puts "Connecting or logging in failed: #{error}"
-      end.bothback do
-        #EM.stop
       end
     end
   end
