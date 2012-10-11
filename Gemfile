@@ -27,6 +27,7 @@ gem "strongbox"
 gem "validates_email_format_of"
 gem "raad", :require => false
 gem "mail"
+gem "grape"
 
 # gem 'aws-s3', :require => 'aws/s3'
 

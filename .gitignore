@@ -8,3 +8,4 @@ projectvision
 vendor/bundle/
 /nbproject
 /config/database.yml
+/vendor/ruby
