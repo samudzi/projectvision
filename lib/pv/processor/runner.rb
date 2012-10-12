@@ -6,7 +6,7 @@ module Pv
         @processor.start_imap_processor()
 
         @redis_processor = Pv::Processor::RedisProcessor.new()
-        EM.add_periodic_timer(60) {
+        EM.add_periodic_timer(Pv.config.processor.redis_poll_interval) {
           process_parsed_mesage(@redis_processor.check_for_messages())
         }
       end

@@ -15,7 +15,7 @@ class ImapProcessor
 
   def run_processor
     EM.run {
-      puts "Whoa"
+      Pv::Processor::Runner.run()
     }
   end
 end

@@ -2,7 +2,9 @@ development: &local
   app_url: "http://localhost:3000"
   public_key_passphrase: "projectvision"
   redis_list_name: "imap_messages"
-  polling_interval: 3600
+  processor:
+    imap_poll_interval: 3600
+    redis_poll_interval: 60
 
 test:
   <<: *local
@@ -12,4 +14,6 @@ production:
   public_key_passphrase: "projectvision"
   polling_interval: 3600
   redis_list_name: "imap_messages"
-
+  processor:
+    imap_poll_interval: 3600
+    redis_poll_interval: 60
