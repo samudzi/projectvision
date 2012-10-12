@@ -26,7 +26,7 @@ module Pv
 
   def self.imap_poller
     return @@imap_poller if defined?(@@imap_poller)
-    @@imap_poller = Pv::WorkerClient.new()
+    @@imap_poller = Pv::WorkerClient::Client.new()
   end
 
   def self.load_config

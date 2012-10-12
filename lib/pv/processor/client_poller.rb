@@ -8,10 +8,12 @@ module Pv
         client.connect.bind! do
           client.login(imap_address.email, imap_address.plain_password)
         end.bind! do
+          Pv::Processor.info("Successfully logged into inbox with email #{imap_address.email}")
           client.examine("INBOX")
         end.callback do
           fetch_new_email
         end.errback do |error|
+          Pv::Processor.error("Error polling imap inbox with address #{imap_address.email}")
           imap_address.log_status("Error - #{error.inspect}","error")
         end
       end
@@ -21,6 +23,7 @@ module Pv
       end
 
       def fetch_new_email
+        Pv::Processor.debug("Trying to fetch new emails for inbox #{imap_address.email}")
         imap_address.last_uid ? fetch_new_email_by_uuid() : fetch_new_email_by_date
       end
 
@@ -32,6 +35,7 @@ module Pv
             fetch_emails_by_uuid_range(results)
           end
         end.errback do |error|
+          Pv::Processor.error("Fetching emails by uid failed for inbox #{imap_address.email}")
           imap_address.log_status("Error performing uid based search on INBOX. #{error.inspect}","error")
         end
       end
@@ -65,10 +69,17 @@ module Pv
       end
 
       def process_incoming_emails(emails)
-        emails.each { |email| Pv::Processor::EmailParser.new(email,imap_address).save }
+        emails.each { |email| save_incoming_email(email) }
         max_uid = emails.map {|email| email.attr["UID"]}.max
         update_imap_address(max_uid)
+        Pv::Processor.info("Successfully created #{emails.size} thoughts")
         imap_address.log_status("Successfully created #{emails.size} thoughts", "ok")
+      end
+
+      def save_incoming_email(email)
+        Pv::Processor::EmailParser.new(email,imap_address).save
+      rescue Exception => e
+        Pv::Processor.error("Error saving email from #{imap_address.email} with error #{e.inspect}")
       end
 
       def update_imap_address(max_uid)

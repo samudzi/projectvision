@@ -3,18 +3,23 @@
 require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
 
 require "processor"
+require "raad"
 
 class ImapProcessor
   def start
     Raad::Logger.debug("Imap Processor started in #{Raad.env} env")
+    run_processor()
   end
 
   def stop
     Raad::Logger.debug("Imap Processor stopped")
+    EM.stop()
   end
 
   def run_processor
+    Raad::Logger.debug("Calling run_processor method")
     EM.run {
+      Raad::Logger.debug("Going to call run now")
       Pv::Processor::Runner.run()
     }
   end

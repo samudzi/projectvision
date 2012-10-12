@@ -2,6 +2,7 @@ module Pv
   module Processor
     class Runner
       def self.run
+        Pv::Processor.debug("Running imap processor runner now now")
         @processor = Pv::Processor::Base.new()
         @processor.start_imap_processor()
 

@@ -23,9 +23,15 @@ module Pv
       def store_thought
         thought = Thought.new()
         thought.brief = @mail.subject
-        thought.detail = @mail.text_part.body
+        thought.detail = mail_body
         thought.user = @user
         thought.save
+      end
+
+      def mail_body
+        return @mail.html_part.body.to_s if @mail.html_part
+        return @mail.text_part.body.to_s if @mail.text_part
+        @mail.body.to_s
       end
 
       def parse_email(raw_imap_email)

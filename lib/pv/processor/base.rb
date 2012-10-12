@@ -8,7 +8,9 @@ module Pv
       end
 
       def start_imap_processor
+        Pv::Processor.debug("Starting imap procesor")
         ImapAddress.all.each do |imap_address|
+          Pv::Processor.info("Add #{imap_address.email} to list of monitored imap servers")
           start_polling(imap_address)
         end
       end
@@ -22,11 +24,15 @@ module Pv
       def start_polling(imap_address,renew = true)
         return if @emails_under_processing[imap_address.email]
 
-        poller = Pv::Processor::ClientPoller.new(imap_address)
+        poller = trigger_client_poller(imap_address)
         if renew
           @emails_under_processing[imap_address.email] = imap_address
           poller.on_logout { renew_polling(imap_address) }
         end
+      end
+
+      def trigger_client_poller(imap_address)
+        Pv::Processor::ClientPoller.new(imap_address)
       end
 
       def renew_polling(imap_address)

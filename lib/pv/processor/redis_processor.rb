@@ -6,11 +6,12 @@ module Pv
       end
 
       def check_for_messages
+        Pv::Processor.debug("Checking redis queue for incoming messages")
         message = redis_connection.rpop Pv.config.redis_list_name
         if message
           json_object = ActiveSupport::JSON.decode(message)
-          message = Pv::Processor::Message.parse(json_object)
-          process_parsed_mesage(message)
+          Pv::Processor.info("Found a message of type #{json_object['request_type']}")
+          Pv::Processor::Message.parse(json_object)
         end
       end
     end
