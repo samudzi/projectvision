@@ -16,7 +16,7 @@ module Pv
         end
       end
 
-      def logout(&block)
+      def on_logout(&block)
         @logout_block = block
       end
 
