@@ -15,7 +15,7 @@ class ImapAddressesController < ApplicationController
     if @imap_address.save
       present @imap_address, with: Entity::ImapAddress, status: 201
     else
-      present_error @imap_address.errors.messages, status: 422
+      present_error @imap_address.errors.full_messages, status: 422
     end
   end
 
@@ -30,7 +30,7 @@ class ImapAddressesController < ApplicationController
     if @imap_address.update_attributes(params[:imap_address])
       present @imap_address, with: Entity::ImapAddress, status: 200
     else
-      present_error @imap_address.errors.message, status: 422
+      present_error @imap_address.errors.full_messages, status: 422
     end
   end
 end

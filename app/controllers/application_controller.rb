@@ -10,8 +10,8 @@ class ApplicationController < ActionController::Base
     render json: body_hash, status: options[:status]
   end
 
-  def present_error(messages, status)
+  def present_error(messages, options = {})
     body_hash = { error: Array(messages) }
-    render json: body_hash.to_json, status: status
+    render json: body_hash.to_json, status: options[:status]
   end
 end

@@ -26,7 +26,7 @@ describe ImapAddressesController do
       imap_attributes = FactoryGirl.attributes_for(:imap_address)
       post :create, imap_address: imap_attributes, format: :json
 
-      response.should be_created
+      response.status.should == 201
       response.should contain("email", imap_attributes['email'])
       response.should contain("user_id", @user.id)
     end
@@ -36,7 +36,7 @@ describe ImapAddressesController do
       imap_attributes = FactoryGirl.attributes_for(:imap_address, email: "hemant2@example.com")
 
       post :create, imap_address: imap_attributes, format: :json
-
+      response.status.should == 422
     end
   end
 
@@ -48,14 +48,15 @@ describe ImapAddressesController do
     end
 
     it "should allow updating of an imap address" do
-      put :update, imap_address: { email: 'hemant@codemancers.com'}, format: :json
+      put "update", id: @imap_address.id, imap_address: { email: 'hemant@codemancers.com'}, format: :json
       response.should be_success
       response.should contain('email','hemant@codemancers.com')
     end
 
     it "should throw error if error updating a record" do
       another_imap_address = FactoryGirl.create(:imap_address, email: "hemant2@example.com")
-      put :update, imap_address: { email: "hemant2@example.com"}, format: json
+      put "update", id: @imap_address.id, imap_address: { email: "hemant2@example.com"}, format: :json
+      response.status.should == 422
     end
   end
 end
