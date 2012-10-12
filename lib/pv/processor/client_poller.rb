@@ -74,6 +74,7 @@ module Pv
         update_imap_address(max_uid)
         Pv::Processor.info("Successfully created #{emails.size} thoughts")
         imap_address.log_status("Successfully created #{emails.size} thoughts", "ok")
+        close_current_connection()
       end
 
       def save_incoming_email(email)

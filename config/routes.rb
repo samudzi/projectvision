@@ -32,7 +32,9 @@ Pv::Application.routes.draw do
     end
   end
 
-  resources :imap_addresses
+  resources :imap_addresses do
+    get :trigger_poll, on: :member
+  end
 
   match 'thoughts/update_status/:id' => 'thought#update_status'
   match 'home/login' => 'home#login'

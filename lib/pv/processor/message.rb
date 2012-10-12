@@ -26,7 +26,7 @@ module Pv
       def trigger_processor_action(processor)
         Pv::Processor.info("Received request to poll server with email : #{email}")
         imap_address = ImapAddress.find_by_email(email)
-        imap_address && processor.start_polling(imap_address)
+        imap_address && processor.add_to_email_polling(imap_address)
       end
     end
 

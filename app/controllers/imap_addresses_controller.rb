@@ -13,10 +13,17 @@ class ImapAddressesController < ApplicationController
   def create
     @imap_address = current_user.imap_addresses.build(params[:imap_address])
     if @imap_address.save
+      Pv.imap_poller.new_imap_request(@imap_address)
       present @imap_address, with: Entity::ImapAddress, status: 201
     else
       present_error @imap_address.errors.full_messages, status: 422
     end
+  end
+
+  def trigger_poll
+    @imap_address = current_user.imap_addresses.find(params[:id])
+    Pv.imap_poller.trigger_poll(@imap_address)
+    head 200
   end
 
   def destroy

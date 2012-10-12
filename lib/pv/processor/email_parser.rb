@@ -22,6 +22,7 @@ module Pv
 
       def store_thought
         thought = Thought.new()
+        thought.imap_uid = @imap_uid
         thought.brief = @mail.subject
         thought.detail = mail_body
         thought.user = @user

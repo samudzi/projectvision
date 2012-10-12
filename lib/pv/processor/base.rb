@@ -21,9 +21,12 @@ module Pv
         end
       end
 
-      def start_polling(imap_address,renew = true)
+      def add_to_email_polling(imap_address)
         return if @emails_under_processing[imap_address.email]
+        start_polling(imap_address)
+      end
 
+      def start_polling(imap_address,renew = true)
         poller = trigger_client_poller(imap_address)
         if renew
           @emails_under_processing[imap_address.email] = imap_address

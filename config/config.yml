@@ -3,7 +3,7 @@ development: &local
   public_key_passphrase: "projectvision"
   redis_list_name: "imap_messages"
   processor:
-    imap_poll_interval: 3600
+    imap_poll_interval: 60
     redis_poll_interval: 20
 
 test:
@@ -12,8 +12,7 @@ test:
 production:
   app_url: "http://projectvision.heroku.com/"
   public_key_passphrase: "projectvision"
-  polling_interval: 3600
   redis_list_name: "imap_messages"
   processor:
-    imap_poll_interval: 3600
+    imap_poll_interval: 60
     redis_poll_interval: 20
