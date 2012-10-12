@@ -8,16 +8,14 @@ module Pv
       def check_for_messages
         Pv::Processor.debug("Checking redis queue for incoming messages")
         message = fetch_from_redis
-        if message
-          json_object = parse_json_string(message)
-          if json_object
-            Pv::Processor.info("Found a message of type #{json_object['request_type']}")
-            Pv::Processor::Message.parse(json_object)
-          else
-            Pv::Processor.error("Error parsing incoming json message from redis")
-          end
+        return unless message
+        json_object = parse_json_string(message)
+        if json_object
+          Pv::Processor.info("Found a message of type #{json_object['request_type']}")
+          Pv::Processor::Message.parse(json_object)
         else
-          Pv::Processor.error("Error connecting to redis")
+          Pv::Processor.error("Error parsing incoming json message from redis")
+          nil
         end
       end
 
