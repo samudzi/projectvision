@@ -12,8 +12,8 @@ module Pv
 
     def redis_connection_option
       {
-        host: ENV['REDIS_HOST'] || "localhost",
-        port: ENV['REDIS_PORT'] || 6379
+        host: configatron.redis.retrieve(:server, 'localhost')
+        port: configatron.redis.retrieve(:port, 6379)
       }
     end
 
