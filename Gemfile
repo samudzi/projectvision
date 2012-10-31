@@ -20,6 +20,15 @@ gem 'devise'
 # gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'mysql2', '< 0.3'
 gem "configatron"
+gem "redis"
+gem "eventmachine"
+gem "em-imap"
+gem "strongbox"
+gem "validates_email_format_of"
+gem "raad", :require => false
+gem "mail"
+gem "grape"
+
 # gem 'aws-s3', :require => 'aws/s3'
 
 # Bundle gems for the local environment. Make sure to

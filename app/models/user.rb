@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_many :teams , :through => :team_roles
   has_many :team_roles, :dependent => :destroy
   has_many :action_logs
+  has_many :imap_addresses
  
   after_create :initial_thoughts
   def initial_thoughts  

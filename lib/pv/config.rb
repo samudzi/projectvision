@@ -10,11 +10,23 @@ module Pv
       configatron.send(method, *args, &block)
     end
 
+    def redis_connection_option
+      {
+        host: configatron.redis.retrieve(:server, 'localhost'),
+        port: configatron.redis.retrieve(:port, 6379)
+      }
+    end
+
     private
     def configure_configatron
       yaml_data = YAML.load_file("#{Rails.root}/config/config.yml")[Rails.env]
       configatron.configure_from_hash(yaml_data)
     end
+  end
+
+  def self.imap_poller
+    return @@imap_poller if defined?(@@imap_poller)
+    @@imap_poller = Pv::WorkerClient::Client.new()
   end
 
   def self.load_config

@@ -8,3 +8,5 @@ projectvision
 vendor/bundle/
 /nbproject
 /config/database.yml
+/vendor/ruby
+imap_processor.log

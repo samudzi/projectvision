@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120409121129) do
+ActiveRecord::Schema.define(:version => 20121009191253) do
 
   create_table "action_logs", :force => true do |t|
     t.integer  "user_id"
@@ -28,6 +28,22 @@ ActiveRecord::Schema.define(:version => 20120409121129) do
     t.datetime "updated_at"
     t.string   "type"
     t.string   "ctype"
+  end
+
+  create_table "imap_addresses", :force => true do |t|
+    t.string   "server"
+    t.integer  "port"
+    t.boolean  "ssl"
+    t.string   "email"
+    t.binary   "password"
+    t.binary   "password_key"
+    t.binary   "password_iv"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "last_uid"
+    t.text     "status_message"
+    t.string   "status"
   end
 
   create_table "teams", :force => true do |t|
@@ -64,6 +80,7 @@ ActiveRecord::Schema.define(:version => 20120409121129) do
     t.integer  "team_id"
     t.datetime "start_date"
     t.integer  "catagory_id"
+    t.integer  "imap_uid"
   end
 
   create_table "users", :force => true do |t|

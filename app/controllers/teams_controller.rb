@@ -18,7 +18,10 @@ class TeamsController < ApplicationController
         else
           team_role_name = "ReadOnly"
         end
-        users << {:id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id, :team_role => team_role.role, :user => user.email, :tasks => user.assigned_thoughts.find(:all,:conditions=>["team_id=?",team.id]).length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at,:user_name => user.user_name, :team_role_name => team_role_name}
+        users << {
+          :id => team.id.to_s+'_'+user.id.to_s, :user_id => user.id,
+          :team_role => team_role.role, :user => user.email,
+          :tasks => user.assigned_thoughts.find(:all,:conditions=>["team_id=?",team.id]).length.to_s, :team_id => team.id, :team => team.name,:last_sign_in_at => user.last_sign_in_at,:user_name => user.user_name, :team_role_name => team_role_name}
       end  
     end   
     render :json =>  {:data => users, :success => true, :totalRows => users.count }.to_json
