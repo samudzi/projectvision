@@ -4,6 +4,7 @@ gem 'rails', '3.0.3'
 gem 'rake', '0.8.7'
 
 gem 'devise'
+gem "oa-openid", :require => "omniauth/openid"
 # Use unicorn as the web server
 # gem 'unicorn'
 
