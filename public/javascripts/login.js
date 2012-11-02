@@ -65,8 +65,7 @@ Ext.onReady(function(){
     monitorValid:true,
     // Specific attributes for the text fields for username / password.
     // The "name" attribute defines the name of variables sent to the server.
-    items:[
-    {
+    items:[{
       fieldLabel:'Username',
       name:'user[email]',
       allowBlank:false

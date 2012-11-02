@@ -1,6 +1,5 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController  
   def open_id
-    # You need to implement the method below in your model
     @user = User.find_for_open_id(env["omniauth.auth"], current_user)
     if @user.persisted?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "Google"
