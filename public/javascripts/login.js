@@ -85,9 +85,12 @@ Ext.onReady(function(){
 				}
 		  }
 	  }
-		  
-    }],
-
+  },
+  {
+  xtype: 'box',
+  autoEl: {tag: 'a', href: '/users/auth/open_id?openid_url=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid', html: 'Sign in with Google Service'}
+  }],
+    
     // All the magic happens after the user clicks the button
     buttons:[{
       text:'Login',
