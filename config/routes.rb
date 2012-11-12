@@ -1,6 +1,6 @@
 Pv::Application.routes.draw do
 
-  devise_for :users, :controllers => { :sessions => "users/sessions"}
+  devise_for :users, :controllers => { :sessions => "users/sessions", :omniauth_callbacks => "users/omniauth_callbacks"}
   match '/setup' => 'home#setup'
   root :to => "home#index"
   get "home/index"
