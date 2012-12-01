@@ -198,3 +198,14 @@ button.cancel {
     font-size: 12px;
     padding:0 5px 5px;
 }
+
+.u-tablelayout-fitwidth .x-table-layout { 
+    width: 100%; 
+} 
+
+.u-tablelayout-fitwidth .x-table-layout-cell { 
+    width: 1%; 
+} 
+.u-tablelayout-fitwidth .x-panel-body-noborder .x-form-field { 
+    margin-top: 0; 
+}  

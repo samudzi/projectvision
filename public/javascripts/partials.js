@@ -63,16 +63,6 @@ var organizeJsonStore = new Ext.data.JsonStore({
 			root: 'organize',
 			fields: fieldsArray
 });
-/*var todoArrayStore = new Ext.data.ArrayStore({
-	 fields: [          
-		   {name: 'id', type: 'int'},   
-           {name: 'next', type: 'string'}, 
-           {name: 'outcome', type: 'string'},
-		   {name: 'due_date', type: 'string'},
-		   {name: 'context', type: 'string'},
-		   {name: 'action_status', type: 'string'}   
-        ]
-});*/
 
 var todoJsonStore = new Ext.data.JsonStore({
 			root: 'todo',
@@ -706,7 +696,6 @@ function teamThoughtStoreCallbackFn(records){
     teamThoughtsJsonStore[i].loadData(tempJsonTeamThoughts[i],false);
     outstandingTasksJsonStore[i].loadData(tempJsonTeamTasks[i],false);
     teamUsersJsonStore[i].loadData(tempJsonTeamUsers[i],false);
-	  //teamEventsJsonStore[i].loadData(tempJsonTeamEvents[i],false);
 		Ext.ensible.sample.EventData = tempJsonTeamEvents[i];
 		teamEventsJsonStore[i].loadData(Ext.ensible.sample.EventData,false);			      
     
@@ -1092,16 +1081,6 @@ function teamThoughtStoreCallbackFn(records){
             handler: reminderTaskAsignHandler
           }];
           
-          calendar_action_buttons = [{
-            text: 'New Event',
-            iconCls: 'add-prop',
-            handler: calendarEventHandler
-            },{
-            text: 'Synchronize',
-            //iconCls: 'add-prop',
-            handler: new_entry
-          }];
-          
           assign_user_action_buttons =  {
             text: 'Assign User',
             iconCls: 'add-prop',
@@ -1122,7 +1101,7 @@ function teamThoughtStoreCallbackFn(records){
         title : 'Shared Team Thoughts',
         store : teamThoughtsJsonStore[i],   // Store
         height : 300,
-        bodyStyle : 'margin-right:20px',
+        bodyStyle : 'margin-right:20px;',
         plugins : expander,
         colModel: teamThoughtColModel,
         tbar: [new_thought_action],
@@ -1155,96 +1134,7 @@ function teamThoughtStoreCallbackFn(records){
         }),
         tbar: [outstading_task_actions]
       });
-      
         
-      var calendar = new Ext.ensible.cal.CalendarPanel({
-        //eventStore : eventStore[i],
-        eventStore: teamEventsJsonStore[i],
-        //title : 'Shared Calendar',
-        width : 568,
-        height : 420,
-    
-        listeners: {
-          eventclick: function(calendar, record, el){
-            //console.log(record.id);
-            selectedId = record.id;                                   
-            newTask=false;
-            if(!eventEditWindow) eventEditWindow = new Ext.Window({
-              title: 'Edit Event',
-              closeAction:'hide',
-              width: 380,
-              height: 580,
-              layout: 'fit',
-              plain:true,
-              bodyStyle:'padding:5px;',
-              buttonAlign:'center',
-              //resizable:false,
-              items: eventEditPanel
-              });
-              else
-                eventEditWindow.setTitle("Edit Event");
-              selectedThoughtID = selectedId;
-              eventEditPanel.getForm().reset();
-              eventEditPanel.thoughtType.setValue('public').setVisible(false);
-              eventEditPanel.status.setVisible(false);
-              eventEditPanel.status.setValue(5); 
-              eventEditPanel.team.setValue(tabTeamId); 
-              eventEditPanel.team.setVisible(false);             
-              eventEditPanel.getForm().load({
-                url: '/thoughts/' + selectedId + '.json',
-                params: {
-                  id: selectedId
-                },
-                waitMsg: 'Loading...',
-                method: 'get',
-                success: function(f,a){
-                  //console.log(f);
-                  var startDate = new Date(a.result.data.start_date);
-                  var dueDate = new Date(a.result.data.due_date);
-                  /*start_utc_date = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(),  startDate.getUTCHours(), startDate.getUTCMinutes(), startDate.getUTCSeconds());
-                  due_utc_date = new Date(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate(),  dueDate.getUTCHours(), dueDate.getUTCMinutes(), dueDate.getUTCSeconds()); */    
-                  var start_date = eventEditPanel.start_date_date.setValue(startDate);
-                  start_date = eventEditPanel.start_date_date.getValue();   
-                  var due_date = eventEditPanel.due_date_date.setValue(dueDate); 
-                  due_date = eventEditPanel.due_date_date.getValue();
-                                                                    
-                  eventEditPanel.start_date_time.setValue(startDate);                   
-                  eventEditPanel.start_date.setValue(start_date);                    
-                  eventEditPanel.due_date_time.setValue(dueDate);
-                  eventEditPanel.due_date.setValue(due_date);
-
-                }
-              });
-
-            eventEditWindow.show();                                                                                                             
-          }                                                                                    
-        }
-      });
-      
-        
-      var calandar = new Ext.Panel({
-       // layout: 'absolute',
-        width : 710,
-        height : 510,            
-        title:'Shared Calendar',
-        tbar:[calendar_action_buttons],
-          items:[calendar]        
-      });
-        
-     /*   var tb = new Ext.Toolbar({
-        renderTo: document.body,
-        width: 600,
-        height: 100,
-        items: [
-            {
-                // xtype: 'button', // default for Toolbars, same as 'tbbutton'
-                text: 'Button'
-            }],
-         calendar.getTopToolBa().tb.add({
-         text:'new Event'
-         });
-         tb.dolayout();
-       */         
       var teamUsersGrid = new Ext.grid.GridPanel({
         title: "Users",
         store: teamUsersJsonStore[i],
@@ -1281,29 +1171,141 @@ function teamThoughtStoreCallbackFn(records){
         listeners: {
         },
         //region:'center' 	
-      });                                
+      });                  
+
      // console.log("inboxbeforedo layout");                
       inboxPanel.add({
         title: teams[i]['team'],
+        itemId : teams[i]['id'],
         ref:'teamspace'+i,
         layout:'table',
-        itemId : teams[i]['id'],
         layoutConfig: {
-          columns:2
-          
+          columns: 1,
+         align : 'stretch',
+         pack  : 'start'
         },
+        cls: "u-tablelayout-fitwidth", 
         defaults: {
           frame:true,
-          width:580,
-          height:500,
-          bodyStyle:'vertical-align:top'
+          // width:580,
+          // width:700,
+          // height:500,
+          bodyStyle:'vertical-align:top; min-height: 100px; height: auto !important;'
         },
-        items: [teamThoughtGrid,teamUsersGrid,outstandingTaskGrid,calandar]
+        // items: [teamThoughtGrid,teamUsersGrid,outstandingTaskGrid,calandar]
+        items: [teamThoughtGrid,outstandingTaskGrid,teamUsersGrid]
       });
     inboxPanel.doLayout();
    // console.log("inboxafterdo layout");
     }
   }
+       
+  calendar_action_buttons = [{
+    text: 'New Event',
+    iconCls: 'add-prop',
+    handler: calendarEventHandler
+    },{
+    text: 'Synchronize',
+    //iconCls: 'add-prop',
+    handler: new_entry
+  }];
+
+  var calendar = new Ext.ensible.cal.CalendarPanel({
+    //eventStore : eventStore[i],
+    eventStore: teamEventsJsonStore[0],
+    //title : 'Shared Calendar',
+    width : 568,
+    height : 420,
+
+    listeners: {
+      eventclick: function(calendar, record, el){
+        //console.log(record.id);
+        selectedId = record.id;                                   
+        newTask=false;
+        if(!eventEditWindow) eventEditWindow = new Ext.Window({
+          title: 'Edit Event',
+          closeAction:'hide',
+          width: 380,
+          height: 580,
+          layout: 'fit',
+          plain:true,
+          bodyStyle:'padding:5px;',
+          buttonAlign:'center',
+          //resizable:false,
+          items: eventEditPanel
+          });
+          else
+            eventEditWindow.setTitle("Edit Event");
+          selectedThoughtID = selectedId;
+          eventEditPanel.getForm().reset();
+          eventEditPanel.thoughtType.setValue('public').setVisible(false);
+          eventEditPanel.status.setVisible(false);
+          eventEditPanel.status.setValue(5); 
+          eventEditPanel.team.setValue(tabTeamId); 
+          eventEditPanel.team.setVisible(false);             
+          eventEditPanel.getForm().load({
+            url: '/thoughts/' + selectedId + '.json',
+            params: {
+              id: selectedId
+            },
+            waitMsg: 'Loading...',
+            method: 'get',
+            success: function(f,a){
+              //console.log(f);
+              var startDate = new Date(a.result.data.start_date);
+              var dueDate = new Date(a.result.data.due_date);
+              /*start_utc_date = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(),  startDate.getUTCHours(), startDate.getUTCMinutes(), startDate.getUTCSeconds());
+              due_utc_date = new Date(dueDate.getUTCFullYear(), dueDate.getUTCMonth(), dueDate.getUTCDate(),  dueDate.getUTCHours(), dueDate.getUTCMinutes(), dueDate.getUTCSeconds()); */    
+              var start_date = eventEditPanel.start_date_date.setValue(startDate);
+              start_date = eventEditPanel.start_date_date.getValue();   
+              var due_date = eventEditPanel.due_date_date.setValue(dueDate); 
+              due_date = eventEditPanel.due_date_date.getValue();
+                                                                
+              eventEditPanel.start_date_time.setValue(startDate);                   
+              eventEditPanel.start_date.setValue(start_date);                    
+              eventEditPanel.due_date_time.setValue(dueDate);
+              eventEditPanel.due_date.setValue(due_date);
+
+            }
+          });
+
+        eventEditWindow.show();                                                                                                             
+      }                                                                                    
+    }
+  });
+          
+  var calandar = new Ext.Panel({
+   // layout: 'absolute',
+    width : 710,
+    height : 510,            
+    title:'Shared Calendar',
+    tbar:[calendar_action_buttons],
+      items:[calendar]        
+  });
+             
+  inboxPanel.add({
+    title: 'Calendar',
+    itemId : 'Calendar_All',
+    ref:'calendar_all',
+    layout:'table',
+    layoutConfig: {
+      columns: 1,
+     align : 'stretch',
+     pack  : 'start'
+    },
+    cls: "u-tablelayout-fitwidth", 
+    defaults: {
+      frame:true,
+      // width:580,
+      // width:700,
+      // height:500,
+      bodyStyle:'vertical-align:top; min-height: 100px; height: auto !important;'
+    },
+    // items: [teamThoughtGrid,teamUsersGrid,outstandingTaskGrid,calandar]
+    items: [calandar]
+  });
+
+  inboxPanel.doLayout();
         
 }
 
@@ -2964,36 +2966,6 @@ var catagoryAddPanel = new Ext.form.FormPanel({
   }]
 });
 
-/*
-
-var contextAddPanel = new Ext.form.FormPanel({
-  labelWidth:80,
-  labelAlign: 'top',
-  baseCls: 'x-plan',
-  defaultType:'textfield',
-  ref:'contextAddPanel',
-  defaults: {
-    width: 250
-  },
-  items:[{
-    fieldLabel:"Context Name",
-    name:'context',
-    ref:'context',
-    allowBlank:false
-  }],
-  buttons:[{
-    text: "Save",
-    handler: contextSaveHandler
-  },{
-    text: 'Close',
-    handler: function(){
-      newTeamWindow.hide();
-    }
-  }]
-});
-
-
-*/
 var editTeamPanel = new Ext.form.FormPanel({
   labelWidth:80,
   labelAlign: 'top',
@@ -3348,31 +3320,7 @@ var todoEditPanel = new Ext.form.FormPanel({
       fieldLabel:"Details",
       name:'detail',
       height: 80
-  },{ 
-  /*
-      xtype: 'combo',
-      ref:'category',
-      id:'category',
-      mode: 'local',
-      typeAhead: true,
-      forceSelection: true,
-      fieldLabel: 'Category',
-      name: 'category',
-      triggerAction: 'all',
-      displayField: 'name',
-      valueField: 'value',
-      emptyText: 'Select Category',
-      store: new Ext.data.SimpleStore({
-      fields: ['name','value'],
-      data: [
-      ['General','General'],
-      ['To Do','To Do'],
-      ['Reference','Reference']
-      ]
-    }),
-    value: 'General'
-    
-*/    
+  },{     
       xtype: 'combo',  
       mode: 'local',
       typeAhead: true,
@@ -3745,7 +3693,61 @@ var addToTeam = new Ext.form.FormPanel({
 });*/
 
 
+     /*   var tb = new Ext.Toolbar({
+        renderTo: document.body,
+        width: 600,
+        height: 100,
+        items: [
+            {
+                // xtype: 'button', // default for Toolbars, same as 'tbbutton'
+                text: 'Button'
+            }],
+         calendar.getTopToolBa().tb.add({
+         text:'new Event'
+         });
+         tb.dolayout();
+       */         
 
 
+/*
+
+var contextAddPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'contextAddPanel',
+  defaults: {
+    width: 250
+  },
+  items:[{
+    fieldLabel:"Context Name",
+    name:'context',
+    ref:'context',
+    allowBlank:false
+  }],
+  buttons:[{
+    text: "Save",
+    handler: contextSaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      newTeamWindow.hide();
+    }
+  }]
+});
 
 
+*/
+
+
+/*var todoArrayStore = new Ext.data.ArrayStore({
+   fields: [          
+       {name: 'id', type: 'int'},   
+           {name: 'next', type: 'string'}, 
+           {name: 'outcome', type: 'string'},
+       {name: 'due_date', type: 'string'},
+       {name: 'context', type: 'string'},
+       {name: 'action_status', type: 'string'}   
+        ]
+});*/
