@@ -230,6 +230,74 @@ var userdStats = new Ext.grid.GridPanel({
      }]
 });
 
+var simple = new Ext.FormPanel({
+    labelWidth: 75, // label settings here cascade unless overridden
+    url:'save-form.php',
+    frame:true,
+    title: 'Simple Form',
+    bodyStyle:'padding:5px 5px 0',
+    width: 350,
+    defaults: {width: 230},
+    defaultType: 'textfield',
+
+    items: [{
+            fieldLabel: 'Email Address',
+            name: 'email',
+            vtype:'email',
+            allowBlank:false
+        },{
+            fieldLabel: 'Password',
+            name: 'password'
+        }
+    ],
+
+    buttons: [{
+        text: 'Save',
+        handler:function()
+         {
+             Ext.Ajax.request({
+                url: '/login/login',
+                    params:{
+                        email: Ext.getCmp(simple.items.keys[0]).getValue(), 
+                        password: Ext.getCmp(simple.items.keys[1]).getValue()
+                    },
+                    method:'POST',
+                    success: function(result, request){
+                       // var res = new Object();
+                       // res = Ext.util.JSON.decode(result.responseText);
+                       // if(res.login == false){
+                       //       Ext.MessageBox.alert('Warning',res.message);
+                       // }else{
+                       //    location.href = '/main/index'
+                       //  }
+                       alert('saved');
+                    }
+                  });
+          }
+            
+    },{
+        text: 'Sync Current Saved Email',
+        handler:function()
+         {
+             Ext.Ajax.request({
+                url: '/1/pull',
+                method:'GET',
+                success: function(result, request){
+                   // var res = new Object();
+                   // res = Ext.util.JSON.decode(result.responseText);
+                   // if(res.login == false){
+                   //       Ext.MessageBox.alert('Warning',res.message);
+                   // }else{
+                   //    location.href = '/main/index'
+                   //  }
+                   alert('saved');
+                }
+              });
+          }
+    }]
+});
+
+
 
 var dashboardPanel = new Ext.TabPanel({
   title: 'Dashboard',
@@ -253,7 +321,7 @@ var dashboardPanel = new Ext.TabPanel({
       frame:true,
       width:500
     },
-    items: [userStats,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid]
+    items: [simple,userStats,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid]
   },{
     title: 'Community'
   },{
