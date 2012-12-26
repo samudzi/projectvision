@@ -256,10 +256,12 @@ var simple = new Ext.FormPanel({
         handler:function()
          {
              Ext.Ajax.request({
-                url: '/login/login',
+                url: '/imap_addresses',
                     params:{
-                        email: Ext.getCmp(simple.items.keys[0]).getValue(), 
-                        password: Ext.getCmp(simple.items.keys[1]).getValue()
+                        imap_address: {
+                          email: Ext.getCmp(simple.items.keys[0]).getValue(), 
+                          password: Ext.getCmp(simple.items.keys[1]).getValue()
+                        }
                     },
                     method:'POST',
                     success: function(result, request){
