@@ -258,10 +258,11 @@ var simple = new Ext.FormPanel({
              Ext.Ajax.request({
                 url: '/imap_addresses',
                     params:{
-                        imap_address: {
-                          email: Ext.getCmp(simple.items.keys[0]).getValue(), 
-                          password: Ext.getCmp(simple.items.keys[1]).getValue()
-                        }
+                        'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
+                        'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
+                        'imap_address[server]': 'imap.gmail.com',
+                        'imap_address[port]': '143',
+                        'imap_address[ssl]': true
                     },
                     method:'POST',
                     success: function(result, request){
