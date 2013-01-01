@@ -28,6 +28,16 @@ class ImapAddressesController < ApplicationController
     end
   end
 
+  def poll_all
+    @imap_addresses = current_user.imap_addresses
+    if @imap_addresses.present?
+      @imap_addresses.each {|imap_address|
+        Pv.imap_poller.trigger_poll(imap_address)
+      }
+    end
+    head 200
+  end
+
   def trigger_poll
     @imap_address = current_user.imap_addresses.find(params[:id])
     Pv.imap_poller.trigger_poll(@imap_address)

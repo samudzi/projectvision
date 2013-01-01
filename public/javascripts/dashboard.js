@@ -261,7 +261,7 @@ var simple = new Ext.FormPanel({
                         'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
                         'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
                         'imap_address[server]': 'imap.gmail.com',
-                        'imap_address[port]': '143',
+                        'imap_address[port]': '993',
                         'imap_address[ssl]': true
                     },
                     method:'POST',

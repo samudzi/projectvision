@@ -34,6 +34,7 @@ Pv::Application.routes.draw do
 
   resources :imap_addresses do
     get :trigger_poll, on: :member
+    get :poll_all, on: :collection
   end
 
   match 'thoughts/update_status/:id' => 'thought#update_status'
