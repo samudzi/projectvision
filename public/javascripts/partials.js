@@ -1,4 +1,5 @@
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
+var emailStore = Ext.StoreMgr.get('email_store');
 var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store');
 var userStore = Ext.StoreMgr.get('users_store');
@@ -17,7 +18,6 @@ myAdminTeamStore.load();
 userStore.load();
 //myTeamStore.load();
 teamUserStore.load({callback : function(records,option,success){
-          console.log('===================== in here ===================')
           teamUserStoreCallbackFn(records);
           }
         });
@@ -53,12 +53,29 @@ var fieldsArray = [
     {name: 'myteam', type: 'string'},
 ];
 
+var emailFieldsArray = [
+    
+    {name: 'email', type: 'string'},
+    {name: 'password', type: 'string'},
+    {name: 'server', type: 'string'}, 
+    {name: 'port', type: 'int'},   
+    {name: 'ssl', type: 'int'},  
+];
+
 var replyFieldsArray = [{name:'reply', type:'text'},{name:'user', type:'string'},{name:'thought_id', type:'int'},{name:'user_id', type:'int'},];
 
 var inboxJsonStore = new Ext.data.JsonStore({
 			root: 'inbox',
 			fields: fieldsArray
 });
+
+var emailJsonStore = new Ext.data.JsonStore({
+      root: 'data',
+      fields: emailFieldsArray
+});
+emailStore.load();
+emailJsonStore.loadData(emailStore,false);
+
 var organizeJsonStore = new Ext.data.JsonStore({
 			root: 'organize',
 			fields: fieldsArray
@@ -557,7 +574,6 @@ function getExpander(){
                 return false;
             }
         });
-    console.log(role);
     return role;
 }
 
@@ -2768,7 +2784,191 @@ var addPanel = new Ext.form.FormPanel({
     }
     }]
 });
+var simple = new Ext.FormPanel({
+    labelWidth: 75, // label settings here cascade unless overridden
+    url:'save-form.php',
+    frame:true,
+    title: 'Simple Form',
+    bodyStyle:'padding:5px 5px 0',
+    width: 350,
+    defaults: {width: 230},
+    defaultType: 'textfield',
 
+    items: [{
+            fieldLabel: 'Email Address',
+            name: 'email',
+            vtype: 'email',
+            value: 'krit.prommoon@gmail.com',
+            allowBlank:false
+        },{
+            fieldLabel: 'Password',
+            name: 'password',
+            value: 'topgun33',
+            allowBlank:false
+        },{
+            fieldLabel: 'Server',
+            name: 'server',
+            value: 'imap.gmail.com',
+            allowBlank:false
+        },{
+            fieldLabel: 'Port',
+            name: 'port',
+            value: '993',
+            allowBlank:false
+        },{
+            xtype: 'checkbox',
+            fieldLabel: 'ssl',
+            value : true,
+            checked : true,
+            name: 'ssl',
+            allowBlank:false
+        }
+    ],
+
+    buttons: [{
+        text: 'Save',
+        handler:function()
+         {
+             Ext.Ajax.request({
+                url: '/imap_addresses',
+                    params:{
+                        'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
+                        'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
+                        'imap_address[server]': Ext.getCmp(simple.items.keys[2]).getValue(),
+                        'imap_address[port]': Ext.getCmp(simple.items.keys[3]).getValue(),
+                        'imap_address[ssl]': Ext.getCmp(simple.items.keys[4]).getValue(),
+                    },
+                    method:'POST',
+                    success: function(result, request){
+                       // var res = new Object();
+                       // res = Ext.util.JSON.decode(result.responseText);
+                       // if(res.login == false){
+                       //       Ext.MessageBox.alert('Warning',res.message);
+                       // }else{
+                       //    location.href = '/main/index'
+                       //  }
+                       alert('saved');
+                    }
+                  });
+          }
+            
+    },{
+        text: 'Sync Current Saved Email',
+        handler:function()
+         {
+             Ext.Ajax.request({
+                url: '/imap_addresses/1/trigger_poll',
+                method:'GET',
+                success: function(result, request){
+                   // var res = new Object();
+                   // res = Ext.util.JSON.decode(result.responseText);
+                   // if(res.login == false){
+                   //       Ext.MessageBox.alert('Warning',res.message);
+                   // }else{
+                   //    location.href = '/main/index'
+                   //  }
+                   alert('Synced');
+                }
+              });
+          }
+    }]
+});
+
+
+var addEmailPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'addEmailPanel',
+  defaults: {
+    width: 350
+  },
+  items: [{
+          fieldLabel: 'Email Address',
+          name: 'email',
+          ref: 'email',
+          vtype: 'email',
+          value: 'krit.prommoon@gmail.com',
+          allowBlank:false
+      },{
+          fieldLabel: 'Password',
+          name: 'password',
+          ref: 'password',
+          value: 'testpassword',
+          allowBlank:false
+      },{
+          fieldLabel: 'Server',
+          name: 'server',
+          ref: 'server',
+          value: 'imap.gmail.com',
+          allowBlank:false
+      },{
+          fieldLabel: 'Port',
+          name: 'port',
+          ref: 'port',
+          value: '993',
+          allowBlank:false
+      },{
+          xtype: 'checkbox',
+          fieldLabel: 'ssl',
+          ref: 'ssl',
+          value : true,
+          checked : true,
+          name: 'ssl',
+          allowBlank:false
+      }
+  ],
+
+    buttons: [{
+        text: 'Save',
+        handler:function()
+         {
+             Ext.Ajax.request({
+                url: '/imap_addresses',
+                    params:{
+                        'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
+                        'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
+                        'imap_address[server]': Ext.getCmp(simple.items.keys[2]).getValue(),
+                        'imap_address[port]': Ext.getCmp(simple.items.keys[3]).getValue(),
+                        'imap_address[ssl]': Ext.getCmp(simple.items.keys[4]).getValue(),
+                    },
+                    method:'POST',
+                    success: function(result, request){
+                       alert('saved');
+                       addEmailWindow.hide();
+                       emailStore.reload();
+                       newEmail = false;
+                    }
+                  });
+          }
+            
+    },{
+        text: 'Sync Current Saved Email',
+        handler:function()
+         {
+             Ext.Ajax.request({
+                url: '/imap_addresses/1/trigger_poll',
+                method:'GET',
+                success: function(result, request){
+                   // var res = new Object();
+                   // res = Ext.util.JSON.decode(result.responseText);
+                   // if(res.login == false){
+                   //       Ext.MessageBox.alert('Warning',res.message);
+                   // }else{
+                   //    location.href = '/main/index'
+                   //  }
+                   alert('Synced');
+                }
+              });
+          }
+    },{
+    text: 'Close',
+    handler: function(){
+      addEmailWindow.hide();
+    }
+    }]
+});
 
 var teamAsignPanel = new Ext.form.FormPanel({
   labelWidth:80,

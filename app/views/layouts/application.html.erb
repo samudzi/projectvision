@@ -178,17 +178,11 @@ function handleError(e) {
   var currentUser = <%= current_user ? current_user.id : 0 %>;
   <%- if current_user %>
     <%- tdate = current_user.synchronization_date ? current_user.synchronization_date : current_user.created_at  %>
-    console.log('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
     sync_date =  new Date('<%= tdate.strftime("%Y-%m-%dT%H:%M:%S")%>');
     var hours = sync_date.getHours();
     timezone = sync_date.getTimezoneOffset()/60;
     hours = hours - timezone;
     sync_date.setHours(hours);
-    console.log(hours);
-   console.log(timezone);
-    
-    
-    console.log(sync_date);
   <% end %>
   new Ext.data.JsonStore(
   {
@@ -480,6 +474,24 @@ function handleError(e) {
     "idProperty":"id",
     "url":"/thoughts.json",
     "baseParams":{"fieldset":"default","ttype":"all"},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+  new Ext.data.JsonStore(
+  {
+    "storeId":"email_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+      {"name":"email","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"password","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"server","allowBlank":true,"type":"string","defaultValue":null},
+      {"name":"port","allowBlank":true,"type":"int","defaultValue":null},
+      {"name":"ssl","allowBlank":true,"type":"int","defaultValue":null},
+    ],
+    "idProperty":"id",
+    "url":"/imap_addresses.json",
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
 
   new Ext.data.JsonStore(

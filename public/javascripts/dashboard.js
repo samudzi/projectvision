@@ -243,11 +243,31 @@ var simple = new Ext.FormPanel({
     items: [{
             fieldLabel: 'Email Address',
             name: 'email',
-            vtype:'email',
+            vtype: 'email',
+            value: 'krit.prommoon@gmail.com',
             allowBlank:false
         },{
             fieldLabel: 'Password',
-            name: 'password'
+            name: 'password',
+            value: 'testpassword',
+            allowBlank:false
+        },{
+            fieldLabel: 'Server',
+            name: 'server',
+            value: 'imap.gmail.com',
+            allowBlank:false
+        },{
+            fieldLabel: 'Port',
+            name: 'port',
+            value: '993',
+            allowBlank:false
+        },{
+            xtype: 'checkbox',
+            fieldLabel: 'ssl',
+            value : true,
+            checked : true,
+            name: 'ssl',
+            allowBlank:false
         }
     ],
 
@@ -260,9 +280,9 @@ var simple = new Ext.FormPanel({
                     params:{
                         'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
                         'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
-                        'imap_address[server]': 'imap.gmail.com',
-                        'imap_address[port]': '993',
-                        'imap_address[ssl]': true
+                        'imap_address[server]': Ext.getCmp(simple.items.keys[2]).getValue(),
+                        'imap_address[port]': Ext.getCmp(simple.items.keys[3]).getValue(),
+                        'imap_address[ssl]': Ext.getCmp(simple.items.keys[4]).getValue(),
                     },
                     method:'POST',
                     success: function(result, request){
@@ -283,7 +303,7 @@ var simple = new Ext.FormPanel({
         handler:function()
          {
              Ext.Ajax.request({
-                url: '/1/pull',
+                url: '/imap_addresses/1/trigger_poll',
                 method:'GET',
                 success: function(result, request){
                    // var res = new Object();
@@ -293,7 +313,7 @@ var simple = new Ext.FormPanel({
                    // }else{
                    //    location.href = '/main/index'
                    //  }
-                   alert('saved');
+                   alert('Synced');
                 }
               });
           }
@@ -324,7 +344,7 @@ var dashboardPanel = new Ext.TabPanel({
       frame:true,
       width:500
     },
-    items: [simple,userStats,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid]
+    items: [userStats,miniTodoGrid,miniThoughtGrid,recentTeamActivity,miniCompltedTodoGrid]
   },{
     title: 'Community'
   },{

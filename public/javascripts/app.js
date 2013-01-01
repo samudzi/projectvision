@@ -11,6 +11,7 @@ var deleteTeamWindow;
 var editTeamWindow;
 var editAdminTeamWindow;
 var addWindow;
+var addEmailWindow;
 var teamWindow;
 var teamAdminWindow;
 var userWindow;
@@ -28,7 +29,7 @@ Ext.util.JSON.encodeDate = function(o)
   return '"' + o.format("Y-m-d'T'H:i:s.uZ") + '"';
 }
 
-Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
+// Ext.Msg.alert('ProjectVision','Welcome to the thought engine!');
 
 var newThoughtButton = new Ext.Button({
   text    : 'New Thought',
@@ -79,9 +80,9 @@ var newReminderButton = new Ext.Button({
 var mainPanel;
 
 if (is_admin == true)
-  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,myteamsPanel,adminPanel];
+  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,myteamsPanel,adminPanel,settingsPanel];
 else
-  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,myteamsPanel];
+  mainPanel = [dashboardPanel,inboxPanel,organizePanel,actionPanel,myteamsPanel,settingsPanel];
 
 var tabs = new Ext.ux.VrTabPanel({
   title: 'Project Vision',

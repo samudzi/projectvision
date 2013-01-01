@@ -7,7 +7,15 @@ class ImapAddressesController < ApplicationController
 
   def index
     @imap_addresses = current_user.imap_addresses
-    present @imap_addresses, with: Entity::ImapAddress, status: 200
+    # present @imap_addresses, with: Entity::ImapAddress, status: 200
+
+    params[:user_id] = current_user.id
+    emails, row_count = ImapAddress.list(params)
+    render :json => {
+        :success => true,
+        :totalRows => row_count,
+        :data => emails.collect { |t| t.to_record}
+    }
   end
 
   def create

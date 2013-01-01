@@ -15,47 +15,6 @@ var selectedThoughtID = 0;
 var newButtonTask= true;
 var newCatagory = false;
 
-var myData = [
-['Needs some food','McDonals?','General','public','0',null,null,null,null,null,null,null],
-['Should I add a textbox?','Into the main Panel','General','public','0',null,null,null,null,null,null,null],
-['Another thing on Friday','Beer','General','public','0',null,null,null,null,null,null,null]
-];
-
-// create the data store
-var thoughtStore = new Ext.data.ArrayStore({
-  fields: [
-  {
-    name: 'brief'
-  },{
-    name: 'detail'
-  },{
-    name: 'category'
-  },{
-    name: 'scope'
-  },{
-    name: 'status'
-  },{
-    name: 'actionable'
-  },{
-    name: 'context'
-  },{
-    name: 'next'
-  },{
-    name: 'outcome'
-  },{
-    name: 'action_status'
-  },{
-    name: 'due_date'
-  },{
-    name: 'action_type'
-  }]
-});
-
-// manually load local data
-thoughtStore.loadData(myData);
-
-
-
 function newHandler(){
   newThought = true;
   if(!addWindow) addWindow = new Ext.Window({
@@ -131,30 +90,6 @@ var thoughtGrid = new Ext.grid.GridPanel({
       selectedUserID = inboxJsonStore.getAt(rowIndex).data.user_id;
       
         if(is_admin == true || currentUser == selectedUserID){
-        
-        
-          //        currentIndex = rowIndex;
-          //        var data = myData[rowIndex];
-          //        if(!addWindow) addWindow = new Ext.Window({
-          //          title: 'Edit Thought',
-          //          closeAction:'hide',
-          //          width: 380,
-          //          height: 500,
-          //          layout: 'fit',
-          //          plain:true,
-          //          bodyStyle:'padding:5px;',
-          //          buttonAlign:'center',
-          //          //resizable:false,
-          //          items: addPanel
-          //        });
-          //        else
-          //          addWindow.setTitle("Edit Thought");
-          //
-          //        addPanel.getForm().reset();
-          //        addPanel.brief.setValue(data[0]);
-          //        addPanel.detail.setValue(data[1]);
-          //        addPanel.category.setValue(data[2]);
-          //        addPanel.thoughtType.setValue(data[3]);
           if(!addWindow) addWindow = new Ext.Window({
             title: 'Edit Thought',
             width: 380,
