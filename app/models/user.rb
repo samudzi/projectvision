@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :synchronization_date, :user_name, :is_admin
   
   has_many :thoughts
+  has_one :imap_setting
   has_many :teams , :through => :team_roles
   has_many :team_roles, :dependent => :destroy
   has_many :action_logs

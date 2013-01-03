@@ -2,6 +2,7 @@ var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
 var recentTeamStore = Ext.StoreMgr.get('recent_team_activity_store');
 var userStore = Ext.StoreMgr.get('users_store');
+var myIpStore = Ext.StoreMgr.get('my_store');
 var teamUserStore = Ext.StoreMgr.get('team_store');
 var myTeamUserStore = Ext.StoreMgr.get('myteam_store');
 var myTeamStore = Ext.StoreMgr.get('my_team_store');
@@ -15,6 +16,7 @@ recentTeamStore.load();
 currentUserStore.load();
 myAdminTeamStore.load();
 userStore.load();
+myIpStore.load();
 //myTeamStore.load();
 teamUserStore.load({callback : function(records,option,success){
           console.log('===================== in here ===================')
@@ -88,6 +90,10 @@ var reminderJsonStore = new Ext.data.JsonStore({
 });
 var upcomingJsonStore = new Ext.data.JsonStore({
 			root: 'upcoming',
+			fields: fieldsArray
+});
+var imapJsonStore = new Ext.data.JsonStore({
+			root: 'imap',
 			fields: fieldsArray
 });
 var recentCompletedJsonStore = new Ext.data.JsonStore({
@@ -379,6 +385,7 @@ function globalThoughtStoreCallbackFn(records){
 		var finalJsonReminder = new Array();		
 		var tempJsonUpcoming = new Array();
 		var finalJsonUpcoming = new Array();
+		var finalJsonImap = new Array();
 		var tempJsonRecentCompleted = new Array();
 		var finalJsonRecentCompleted = new Array();
 	  var tempJsonEventCompleted = new Array();
@@ -2168,6 +2175,30 @@ function userSaveHandler()
   // if(userWindow) userWindow.hide();
 }
 
+function imapSaveHandler()
+{
+  ImapEditPanel.getForm().submit({
+    url: '/my_users/update_imap_setting.json',
+    method: 'post',
+    waitMsg: 'Saving...',
+    success: function(f,a) {
+      userImapWindow.hide();
+      myIpStore.reload();
+    },
+    failure: function (f,a)
+    {
+      Ext.Msg.show({
+           title:'Error'
+          ,msg:'Values are incorrect'
+          ,modal:true
+          ,icon:Ext.Msg.ERROR
+          ,buttons:Ext.Msg.OK
+      });
+    }
+  });
+  // if(userWindow) userWindow.hide();
+}
+
 function teamSaveHandler()
 {
   if(newTeam)
@@ -2885,6 +2916,44 @@ var userAddPanel = new Ext.form.FormPanel({
     text: 'Close',
     handler: function(){
       userWindow.hide();
+    }
+  }]
+});
+var ImapEditPanel = new Ext.form.FormPanel({
+  labelWidth:80,
+  labelAlign: 'top',
+  baseCls: 'x-plan',
+  defaultType:'textfield',
+  ref:'ImapEditPanel',
+
+  defaults: {
+    width: 350
+  },
+  items:[{
+    fieldLabel:"Server",
+    name:'server',
+    ref:'server',
+    allowBlank:false
+  },{
+    fieldLabel:"Login",
+    name:'login',
+    ref:'login',
+    allowBlank:false
+  },{
+    fieldLabel:"Password",
+    name:'password',
+    ref:'password',
+    vtype: 'passwordPV',
+    allowBlank: false
+
+  }],
+  buttons:[{
+    text: "Save",
+    handler: imapSaveHandler
+  },{
+    text: 'Close',
+    handler: function(){
+      userImapWindow.hide();
     }
   }]
 });

@@ -66,6 +66,72 @@ var miniTodoGrid = new Ext.grid.GridPanel({
   }]
 });
 
+var imapGrid = new Ext.grid.GridPanel({
+    // store configs
+   store:myIpStore,
+   autoDestroy: false,
+   //storeId: 'myEmailSettingsStore',
+    // reader configs
+  height  : 100,
+  width  : 500,
+  columns: [
+       {
+         header     :'Server',
+         dataIndex: 'server',
+         width  : 180
+       },{
+          header: 'Login',
+          dataIndex: 'login',
+          width  : 180
+       },{
+        header: 'Edit',
+        xtype: 'actioncolumn',
+        width: 90,
+        items: [{
+        icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
+        tooltip: 'Edit IMAP Setting',
+
+        handler: function() {
+          if(!userImapWindow) userImapWindow = new Ext.Window({
+            title: 'Edit IMAP Setting',
+            width: 380,
+            applyTo:'user-window',
+            closeAction:'hide',
+            height: 280,
+            layout: 'fit',
+            plain:true,
+            bodyStyle:'padding:5px;',
+            buttonAlign:'center',
+              //resizable:false,
+            items: ImapEditPanel
+            });
+          else
+            userImapWindow.setTitle('Edit IMAP Setting');
+
+          ImapEditPanel.getForm().reset();
+          ImapEditPanel.getForm().load({
+            url: '/my_users/get_imap_form.json',
+            waitMsg: 'Loading...',
+            method: 'get',
+            success: function(f,a){
+            },
+            failure: function(form, action){
+              Ext.Msg.alert("Load failed", action.result.errorMessage);
+            }
+          });
+          userImapWindow.show();
+        }
+        }]
+    }
+       ]
+  //idIndex: 0,
+  //fields: [
+  //     'label',
+  //     'value'
+  //  ]
+});
+//mystore.loadData([['server','imap.goodlogics.com'],['login','goodlogics'],['password','abc']]);
+
 // create the Grid
 var miniThoughtGrid = new Ext.grid.GridPanel({
   title: 'My Recent Thoughts',
@@ -257,7 +323,8 @@ var dashboardPanel = new Ext.TabPanel({
   },{
     title: 'Community'
   },{
-    title: 'Personal Settings'
+    title: 'Personal Settings',
+    items: [imapGrid]
   },{
      title: 'Users',
     ref:'user',

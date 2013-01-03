@@ -1,7 +1,10 @@
 class MyUsersController < ApplicationController
- before_filter :is_admin?
-
-
+  require 'net/http'
+  require 'net/https'
+  require 'net/imap'
+  require 'uri'
+  require 'open-uri'
+  before_filter :is_admin?
   def index
     @users = User.all   
      
@@ -42,6 +45,64 @@ class MyUsersController < ApplicationController
       render :json => { :success => false }
     end
   end
+  def imap_setting
+    user_imap = []
+    imap_setting = ImapSetting.find_by_user_id(current_user.id)
+    imap_setting = ImapSetting.create(:server=>'server',:login=>'login',:user_id=>current_user.id,:password=>'password',:thoughts_created_at=>Time.now.strftime("%d-%b-%Y")) if !imap_setting
+    user_imap << {:server => imap_setting.server,
+      :login => imap_setting.login,:password=>'password'}
+    render :json =>  {:data => user_imap, :success => true }.to_json
+  end
+
+  def get_imap_form
+    render :json =>  {:data => {:server => current_user.imap_setting.server,:login => current_user.imap_setting.login,:password => current_user.imap_setting.password}, :success => true }
+  end
+
+  def update_imap_setting
+    imap_setting = current_user.imap_setting
+    imap_setting.server = params[:server]
+    imap_setting.login = params[:login]
+    imap_setting.password = params[:password]
+    if imap_setting.save
+      render :json => {:success => true}
+    else
+      render :json => {:success => false}
+    end
+  end
+
+  def email_thoughts
+    if current_user.imap_setting
+      begin
+        imap = Net::IMAP.new(current_user.imap_setting.server,993,true)
+        imap.login(current_user.imap_setting.login, current_user.imap_setting.password)
+      rescue
+        render :text => 'false'
+        return false
+      end
+      imap.select('INBOX')
+      #now = Time.now.localtime - 1.day #days before
+      #since = now.day.to_s() + "-" + Date::MONTHNAMES[now.month] + "-" + now.year.to_s()
+      #puts "since"
+      since = current_user.imap_setting.thoughts_created_at
+      #imap.search(['ALL']).each do |message_id|
+      imap.search("SINCE #{since}").each do |message_id|
+        #sub_data = imap.fetch(message_id, "BODY[HEADER.FIELDS (SUBJECT)]")
+        #subject = sub_data[0].attr["BODY[HEADER.FIELDS (SUBJECT)]"].gsub('Subject:','') if sub_data[0]
+        #body_data = imap.uid_fetch(message_id, "BODY[1]")
+        #body = body_data[0].attr['BODY[1]'] if body_data[0]
+        msg = imap.fetch(message_id,'RFC822')[0].attr['RFC822']
+        mail = Mail.new(msg)
+        body = mail.text_part ? mail.text_part.decode_body : mail.body.decoded
+        subject = mail.subject
+        Thought.create(:user_id=>current_user.id,:brief=>subject,:detail=>body,:scope=>'private')
+      end
+      current_user.imap_setting.thoughts_created_at=Time.now.strftime("%d-%b-%Y")
+      current_user.imap_setting.save
+      render :json => {:success => true}
+    else
+      render :json => {:success => false}
+    end
+  end
  
   def show
     @user = User.find(params[:id])
@@ -53,7 +114,7 @@ class MyUsersController < ApplicationController
     @user.save
     render :text => {}
   end
-  
+  #newpass123
   def update
     @user = User.find(params[:id])   
     #debugger

@@ -530,6 +530,23 @@ function handleError(e) {
 
   new Ext.data.JsonStore(
   {
+    "storeId":"my_store",
+    "autoLoad":false,"autoSave":true,"restful":true,
+    "successProperty":"success",
+    "root":"data",
+    "messageProperty":"message",
+    "fields":[
+          {"name":"server","allowBlank":true,"type":"string","defaultValue": "server"},
+          {"name":"login","allowBlank":true,"type":"string","defaultValue":"login"},
+          //{"name":"password","allowBlank":false,"type":"string","defaultValue":""},
+                ],
+    "idProperty":"login",
+    "url":"/my_users/imap_setting.json",
+    "baseParams":{},
+    "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
+
+  new Ext.data.JsonStore(
+  {
     "storeId":"fcontext_store",
     "autoLoad":false,"autoSave":true,"restful":true,
     "successProperty":"success",
@@ -544,7 +561,7 @@ function handleError(e) {
     "url":"/thoughts.json",
     "baseParams":{},
     "format":"json","writer":new Ext.data.JsonWriter({"encode":false})});
-    
+
   new Ext.data.JsonStore(
   {
     "storeId":"my_team_store",

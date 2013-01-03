@@ -14,6 +14,7 @@ var addWindow;
 var teamWindow;
 var teamAdminWindow;
 var userWindow;
+var userImapWindow;
 var todoEditWindow;
 var refEditWindow;
 var remindEditWindow;
@@ -73,6 +74,42 @@ var newReminderButton = new Ext.Button({
   handler : function() {
              btnReminderTaskHandler();
             } 
+});
+function createEmailThoughtsHandler(){
+  a=confirm('Do you want to generate Thoughts from your email');
+  if(a){
+    console.log('Generating thoughts from your email');
+    $.get("/my_users/email_thoughts",function(data){
+      if(data=='false'){
+        alert('An error has been occurred, please check your imap settings');
+      }
+      else{
+        alert('Created Thoughts from email successfully');
+      }
+    });
+  }
+}
+var createEmailThoughtsButton = new Ext.Button({
+  text    : 'Thoughts from Email',
+  width : 125,
+  height :25,
+  style: "z-index:1000",
+  x:5,
+  y:175,
+  handler : function() {
+          a=confirm('Do you want to generate Thoughts from your email');
+          if(a){
+             Ext.Ajax.request({
+              url: "/my_users/email_thoughts",
+              success: function(response, opts) {
+                alert('Created Thoughts from email successfully');
+              },
+              failure: function(response, opts) {
+                 alert('An error has been occurred, please check your imap settings');
+              }
+              });
+            }
+  }
 });
 
 // Horizontal Tabs ( Ext.TabPanel ) nested inside Vertical TabPanel.
@@ -137,7 +174,7 @@ var mainPanel = new Ext.Panel({
   height: 720,
 //  autoScroll: true,
  
-  items: [newThoughtButton,newTodoButton,newReferenceButton,newReminderButton,tabs],
+  items: [newThoughtButton,newTodoButton,newReferenceButton,newReminderButton,createEmailThoughtsButton,tabs],
   tbar: new Ext.Toolbar({
     cls: 'x-panel-header',
     height: 25,

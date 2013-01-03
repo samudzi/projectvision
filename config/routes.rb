@@ -18,6 +18,10 @@ Pv::Application.routes.draw do
     collection do
       post 'update_sync'
       get  'currentUser'
+      get  'imap_setting'
+      get  'get_imap_form'
+      get  'email_thoughts'
+      post  'update_imap_setting'
     end
   end   
   

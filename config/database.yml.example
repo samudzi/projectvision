@@ -4,7 +4,11 @@ development:
   adapter: mysql2
   database: projectvision_development
   user: root
+<<<<<<< Updated upstream:config/database.yml.example
   password:
+=======
+  password: glogix
+>>>>>>> Stashed changes:config/database.yml
   pool: 5
   timeout: 5000
 
