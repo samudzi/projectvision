@@ -70,12 +70,40 @@ var inboxJsonStore = new Ext.data.JsonStore({
 			fields: fieldsArray
 });
 
-var emailJsonStore = new Ext.data.JsonStore({
+emailJsonStore = new Ext.data.JsonStore({
       root: 'data',
       fields: emailFieldsArray
 });
-emailStore.load();
-emailJsonStore.loadData(emailStore,false);
+
+//fix bug: can not get email data to show on the grid
+//reload email store
+function reloadEmailStore() {
+  emailStore.load({'callback':function(){
+      //get data from emailStore
+      var rawData = emailStore.data.items;
+
+      //process rawData to load to the emailJsonStore
+      var processedData = [];
+      for(var i = 0; i < rawData.length; i++) {
+        var oneItem = {};
+        oneItem["email"] = rawData[i].data.email;
+        oneItem["password"] = rawData[i].data.password;
+        oneItem["port"] = rawData[i].data.port;
+        oneItem["server"] = rawData[i].data.server;
+        oneItem["ssl"] = rawData[i].data.ssl;
+
+        processedData.push(oneItem);
+      }
+
+      //load data to emailJsonStore
+      var data = {
+        data: processedData,
+        totalRows: emailStore.getCount()
+      }
+      emailJsonStore.loadData(data);
+  }});
+}
+reloadEmailStore();
 
 var organizeJsonStore = new Ext.data.JsonStore({
 			root: 'organize',
@@ -679,7 +707,10 @@ function teamThoughtStoreCallbackFn(records){
         tempJsonTeamUsers[i]["users"].push(tempArray);        
       }             
    }); 
-  }              setTimeout("Ext.select('.notice').remove()",5000)
+  }            
+
+  setTimeout("Ext.select('.notice').remove()",5000);
+
   for(var i=0;i<numberOfTeams;i++){
     var cond = i>=teamThoughtsJsonStore.length;
     if(cond){
@@ -930,8 +961,8 @@ function teamThoughtStoreCallbackFn(records){
                     refEditWindow.setTitle("Edit Reference");
                   selectedThoughtID = grid.getStore().getAt(rowIndex).data.id;
                   refEditPanel.getForm().reset();
-                  refEditPanel.context.setVisible(false);
-                  refEditPanel.action_type.setVisible(false);
+                  // refEditPanel.context.setVisible(false);
+                  // refEditPanel.action_type.setVisible(false);
                   refEditPanel.getForm().load({
                     url: '/thoughts/' + grid.getStore().getAt(rowIndex).data.id + '.json',
                     params: {
@@ -1790,15 +1821,15 @@ function thoughtSaveHandler()
 {
   var scope = addPanel.getForm().findField('scope').getValue();
   var team_id = addPanel.getForm().findField('team').getValue();
-    console.log(scope.inputValue);
-    console.log(team_id);
+    // console.log(scope.inputValue);
+    // console.log(team_id);
     if((scope.inputValue == "public")&&(is_admin == false)){
     var team_id = addPanel.getForm().findField('team').getValue();
     var user_id = currentUser;
     var team_permission= getPermissions(user_id, team_id)
     if (team_permission == 3)
     {
-        Ext.Msg.alert('You have read only', 'access for this team.');
+        Ext.Msg.alert('Permission', 'You have read only access for this team.');
         return false;
     }
   }
@@ -2848,7 +2879,7 @@ var addEmailPanel = new Ext.form.FormPanel({
                     success: function(result, request){
                        Ext.Msg.alert("Save", "Email Saved");
                        addEmailWindow.hide();
-                       emailStore.reload();
+                       reloadEmailStore();
                        newEmail = false;
                     }
                   });

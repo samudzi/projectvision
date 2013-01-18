@@ -103,12 +103,12 @@ var emailsGrid = new Ext.grid.GridPanel({
           });
           else
             addEmailPanel.setTitle('Edit Email');                  
-          selectedThoughtID = emailJsonStore.getAt(rowIndex).data.id;
+          selectedThoughtID = emailStore.getAt(rowIndex).data.id;
           addEmailPanel.getForm().reset();         
           addEmailPanel.getForm().load({
-            url: '/imap_addresses/' + emailJsonStore.getAt(rowIndex).data.id + '.json',
+            url: '/imap_addresses/' + emailStore.getAt(rowIndex).data.id + '.json',
             params: {
-              id: emailJsonStore.getAt(rowIndex).data.id
+              id: emailStore.getAt(rowIndex).data.id
             },
             waitMsg: 'Loading...',
             method: 'get',
@@ -121,7 +121,7 @@ var emailsGrid = new Ext.grid.GridPanel({
           });
           //addUserAndTeamSelectOptions();
           myTeamStore.load();
-          addWindow.show();
+          addEmailWindow.show();
           addPanel.brief.focus();
         
         }
