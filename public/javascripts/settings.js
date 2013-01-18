@@ -15,7 +15,6 @@ function newEmailHandler(){
   if(!addEmailWindow) addEmailWindow = new Ext.Window({
     title: 'Add New Email',
     width: 380,
-    applyTo:'hello-win',
     closeAction:'hide',
     height: 320,
     layout: 'fit',
@@ -28,7 +27,6 @@ function newEmailHandler(){
   else
     addEmailWindow.setTitle('Add New Email');
 
-  console.log("new");
   addEmailPanel.getForm().reset();
   addEmailPanel.email.setValue('');
   addEmailPanel.password.setValue('');
@@ -37,6 +35,21 @@ function newEmailHandler(){
   addEmailPanel.ssl.checked = false;
   addEmailWindow.show();
   
+}
+
+function synchAllHandler(){
+  Ext.Ajax.request({
+    url: '/imap_addresses/poll_all',
+    waitMsg: 'Fetching Emails...',
+    method: 'get',
+    success: function(f,a){
+      globalThoughtStore.reload({callback : function(records,option,success){
+          globalThoughtStoreCallbackFn(records);    
+         }
+      });
+      Ext.Msg.alert("Email Loaded", "Emails Synconized");
+    }
+  });
 }
 
 function deleteHandler(){
@@ -91,7 +104,6 @@ var emailsGrid = new Ext.grid.GridPanel({
           else
             addEmailPanel.setTitle('Edit Email');                  
           selectedThoughtID = emailJsonStore.getAt(rowIndex).data.id;
-          console.log("selcted id");      
           addEmailPanel.getForm().reset();         
           addEmailPanel.getForm().load({
             url: '/imap_addresses/' + emailJsonStore.getAt(rowIndex).data.id + '.json',
@@ -155,6 +167,11 @@ var emailsGrid = new Ext.grid.GridPanel({
     text: 'New Email',
     iconCls: 'add-prop',
     handler: newEmailHandler
+  },
+  {
+    text: 'Sync Email',
+    iconCls: 'add-prop',
+    handler: synchAllHandler
   }],
   region:'center',
   stripeRows: true,

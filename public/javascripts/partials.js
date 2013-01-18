@@ -1,3 +1,4 @@
+
 var globalThoughtStore = Ext.StoreMgr.get('global_thought_store');
 var emailStore = Ext.StoreMgr.get('email_store');
 var teamThoughtStore = Ext.StoreMgr.get('team_thought_store');
@@ -1441,7 +1442,6 @@ function myTeamThoughtHandler(){
   else
     addWindow.setTitle('Add New Thought');
 
-  console.log("new");
   addPanel.getForm().reset();
   addPanel.brief.setValue('');
   addPanel.detail.setValue('');
@@ -1969,7 +1969,7 @@ var teamAdminAsignPanel = new Ext.form.FormPanel({
 function teamAdminDeleteHandler()
 {
   selectedTeamID = deleteAdminTeamPanel.getForm().findField('name').getValue();
-  console.log(selectedTeamID);
+  // console.log(selectedTeamID);
   Ext.Ajax.request({
     url: '/teams/'+selectedTeamID,
     scope:this,
@@ -2784,95 +2784,6 @@ var addPanel = new Ext.form.FormPanel({
     }
     }]
 });
-var simple = new Ext.FormPanel({
-    labelWidth: 75, // label settings here cascade unless overridden
-    url:'save-form.php',
-    frame:true,
-    title: 'Simple Form',
-    bodyStyle:'padding:5px 5px 0',
-    width: 350,
-    defaults: {width: 230},
-    defaultType: 'textfield',
-
-    items: [{
-            fieldLabel: 'Email Address',
-            name: 'email',
-            vtype: 'email',
-            value: 'krit.prommoon@gmail.com',
-            allowBlank:false
-        },{
-            fieldLabel: 'Password',
-            name: 'password',
-            value: 'topgun33',
-            allowBlank:false
-        },{
-            fieldLabel: 'Server',
-            name: 'server',
-            value: 'imap.gmail.com',
-            allowBlank:false
-        },{
-            fieldLabel: 'Port',
-            name: 'port',
-            value: '993',
-            allowBlank:false
-        },{
-            xtype: 'checkbox',
-            fieldLabel: 'ssl',
-            value : true,
-            checked : true,
-            name: 'ssl',
-            allowBlank:false
-        }
-    ],
-
-    buttons: [{
-        text: 'Save',
-        handler:function()
-         {
-             Ext.Ajax.request({
-                url: '/imap_addresses',
-                    params:{
-                        'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
-                        'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
-                        'imap_address[server]': Ext.getCmp(simple.items.keys[2]).getValue(),
-                        'imap_address[port]': Ext.getCmp(simple.items.keys[3]).getValue(),
-                        'imap_address[ssl]': Ext.getCmp(simple.items.keys[4]).getValue(),
-                    },
-                    method:'POST',
-                    success: function(result, request){
-                       // var res = new Object();
-                       // res = Ext.util.JSON.decode(result.responseText);
-                       // if(res.login == false){
-                       //       Ext.MessageBox.alert('Warning',res.message);
-                       // }else{
-                       //    location.href = '/main/index'
-                       //  }
-                       alert('saved');
-                    }
-                  });
-          }
-            
-    },{
-        text: 'Sync Current Saved Email',
-        handler:function()
-         {
-             Ext.Ajax.request({
-                url: '/imap_addresses/1/trigger_poll',
-                method:'GET',
-                success: function(result, request){
-                   // var res = new Object();
-                   // res = Ext.util.JSON.decode(result.responseText);
-                   // if(res.login == false){
-                   //       Ext.MessageBox.alert('Warning',res.message);
-                   // }else{
-                   //    location.href = '/main/index'
-                   //  }
-                   alert('Synced');
-                }
-              });
-          }
-    }]
-});
 
 
 var addEmailPanel = new Ext.form.FormPanel({
@@ -2927,15 +2838,15 @@ var addEmailPanel = new Ext.form.FormPanel({
              Ext.Ajax.request({
                 url: '/imap_addresses',
                     params:{
-                        'imap_address[email]': Ext.getCmp(simple.items.keys[0]).getValue(), 
-                        'imap_address[password]': Ext.getCmp(simple.items.keys[1]).getValue(),
-                        'imap_address[server]': Ext.getCmp(simple.items.keys[2]).getValue(),
-                        'imap_address[port]': Ext.getCmp(simple.items.keys[3]).getValue(),
-                        'imap_address[ssl]': Ext.getCmp(simple.items.keys[4]).getValue(),
+                        'imap_address[email]': Ext.getCmp(addEmailPanel.items.keys[0]).getValue(), 
+                        'imap_address[password]': Ext.getCmp(addEmailPanel.items.keys[1]).getValue(),
+                        'imap_address[server]': Ext.getCmp(addEmailPanel.items.keys[2]).getValue(),
+                        'imap_address[port]': Ext.getCmp(addEmailPanel.items.keys[3]).getValue(),
+                        'imap_address[ssl]': Ext.getCmp(addEmailPanel.items.keys[4]).getValue(),
                     },
                     method:'POST',
                     success: function(result, request){
-                       alert('saved');
+                       Ext.Msg.alert("Save", "Email Saved");
                        addEmailWindow.hide();
                        emailStore.reload();
                        newEmail = false;

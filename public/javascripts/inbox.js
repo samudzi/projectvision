@@ -50,6 +50,21 @@ function newHandler(){
   
 }
 
+function synchAllEmailHandler(){
+  Ext.Ajax.request({
+    url: '/imap_addresses/poll_all',
+    waitMsg: 'Fetching Emails...',
+    method: 'get',
+    success: function(f,a){
+      globalThoughtStore.reload({callback : function(records,option,success){
+          globalThoughtStoreCallbackFn(records);    
+         }
+      });
+      Ext.Msg.alert("Email Loaded", "Emails Synconized");
+    }
+  });
+}
+
 function deleteHandler(){
 
 }
@@ -226,6 +241,11 @@ var thoughtGrid = new Ext.grid.GridPanel({
     text: 'New Thought',
     iconCls: 'add-prop',
     handler: newHandler
+  },
+  {
+    text: 'Sync Email',
+    iconCls: 'add-prop',
+    handler: synchAllEmailHandler
   }],
   listeners: {
     rowclick: {
