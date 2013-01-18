@@ -2,7 +2,8 @@ class ImapAddressesController < ApplicationController
   respond_to :json
   def show
     @imap_address = current_user.imap_addresses.find(params[:id])
-    present @imap_address, with: Entity::ImapAddress, status: 200
+    render :json => {:data => @imap_address.attributes, :success => true}
+    #present @imap_address, with: Entity::ImapAddress, status: 200
   end
 
   def index
@@ -53,9 +54,14 @@ class ImapAddressesController < ApplicationController
   end
 
   def destroy
-    @imap_address = current_user.imap_address.find(params[:id])
-    @imap_address.destroy
-    present @imap_address, with: Entity::ImapAddress, status: 200
+    @imap_address = current_user.imap_addresses.find(params[:id])
+    #@imap_address.destroy
+    if @imap_address.destroy
+      render :json => { :success => true }
+    else
+      render :json => { :success => false }
+    end
+    #present @imap_address, with: Entity::ImapAddress, status: 200
   end
 
   def update

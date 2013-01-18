@@ -2816,6 +2816,49 @@ var addPanel = new Ext.form.FormPanel({
     }]
 });
 
+function emailSaveHandler()
+{
+   if(newEmail)
+  {
+   Ext.Ajax.request({
+      url: '/imap_addresses',
+          params:{
+              'imap_address[email]': Ext.getCmp(addEmailPanel.items.keys[0]).getValue(), 
+              'imap_address[password]': Ext.getCmp(addEmailPanel.items.keys[1]).getValue(),
+              'imap_address[server]': Ext.getCmp(addEmailPanel.items.keys[2]).getValue(),
+              'imap_address[port]': Ext.getCmp(addEmailPanel.items.keys[3]).getValue(),
+              'imap_address[ssl]': Ext.getCmp(addEmailPanel.items.keys[4]).getValue(),
+          },
+          method:'POST',
+          success: function(result, request){
+             Ext.Msg.alert("Save", "Email Saved");
+             addEmailWindow.hide();
+             reloadEmailStore();
+             newEmail = false;
+          }
+        });
+   }
+   else
+   {
+       Ext.Ajax.request({
+      url: '/imap_addresses/'+selectedThoughtID+'.json',
+          params:{
+              'imap_address[email]': Ext.getCmp(addEmailPanel.items.keys[0]).getValue(), 
+              'imap_address[password]': Ext.getCmp(addEmailPanel.items.keys[1]).getValue(),
+              'imap_address[server]': Ext.getCmp(addEmailPanel.items.keys[2]).getValue(),
+              'imap_address[port]': Ext.getCmp(addEmailPanel.items.keys[3]).getValue(),
+              'imap_address[ssl]': Ext.getCmp(addEmailPanel.items.keys[4]).getValue(),
+          },
+          method:'PUT',
+          success: function(result, request){
+             Ext.Msg.alert("Save", "Email Saved");
+             addEmailWindow.hide();
+             reloadEmailStore();
+             newEmail = false;
+          }
+        });
+   }       
+}
 
 var addEmailPanel = new Ext.form.FormPanel({
   labelWidth:80,
@@ -2864,26 +2907,7 @@ var addEmailPanel = new Ext.form.FormPanel({
 
     buttons: [{
         text: 'Save',
-        handler:function()
-         {
-             Ext.Ajax.request({
-                url: '/imap_addresses',
-                    params:{
-                        'imap_address[email]': Ext.getCmp(addEmailPanel.items.keys[0]).getValue(), 
-                        'imap_address[password]': Ext.getCmp(addEmailPanel.items.keys[1]).getValue(),
-                        'imap_address[server]': Ext.getCmp(addEmailPanel.items.keys[2]).getValue(),
-                        'imap_address[port]': Ext.getCmp(addEmailPanel.items.keys[3]).getValue(),
-                        'imap_address[ssl]': Ext.getCmp(addEmailPanel.items.keys[4]).getValue(),
-                    },
-                    method:'POST',
-                    success: function(result, request){
-                       Ext.Msg.alert("Save", "Email Saved");
-                       addEmailWindow.hide();
-                       reloadEmailStore();
-                       newEmail = false;
-                    }
-                  });
-          }
+        handler: emailSaveHandler
             
     },{
         text: 'Sync Current Saved Email',

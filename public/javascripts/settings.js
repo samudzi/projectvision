@@ -103,12 +103,13 @@ var emailsGrid = new Ext.grid.GridPanel({
           });
           else
             addEmailPanel.setTitle('Edit Email');                  
-          selectedThoughtID = emailStore.getAt(rowIndex).data.id;
+          selectedThoughtID = emailStore.getAt(rowIndex).id;
           addEmailPanel.getForm().reset();         
+          console.log(emailStore.getAt(rowIndex));
           addEmailPanel.getForm().load({
-            url: '/imap_addresses/' + emailStore.getAt(rowIndex).data.id + '.json',
+            url: '/imap_addresses/' + emailStore.getAt(rowIndex).id + '.json',
             params: {
-              id: emailStore.getAt(rowIndex).data.id
+              id: emailStore.getAt(rowIndex).id
             },
             waitMsg: 'Loading...',
             method: 'get',
@@ -137,12 +138,12 @@ var emailsGrid = new Ext.grid.GridPanel({
       tooltip: 'Delete Email',
       handler: function(grid,rowIndex, colIndex)
       {
-        selectedThoughtID = emailJsonStore.getAt(rowIndex).data.id;
-        selectedUserID = emailJsonStore.getAt(rowIndex).data.user_id;
+        selectedThoughtID = emailStore.getAt(rowIndex).id;
+        selectedUserID = emailStore.getAt(rowIndex).json.user_id;
         if(is_admin == true || currentUser == selectedUserID)
         {
           Ext.Ajax.request({
-            url: '/imap_addresses/'+selectedThoughtID,
+            url: '/imap_addresses/'+selectedThoughtID+'.json',
             scope:this,
             params: {
               id: selectedThoughtID
@@ -150,7 +151,8 @@ var emailsGrid = new Ext.grid.GridPanel({
             waitMsg:'Deleting...',
             method: 'delete',
             success: function(f,a){
-              emailStore.reload();
+              reloadEmailStore();
+              Ext.Msg.alert("Delete","Email Deleted");
             }
           });
         }
