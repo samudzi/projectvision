@@ -791,10 +791,10 @@ function teamThoughtStoreCallbackFn(records){
                  if(is_admin == true || currentUser == selectedUserID || team_permission == 1){
                   if(!addWindow) addWindow = new Ext.Window({
                     title: 'Edit Thought',
-                    width: 380,
+                    width: 790,
                     applyTo:'hello-win',
                     closeAction:'hide',
-                    height: 500,
+                    height: 620,
                     layout: 'fit',
                     plain:true,
                     bodyStyle:'padding:5px;',
@@ -845,7 +845,7 @@ function teamThoughtStoreCallbackFn(records){
         columns : [expander, {
       		id : 'brief',
       		header : 'Thought',
-      		width : 389,
+      		width : 290,
       		//    sortable : true,
       		dataIndex : 'brief'
       	}, {
@@ -903,8 +903,8 @@ function teamThoughtStoreCallbackFn(records){
                   if(!todoEditWindow) todoEditWindow = new Ext.Window({
                   title: 'Edit Thought',
                   closeAction:'hide',
-                  width: 380,
-                  height: 610,
+                  width: 790,
+                  height: 620,
                   layout: 'fit',
                   plain:true,
                   bodyStyle:'padding:5px;',
@@ -948,8 +948,8 @@ function teamThoughtStoreCallbackFn(records){
                   if(!refEditWindow) refEditWindow = new Ext.Window({
                     title: 'Edit Thought',
                     closeAction:'hide',
-                    width: 380,
-                    height: 500,
+                    width: 790,
+                    height: 620,
                     layout: 'fit',
                     plain:true,
                     bodyStyle:'padding:5px;',
@@ -983,8 +983,8 @@ function teamThoughtStoreCallbackFn(records){
                   if(!remindEditWindow) remindEditWindow = new Ext.Window({
                     title: 'Edit Thought',
                     closeAction:'hide',
-                    width: 380,
-                    height: 550,
+                    width: 790,
+                    height: 620,
                     plain:true,
                     bodyStyle:'padding:5px;',
                     buttonAlign:'center',
@@ -1063,7 +1063,7 @@ function teamThoughtStoreCallbackFn(records){
       	columns : [expander1, {
       		id : 'brief',
       		header : 'Task',
-      		width : 280,
+      		width : 220,
       		//sortable : true,
       		dataIndex : 'brief'
       	},{
@@ -1073,7 +1073,7 @@ function teamThoughtStoreCallbackFn(records){
       		//hidden: true
       	},{
       		header : 'Assigned',
-      		width : 75,
+      		width : 80,
       		//xtype: 'button',
       		//width: 50,
       		//items: [assigned_button
@@ -1090,7 +1090,7 @@ function teamThoughtStoreCallbackFn(records){
       		renderer : extjsAssignRenderer
       	},{
       		header : 'Due Date',
-      		width : 100,
+      		width : 120,
       		//    sortable : true,
       	  dataIndex : 'due_date',
       	  renderer: function(date) { if(date) return date.format("d-m-Y H:i:s"); }
@@ -1149,9 +1149,11 @@ function teamThoughtStoreCallbackFn(records){
         title : 'Shared Team Thoughts',
         store : teamThoughtsJsonStore[i],   // Store
         height : 300,
-        bodyStyle : 'margin-right:20px;',
+        autoWidth: true,
+        //bodyStyle : 'margin-right:20px;',
         plugins : expander,
         colModel: teamThoughtColModel,
+        columnWidth: .5,
         tbar: [new_thought_action],
         bbar: new Ext.PagingToolbar({
           store: teamThoughtsJsonStore[i],       // grid and PagingToolbar using same store
@@ -1172,12 +1174,15 @@ function teamThoughtStoreCallbackFn(records){
       var outstandingTaskGrid = new Ext.grid.GridPanel({
         title : 'Outstanding Tasks',
         store : outstandingTasksJsonStore[i],   //Dummy Store
-        height : 300,
+        height : Ext.isGecko ? 315 : 300,
+        autoWidth: true,
         stripeRows : true,
         plugins : expander1,
+        columnWidth: .5,
+        style: "margin-left: 5px;",
         colModel: outstandingTaskColModel,
         view: new Ext.grid.GroupingView({
-          forceFit:true,
+          forceFit:false,
           groupTextTpl: '{text} ({[values.rs.length]} {[values.rs.length > 1 ? "Items" : "Item"]})'
         }),
         tbar: [outstading_task_actions]
@@ -1186,6 +1191,8 @@ function teamThoughtStoreCallbackFn(records){
       var teamUsersGrid = new Ext.grid.GridPanel({
         title: "Users",
         store: teamUsersJsonStore[i],
+        autoExpandColumn: 'user_name_column',
+        autoWidth: true,
         height: 320,
 
         columns: [
@@ -1197,21 +1204,21 @@ function teamThoughtStoreCallbackFn(records){
               dataIndex: 'user_id',
               hidden: false
             },{
-              header: 'User Name',
+              id: 'user_name_column',
               width    : 150,
               dataIndex: 'user_name'
             },{
               header: 'Team Role',
-              width    : 125,
+              width    : 155,
               dataIndex: 'team_role_name'
             },{
 	            header : 'Last Sing In',
-	            width : 125,
+	            width : 155,
 	            dataIndex :'last_sign_in_at'
 
             },{
               header : 'Remove User',
-              width : 70,
+              width : 100,
               renderer : newextjsRenderer
             }
         ],
@@ -1226,12 +1233,7 @@ function teamThoughtStoreCallbackFn(records){
         title: teams[i]['team'],
         itemId : teams[i]['id'],
         ref:'teamspace'+i,
-        layout:'table',
-        layoutConfig: {
-          columns: 1,
-         align : 'stretch',
-         pack  : 'start'
-        },
+        
         cls: "u-tablelayout-fitwidth", 
         defaults: {
           frame:true,
@@ -1241,7 +1243,17 @@ function teamThoughtStoreCallbackFn(records){
           bodyStyle:'vertical-align:top; min-height: 100px; height: auto !important;'
         },
         // items: [teamThoughtGrid,teamUsersGrid,outstandingTaskGrid,calandar]
-        items: [teamThoughtGrid,outstandingTaskGrid,teamUsersGrid]
+        items:[{
+            xtype: 'fieldset',
+            border: false,
+            layout:'column',
+            labelWidth: 1,
+            style: "margin: 0 0 10px 2px; padding: 0",
+            items:[
+              teamThoughtGrid, outstandingTaskGrid
+            ]
+          }, teamUsersGrid
+        ]
       });
     inboxPanel.doLayout();
    // console.log("inboxafterdo layout");
@@ -1273,8 +1285,8 @@ function teamThoughtStoreCallbackFn(records){
         if(!eventEditWindow) eventEditWindow = new Ext.Window({
           title: 'Edit Event',
           closeAction:'hide',
-          width: 380,
-          height: 580,
+          width: 700,
+          height: 650,
           layout: 'fit',
           plain:true,
           bodyStyle:'padding:5px;',
@@ -1459,10 +1471,10 @@ function myTeamThoughtHandler(){
   newThought = true;
   if(!addWindow) addWindow = new Ext.Window({
     title: 'Add New Thought',
-    width: 380,
+    width: 700,
     applyTo:'hello-win',
     closeAction:'hide',
-    height: 500,
+    height: 550,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -1531,10 +1543,9 @@ function btnTodoTaskHandler()
   if(!todoEditWindow) todoEditWindow = new Ext.Window({
     title: 'Add New To do',
     closeAction:'hide',
-    width: 380,
-    height: 610,
+    width: 790,
+    height: 620,
     layout: 'fit',
-
     plain:true,
     bodyStyle:'padding:5px;',
     buttonAlign:'center',
@@ -1566,8 +1577,8 @@ function btnReferenceTaskHandler()
   if(!refEditWindow) refEditWindow = new Ext.Window({
     title: 'Add New Reference',
     closeAction:'hide',
-    width: 380,
-    height: 580,
+    width: 790,
+    height: 560,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -1595,7 +1606,7 @@ function btnReminderTaskHandler()
   if(!remindEditWindow) remindEditWindow = new Ext.Window({
     title: 'Add New Reminder',
     closeAction:'hide',
-    width: 380,
+    width: 790,
     height: 600,
     layout: 'fit',
     plain:true,
@@ -1633,8 +1644,8 @@ function calendarEventHandler()
   if(!eventEditWindow) eventEditWindow = new Ext.Window({
     title: 'Add New Event',
     closeAction:'hide',
-    width: 380,
-    height: 580,
+    width: 790,
+    height: 650,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -1662,8 +1673,8 @@ function todoTaskAsignHandler()
   if(!todoEditWindow) todoEditWindow = new Ext.Window({
     title: 'Add New To do',
     closeAction:'hide',
-    width: 380,
-    height: 610,
+    width: 790,
+    height: 620,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -1695,7 +1706,7 @@ function referenceTaskAsignHandler()
   if(!refEditWindow) refEditWindow = new Ext.Window({
     title: 'Add New Reference',
     closeAction:'hide',
-    width: 380,
+    width: 790,
     height: 580,
     layout: 'fit',
     plain:true,
@@ -1726,7 +1737,7 @@ function reminderTaskAsignHandler()
   if(!remindEditWindow) remindEditWindow = new Ext.Window({
     title: 'Add New Reminder',
     closeAction:'hide',
-    width: 380,
+    width: 790,
     height: 600,
     layout: 'fit',
     plain:true,
@@ -2719,7 +2730,7 @@ var addPanel = new Ext.form.FormPanel({
   defaultType:'textfield',
   ref:'addPanel',
   defaults: {
-    width: 350
+    width: 760
   },
   items:[{
     fieldLabel:"Briefly, what's on your mind?",
@@ -2741,18 +2752,17 @@ var addPanel = new Ext.form.FormPanel({
     valueField: 'catagory_name',
     emptyText: 'Select Catagory',
     allowBlank: false
-    // valueNotFoundText: 'Value Not Found',
-    // listeners: {
-    //     afterrender: function(combo) {
-    //       combo.setValue('General');
-    //     }
-    // }
   },{
-    xtype:'textarea',
-    ref:'detail',
+    xtype: "tinymce",
     fieldLabel:"More Details",
+    ref:'detail',
     name:'detail',
-    height: 200
+    ctCls: 'detail-new-though',
+    height: 300,
+    width: 760,
+    border: true,
+    frame: true,
+    tinymceSettings: g_tinymce_settings
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
@@ -2765,7 +2775,6 @@ var addPanel = new Ext.form.FormPanel({
       inputValue: 'private',
       listeners:{
         check:function(field,checked) {
-            //console.log("Hit");
           if(checked) {
             addPanel.getForm().findField('team').setVisible(false);
 
@@ -2779,7 +2788,6 @@ var addPanel = new Ext.form.FormPanel({
       inputValue: 'public',
       listeners:{
         check:function(field,checked) {
-            //console.log("Hit");
             if(checked) {
                addPanel.getForm().findField('team').setVisible(true);
             }
@@ -2787,7 +2795,6 @@ var addPanel = new Ext.form.FormPanel({
       }
     }]
   },{
-    
       xtype: 'combo',
       mode: 'local',
       typeAhead: true,
@@ -3279,7 +3286,7 @@ var eventEditPanel = new Ext.form.FormPanel({
   defaultType:'textfield',
   ref:'eventEditPanel',
   defaults: {
-    width: 350
+    width: 760
   },
   items:[
     {
@@ -3334,11 +3341,16 @@ var eventEditPanel = new Ext.form.FormPanel({
       //format: 'c',
       editable: false
   },{
-    xtype:'textarea',
-    ref:'detail',
-    fieldLabel:"Details",
-    name:'detail',
-    height: 150
+      xtype: "tinymce",
+      fieldLabel:"Details",
+      ref:'detail',
+      name:'detail',
+      width: 760,
+      height: 250,
+      autoWidth: true,
+      border: true,
+      frame: true,
+      tinymceSettings: g_tinymce_settings
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
@@ -3411,7 +3423,8 @@ var todoEditPanel = new Ext.form.FormPanel({
   defaultType:'textfield',
   ref:'todoEditPanel',
   defaults: {
-    width: 350
+    width: 760,
+    flex: 1
   },
   items:[
     {
@@ -3431,62 +3444,120 @@ var todoEditPanel = new Ext.form.FormPanel({
       data: [ [1,'To Do'], [2,'Reference'],[3,'Reminder']]
     }),
     displayField: 'name',
-    valueField: 'val'
+    valueField: 'val',
+    colspan: 2
   },{
     fieldLabel:"Brief Thought",
     name:'brief',
     ref:'brief',
-    allowBlank:false
+    allowBlank:false,
+    colspan: 2
   },{
     fieldLabel:"Next Action",
     name:'next',
     ref:'next',
-    allowBlank:false
+    allowBlank:false,
+    colspan: 2
   },{
     fieldLabel:"Outcome",
     name:'outcome',
     ref:'outcome',
-    allowBlank:false
+    allowBlank:false,
+    colspan: 2
   },{
-    xtype: 'combo',
-    ref:'action_status',
-    mode: 'local',
-    typeAhead: true,
-    forceSelection: true,
-    allowBlank: false,
-    fieldLabel: 'Action Status',
-    name: 'action_status',
-    triggerAction: 'all',
-    displayField: 'name',
-    valueField: 'value',
-    emptyText: 'Select Status',
-    store: new Ext.data.SimpleStore({
-      fields: ['name','value'],
-      data: [
-        ['Pending','Pending'],
-        ['Active','Active'],
-        ['Completed','Completed'],
-        ['Inactive','Inactive']
-      ]
-    }),
-    width: 100,
-    value: 'Active'
-
-  },{
+    xtype: 'fieldset',
+    labelWidth: 1,
+    style: 'marign: 0; padding:0;',
+    border: false,
+    layout: 'table',
+    layoutConfig: {
+      column: 5,
+      tableAttrs: {
+          style: {
+              width: '100%',
+              cellpadding: 5,
+              cellspacing: 5
+          }
+      }
+    },
+    items: [{
+      xtype: 'label',
+      style: 'margin-top: 5px;font: 12px tahoma,arial,helvetica,sans-serif;',
+      html: 'Action Status:',
+      width: 100
+    },{
+      xtype: 'combo',
+      ref:'action_status',
+      mode: 'local',
+      typeAhead: true,
+      forceSelection: true,
+      allowBlank: false,
+      fieldLabel: 'Action Status',
+      name: 'action_status',
+      triggerAction: 'all',
+      displayField: 'name',
+      valueField: 'value',
+      emptyText: 'Select Status',
+      store: new Ext.data.SimpleStore({
+        fields: ['name','value'],
+        data: [
+          ['Pending','Pending'],
+          ['Active','Active'],
+          ['Completed','Completed'],
+          ['Inactive','Inactive']
+        ]
+      }),
+      width: 200,
+      value: 'Active'
+    },{
+      xtype: 'label',
+      html: ''
+    },{
+      xtype: 'label',
+      style: 'marign-left: 10px; margin-top: 5px;font: 12px tahoma,arial,helvetica,sans-serif;',
+      html: 'Due Date:'
+    },{
       xtype: 'datefield',
       fieldLabel: 'Due Date',
       ref:'due_date',
       name: 'due_date',
       format: 'c', //'d-m-Y H:i:s',
       //caltFormats: 'c',
-      editable: false
+      editable: false,
+      width: 200
+    }]
   },{
-      xtype:'textarea',
-      ref:'detail',
+      xtype: "tinymce",
       fieldLabel:"Details",
+      ref:'detail',
       name:'detail',
-      height: 80
-  },{     
+      height: 200,
+      width: 760,
+      border: true,
+      frame: true,
+      tinymceSettings: g_tinymce_settings
+  },{
+    xtype: 'fieldset',
+    labelWidth: 1,
+    style: 'marign: 0; padding:0;',
+    border: false,
+    layout: 'table',
+    layoutConfig: {
+      column: 5,
+      tableAttrs: {
+          style: {
+              width: '100%',
+              cellpadding: 5,
+              cellspacing: 5
+          }
+      }
+    },
+    items: [{  
+      xtype: 'label',
+      style: 'margin-top: 5px;font: 12px tahoma,arial,helvetica,sans-serif;',
+      width: 100,
+      html: 'Catagory:'
+    },{   
       xtype: 'combo',  
       mode: 'local',
       typeAhead: true,
@@ -3500,8 +3571,16 @@ var todoEditPanel = new Ext.form.FormPanel({
       store: catagoryOptions,
       displayField: 'catagory_name',
       valueField: 'catagory_name',
-      emptyText: 'Select Catagory'
-  },{    
+      emptyText: 'Select Catagory',
+      width: 200
+    },{
+      xtype: 'label',
+      html: ''
+    },{
+      xtype: 'label',
+      style: 'marign-left: 10px; margin-top: 5px;font: 12px tahoma,arial,helvetica,sans-serif;',
+      html: 'Context:'
+    },{    
       xtype: 'combo',
       mode: 'local',
       typeAhead: true,
@@ -3510,12 +3589,14 @@ var todoEditPanel = new Ext.form.FormPanel({
       name: 'context',
       ref: 'context',
             
-      fieldLabel: 'context',
+      fieldLabel: 'Context',
       triggerAction: 'all',
       store: contextOptions,
       displayField: 'catagory_name',
       valueField: 'catagory_name',
-      emptyText: 'Select context'
+      emptyText: 'Select context',
+      width: 200
+    }]
       /*
       xtype: 'combo',
       ref:'context',
@@ -3540,6 +3621,8 @@ var todoEditPanel = new Ext.form.FormPanel({
     xtype: 'radiogroup',
     fieldLabel: 'Type',
     ref: 'thoughtType',
+    width: 200,
+    colspan: 2,
     items: [{
       boxLabel: 'Private',
       name: 'scope',
@@ -3579,16 +3662,19 @@ var todoEditPanel = new Ext.form.FormPanel({
 
      displayField: 'name',
      valueField: 'id',
-     hidden: true
+     hidden: true,
+     colspan: 2
   },{
     ref: 'status',
     name: 'status',
-    hidden: true
+    hidden: true,
+     colspan: 2
   },{
     ref: 'actionable',
     name: 'actionable',
     hidden: true,
-    value:'t'
+    value:'t',
+    colspan: 2 
   }
   ],
   buttons:[{
@@ -3609,7 +3695,7 @@ var refEditPanel = new Ext.form.FormPanel({
   defaultType:'textfield',
   ref:'refEditPanel',
   defaults: {
-    width: 350
+    width: 760
   },
   items:[{
     xtype: 'combo',
@@ -3635,11 +3721,15 @@ var refEditPanel = new Ext.form.FormPanel({
     ref:'brief',
     allowBlank:false
   },{
-    xtype:'textarea',
-    ref:'detail',
-    fieldLabel:"Details",
-    name:'detail',
-    height: 200
+      xtype: "tinymce",
+      fieldLabel:"Details",
+      ref:'detail',
+      name:'detail',
+      width: 760,
+      height: 300,
+      border: true,
+      frame: true,
+      tinymceSettings: g_tinymce_settings
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
@@ -3709,7 +3799,7 @@ var remindEditPanel = new Ext.form.FormPanel({
 
 
   defaults: {
-    width: 350
+    width: 760
   },
   items:[{
     xtype: 'combo',
@@ -3747,11 +3837,16 @@ var remindEditPanel = new Ext.form.FormPanel({
       format: 'c',
       editable: false
   },{
-    xtype:'textarea',
-    ref:'detail',
-    fieldLabel:"More Details",
-    name:'detail',
-    height: 180
+      xtype: "tinymce",
+      fieldLabel:"More Details",
+      ref:'detail',
+      name:'detail',
+      width: 760,
+      height: 250,
+      autoWidth: true,
+      border: true,
+      frame: true,
+      tinymceSettings: g_tinymce_settings
   },{
     xtype: 'radiogroup',
     fieldLabel: 'Type',
@@ -3790,7 +3885,7 @@ var remindEditPanel = new Ext.form.FormPanel({
      mode: 'local',
      typeAhead: true,
      forceSelection: true,
-     fieldLabel: 'Teamms',
+     fieldLabel: 'Teams',
      triggerAction: 'all',
      store: myTeamStore,
      displayField: 'name',
