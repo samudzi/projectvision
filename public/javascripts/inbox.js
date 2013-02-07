@@ -19,10 +19,10 @@ function newHandler(){
   newThought = true;
   if(!addWindow) addWindow = new Ext.Window({
     title: 'Add New Thought',
-    width: 380,
+    width: 790,
     applyTo:'hello-win',
     closeAction:'hide',
-    height: 500,
+    height: 620,
     layout: 'fit',
     plain:true,
     bodyStyle:'padding:5px;',
@@ -69,8 +69,10 @@ function deleteHandler(){
 
 }
 
-function gridRowClickHandler(addrGrid,rowIndex,e) {
-  detailsPanel.update(inboxJsonStore.getAt(rowIndex).get('detail'));
+function gridRowClickHandler(addrGrid,rowIndex,e) {  
+  // detailsPanel.update(inboxJsonStore.getAt(rowIndex).get('detail'));
+  detailsPanel.items.items[0].setValue(inboxJsonStore.getAt(rowIndex).get('detail'));
+  // detailsPanel.setValue(inboxJsonStore.getAt(rowIndex).get('detail'));
 }
 
 
@@ -101,54 +103,7 @@ var thoughtGrid = new Ext.grid.GridPanel({
     items: [{
       icon   : '../images/icons/application_form_edit.gif',  // Use a URL in the icon config
       tooltip: 'Edit Thought',
-      handler: function(grid, rowIndex, colIndex) {
-      selectedUserID = inboxJsonStore.getAt(rowIndex).data.user_id;
-      
-        if(is_admin == true || currentUser == selectedUserID){
-          if(!addWindow) addWindow = new Ext.Window({
-            title: 'Edit Thought',
-            width: 380,
-            applyTo:'hello-win',
-            closeAction:'hide',
-            height: 500,
-            layout: 'fit',
-            plain:true,
-            bodyStyle:'padding:5px;',
-            buttonAlign:'center',
-            //resizable:false,
-            items: addPanel
-          });
-          else
-            addWindow.setTitle('Edit Thought');                  
-          selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
-          console.log("selcted id");      
-          addPanel.getForm().reset();         
-          addPanel.getForm().load({
-            url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
-            params: {
-              id: inboxJsonStore.getAt(rowIndex).data.id
-            },
-            waitMsg: 'Loading...',
-            method: 'get',
-            success: function(f,a){
-            },
-            failure: function(form, action){
-              Ext.Msg.alert("Load failed", action.result.errorMessage);
-            }
-          
-          });
-          //addUserAndTeamSelectOptions();
-          myTeamStore.load();
-          addWindow.show();
-          addPanel.brief.focus();
-        
-        }
-        else{
-          Ext.Msg.alert("Access violation","You don't have access to edit ");
-        }              
-      }
-      
-      
+      handler: showEditThoughtTabWindow  
     },
     {
       icon   : '../images/icons/delete.gif',
@@ -250,6 +205,9 @@ var thoughtGrid = new Ext.grid.GridPanel({
   listeners: {
     rowclick: {
       fn: gridRowClickHandler
+    },
+    rowdblclick: {
+      fn: showEditThoughtTabWindow
     }
   },
   region:'center',
@@ -269,10 +227,38 @@ var detailsPanel = new Ext.Panel({
   ref: 'detailsPanel',
   height: 200,
   minSize: 75,
-  maxSize: 250,
+  
+  maxSize: 250,  
   cmargins: '5 0 0 0',
+  autoScroll: true,
+  items: [{
+      xtype: "tinymce",
+      width: 'auto',
+      ctCls: 'detail-though',
+      height: 160,
+      border: false,
+      frame: true,
+      tinymceSettings: no_toolbar_g_tinymce_settings,
+      html: '<p>Select a Thought</p>'
+  }]
+});
+/*var detailsPanel = new Ext.ux.TinyMCE({
+  title: 'Details',
+  region: 'south',
+  ref: 'detailsPanel',
+  height: 250,
+  minSize: 75,
+  
+  maxSize: 250,  
+  cmargins: '5 0 0 0',
+  autoScroll: true,
+  frame: true,
+  border: true,
+  ctCls: 'detail-though',
+  tinymceSettings: no_toolbar_g_tinymce_settings,
   html: '<p>Select a Thought</p>'
 });
+*/
 //loop , array
 
 var inboxPanel = new Ext.TabPanel({
@@ -289,8 +275,7 @@ var inboxPanel = new Ext.TabPanel({
     ref:'myspace',
     layout: 'border',
     items: [thoughtGrid,detailsPanel]
-  }
-  ],
+  }],
   listeners: {
           activate: function(tab){
 				    if(addWindow) addWindow.hide();
@@ -309,3 +294,53 @@ var inboxPanel = new Ext.TabPanel({
   }
 });
 
+/*
+function to show edit Thought item Window of Inbox tab
+*/
+function showEditThoughtTabWindow(grid, rowIndex, colIndex) {
+  selectedUserID = inboxJsonStore.getAt(rowIndex).data.user_id;
+
+  if(is_admin == true || currentUser == selectedUserID){
+    if(!addWindow) addWindow = new Ext.Window({
+      title: 'Edit Thought',
+      width: 790,
+      applyTo:'hello-win',
+      closeAction:'hide',
+      height: 620,
+      layout: 'fit',
+      plain:true,
+      bodyStyle:'padding:5px;',
+      buttonAlign:'center',
+      //resizable:false,
+      items: addPanel
+    });
+    else
+      addWindow.setTitle('Edit Thought');    
+
+    selectedThoughtID = inboxJsonStore.getAt(rowIndex).data.id;
+    console.log("selcted id");      
+    addPanel.getForm().reset();         
+    addPanel.getForm().load({
+      url: '/thoughts/' + inboxJsonStore.getAt(rowIndex).data.id + '.json',
+      params: {
+        id: inboxJsonStore.getAt(rowIndex).data.id
+      },
+      waitMsg: 'Loading...',
+      method: 'get',
+      success: function(f,a){
+      },
+      failure: function(form, action){
+        Ext.Msg.alert("Load failed", action.result.errorMessage);
+      }
+    
+    });
+    //addUserAndTeamSelectOptions();
+    myTeamStore.load();
+    addWindow.show();
+    addPanel.brief.focus();
+  
+  }
+  else{
+    Ext.Msg.alert("Access violation","You don't have access to edit ");
+  }  
+}
